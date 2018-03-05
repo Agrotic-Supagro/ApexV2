@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
+
+import { Device } from '@ionic-native/device';
 import { Vibration } from '@ionic-native/vibration';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
@@ -21,31 +23,41 @@ export class ApexmodalPage {
   private c_array: number;
   private r_array: number;
   private p_array: number;
-  public lat: number;
-  public lng: number;
   public numberApex: number = 0;
   public thresholdApex: number = THRESHOLD_APEX;
   public guidsession: string;
-  public guidobservation: string;
-  public date: number;
+  public idUser: number;
 
   constructor(
     public vibration: Vibration,
     public navCtrl: NavController,
     public viewCtrl : ViewController,
     public alertCtrl: AlertController,
-    private sqlite: SQLite,
+    public device: Device,
+    public sqlite: SQLite,
     public navParams: NavParams,
     public locationTracker: LocationTracker,
     public dateformater: Dateformater,
     public guid: GUIDGenerator) {
 
-      this.openDataBase();
+      
+      this.initializeVariable();
+      this.idUser = this.navParams.get('iduser');
     }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ApexmodalPage');
-    //this.paramtest = this.navParams.get('message');
+    console.log('try open DB');
+    this.openDataBase();
+  }
+
+  private initializeVariable():void{
+    this.c_array = 0;
+    this.r_array = 0;
+    this.p_array = 0;
+    this.numberApex = 0;
+    this.guidsession = this.guid.getGuid();
+    console.log('GUID Session : '+this.guid.getGuid());
   }
 
   private openDataBase(): void {
@@ -56,7 +68,6 @@ export class ApexmodalPage {
       .then((db: SQLiteObject) => {
         console.log('DB opened !');
         this.db = db;
-        //this.createTables();
       })
       .catch(e => console.log(e));
   }
@@ -68,17 +79,6 @@ export class ApexmodalPage {
       buttons: ['Fermer']
     });
     alert.present();
-  }
-
-  public saveObservation(apexvalue):void{
-    console.log('timestamp : '+this.dateformater.gettimestamp());
-    console.log('GUID Obs : '+this.guid.getGuid());
-    console.log('Lat : '+this.locationTracker.getLatitude());
-    console.log('Lng : '+this.locationTracker.getLongitude());
-
-    this.guidobservation = this.guid.getGuid();
-    this.lat = this.locationTracker.getLatitude();
-    this.lng = this.locationTracker.getLongitude();
   }
   
   public addvalue(apexvalue){
@@ -95,38 +95,54 @@ export class ApexmodalPage {
         this.c_array++;
       }
     }
-/*       this.sqlite.create({
-        name: 'data.db',
-        location: 'default'
-      })
-      .then((db: SQLiteObject) => {
-        db.executeSql('CREATE TABLE IF NOT EXISTS datasession(id INTEGER PRIMARY KEY AUTOINCREMENT,id_session,apex,latitude,longitude,hour)', {})
-        .then(() => console.log('Executed SQL'))
-        .catch(e => console.log(e));
-        var id_session = this.idsession;
-        var apex = apexvalue;
-        var latitude = this.locationTracker.getLatitude();
-        var longitude = this.locationTracker.getLongitude();
-        var hour = this.dateFormat.gettime();
-        this.remplir = "Apex(" + apexvalue + ") - Coord ("+latitude.toFixed(4)+"/"+longitude.toFixed(4)+") ";
-        setTimeout(() => {
-          this.remplir = "";
-        }, 1000);
+  }
 
-        db.executeSql('INSERT INTO datasession(id_session,apex,latitude,longitude,hour) VALUES(?,?,?,?,?)', [id_session,apex,latitude,longitude,hour])
-        .then(() => console.log('Executed SQL'))
-        .catch(e => console.log(e));
-      })
-      .catch(e => console.log(JSON.stringify(e))); */
+  public saveObservation(apexvalue):void{
+    console.log('timestamp : '+this.dateformater.gettimestamp());
+    console.log('Lat : '+this.locationTracker.getLatitude());
+    console.log('Lng : '+this.locationTracker.getLongitude());
 
+    var lat = this.locationTracker.getLatitude();
+    var lng = this.locationTracker.getLongitude();
+    var timestamp = this.dateformater.gettimestamp();
+    var apex = apexvalue; 
+
+    this.db.executeSql('INSERT INTO `Observation` (apexValue, date, latitude, longitude, sessionId) VALUES(?,?,?,?,?)',
+     [apex,timestamp,lat,lng,this.guidsession])
+      .then(() => console.log('insert observation OK'))
+      .catch(e => console.log('fail insert observation : '+e));
   }
 
   public saveSession():void{
+    console.log('timestamp Session : '+this.dateformater.gettimestamp());
+    console.log('Lat Session : '+this.locationTracker.getLatitude());
+    console.log('Lng Session : '+this.locationTracker.getLongitude());
+    console.log('GUID Session : '+ this.guidsession);
 
+    var idSession = this.guidsession;
+    var name = ""; // TODO
+    var score = this.computeScore();
+    var date = this.dateformater.gettimestamp();
+    var uuidPhone = this.device.uuid;
+    var userId = this.idUser;
+
+    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, uuidPhone, userId) VALUES(?,?,?,?,?,?)',
+     [idSession,name,score,date,uuidPhone,userId])
+      .then(() => console.log('insert session OK'))
+      .catch(e => console.log('fail insert session : '+e));
+  }
+
+  public computeScore():any{
+    let totalentity = this.p_array + this.r_array + this.c_array;
+    let p_purcent = (this.p_array * 100 / totalentity)/100;
+    let r_purcent = (this.r_array * 100 / totalentity)/100;
+    let c_purcent = (this.c_array * 100 / totalentity)/100;
+    return (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent));
   }
 
   public closeModal(){
-      this.viewCtrl.dismiss();
+    this.saveSession();
+    this.viewCtrl.dismiss();
   }
 
 }

@@ -13,31 +13,53 @@
   <p>
     {{zen}}
   </p>
-
-  <p>
-    Lat : {{lat}} / Long : {{lng}}
-  </p>
-
-  <button ion-button secondary menuToggle>Toggle Menu</button>
-  <h3>Current Latitude: {{locationTracker.lat}}</h3>
-  <h3>Current Longitude: {{locationTracker.lng}}</h3>
-  <button ion-button full primary (tap)="startGPS()">Start Tracking</button>
-  <button ion-button full primary (tap)="stopGPS()">Stop Tracking</button>
+  <p>Current Latitude: {{locationTracker.lat}}</p>
+  <p>Current Longitude: {{locationTracker.lng}}</p>
 
 
-  <button ion-button large block (tap)="retrieveSession()">Retrieve Session</button>
+  <button ion-button color="light" block (tap)="retrieveUser()">Retrieve User</button>
   <ion-list>
-    <ion-item *ngFor="let data of dataSession" >
-
+    <ion-item *ngFor="let data of dataUser" >
       <ion-card>
         <ion-card-header>
           ID : {{data.id}}
         </ion-card-header>
         <ion-card-content>
-          <p>Structure : {{data.structure}} || Structure : {{data.name}} </p>
+          <p>Structure : {{data.structure}} || Name : {{data.name}} </p>
         </ion-card-content>
       </ion-card>
+    </ion-item>
+  </ion-list>
 
+  <button ion-button color="light" block (tap)="retrieveSession()">Retrieve Session</button>
+  <ion-list>
+    <ion-item *ngFor="let data of dataUser" >
+      <ion-card>
+        <ion-card-header>
+          ID : {{data.id}} 
+        </ion-card-header>
+        <ion-card-content>
+          <p>Score : {{data.score}} </p>
+          <p>Name : {{data.name}} || Date : {{data.date}}</p>
+          <p>UserId {{data.userId}} || UUID : {{data.uuidPhone}} </p>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
+
+  <button ion-button color="light" block (tap)="retrieveObservation()">Retrieve Observation</button>
+  <ion-list>
+    <ion-item *ngFor="let data of dataUser" >
+      <ion-card>
+        <ion-card-header>
+          ID : {{data.id}}
+        </ion-card-header>
+        <ion-card-content>
+          <p>Apex : {{data.apex}} || Date : {{data.date}} </p>
+          <p>Lat : {{data.lat}} || Lng : {{data.lng}} </p>
+          <p>idSession : {{data.idSession}} </p>
+        </ion-card-content>
+      </ion-card>
     </ion-item>
   </ion-list>
 

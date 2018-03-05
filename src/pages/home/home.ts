@@ -14,8 +14,9 @@ const DATABASE_APEX_NAME: string = 'dataApex.db';
 export class HomePage {
 
   private db: SQLiteObject;
-  private uuid: string;
-  private dataSession: any[];
+  private dataUser: any[];
+  private dataSesion: any[];
+  private dataObservation: any[];
 
 
   constructor(
@@ -37,7 +38,7 @@ export class HomePage {
   }
 
   public openModal() {
-    var data = { uuid: this.uuid };
+    var data = { iduser: 1 };
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
     apexModal.present();
   }
@@ -90,7 +91,7 @@ export class HomePage {
       .catch(e => console.log(e));
   }
 
-  public retrieveSession() {
+  public retrieveUser() {
     this.db.executeSql('select * from `User` order by idUser desc',{})
     .then((data) => {
       if(data == null){
@@ -99,9 +100,9 @@ export class HomePage {
       }
       if (data.rows) {
         if (data.rows.length > 0) {
-          this.dataSession = [];
+          this.dataUser = [];
           for (let i = 0; i < data.rows.length; i++) {
-            this.dataSession.push({
+            this.dataUser.push({
               id:data.rows.item(i).idUser,
               structure :data.rows.item(i).structure,
               name: data.rows.item(i).name
@@ -110,9 +111,60 @@ export class HomePage {
         }
       }
     })
+    .catch(e => console.log('fail sql retrieve User '+ e));
+  }
+
+  public retrieveSession() {
+    this.db.executeSql('select * from `Session` order by date desc',{})
+    .then((data) => {
+      if(data == null){
+        console.log('no session yet');
+        return;
+      }
+      if (data.rows) {
+        if (data.rows.length > 0) {
+          this.dataSesion = [];
+          for (let i = 0; i < data.rows.length; i++) {
+            this.dataSesion.push({
+              id:data.rows.item(i).idSession,
+              name: data.rows.item(i).name,
+              score: data.rows.item(i).score,
+              date: data.rows.item(i).date,
+              uuidPhone: data.rows.item(i).uuidPhone,
+              userId: data.rows.item(i).userId
+            });            
+          }
+        }
+      }
+    })
     .catch(e => console.log('fail sql retrieve Sessions '+ e));
   }
 
+  public retrieveObservation() {
+    this.db.executeSql('select * from `Observation` order by idObservation desc',{})
+    .then((data) => {
+      if(data == null){
+        console.log('no session yet');
+        return;
+      }
+      if (data.rows) {
+        if (data.rows.length > 0) {
+          this.dataObservation = [];
+          for (let i = 0; i < data.rows.length; i++) {
+            this.dataObservation.push({
+              id:data.rows.item(i).idObservation,
+              apex :data.rows.item(i).apexValue,
+              date: data.rows.item(i).date,
+              lat: data.rows.item(i).latitude,
+              lng: data.rows.item(i).longitude,
+              idSession: data.rows.item(i).idSession
+            });            
+          }
+        }
+      }
+    })
+    .catch(e => console.log('fail sql retrieve Observation '+ e));
+  }
 
 }
 
