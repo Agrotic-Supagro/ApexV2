@@ -36,13 +36,18 @@ export class HomePage {
   public stopGeolocation(){
     this.locationTracker.stopTracking();
   }
-
+  
   public openModal() {
     var data = { iduser: 1 };
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
     apexModal.present();
   }
 
+  public openSaisieApex() {
+    var data = { iduser: 1 };
+    var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
+    apexSaisie.present();
+  }
 
   private createDatabaseApex(): void {
     this.sqlite.create({
@@ -124,6 +129,7 @@ export class HomePage {
       if (data.rows) {
         if (data.rows.length > 0) {
           this.dataSesion = [];
+          console.log('Push data session');
           for (let i = 0; i < data.rows.length; i++) {
             this.dataSesion.push({
               id:data.rows.item(i).idSession,
@@ -166,5 +172,7 @@ export class HomePage {
     .catch(e => console.log('fail sql retrieve Observation '+ e));
   }
 
+
+  
 }
 

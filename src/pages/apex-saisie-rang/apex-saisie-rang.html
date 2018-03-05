@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Saisie en bout de rang</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>APEX P : pousse active</ion-label>
+      <ion-input placeholder="nombre apex P" [(ngModel)]="p_array"></ion-input>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>APEX R : rameau tombé ou sec</ion-label>
+      <ion-input placeholder="nombre apex R" [(ngModel)]="r_array"></ion-input>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>APEX C : rameau croissance ralentie</ion-label>
+      <ion-input placeholder="nombre apex C" [(ngModel)]="c_array"></ion-input>
+    </ion-item>
+  </div>
+
+  <br/>
+
+  <div>
+      <ion-item>
+        <ion-label color="dark" stacked>(Optionel) Nom de la session</ion-label>
+        <ion-input placeholder="nom session" [(ngModel)]="nameSession"></ion-input>
+      </ion-item>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <button ion-button block color="secondary" (tap)="closeModal()">Calculer l'indice</button>
+  </ion-toolbar>
+</ion-footer>

@@ -8,9 +8,6 @@
 
 
 <ion-content padding class="card-background-page">
-  <p>
-    Test : {{idUser}}
-  </p>
   <ion-card (click)="addvalue('P')">
   <img src="assets/imgs/stadeP.gif" class="card-img"/>
   <div class="card-title">APEX P</div>
@@ -37,7 +34,7 @@
         <button ion-button block color="dark" (tap)="apexAlert()"> Obs : {{numberApex}}/{{thresholdApex}} </button>
     </ng-container>
     <ng-template #elseTemplate>
-        <button ion-button block color="secondary" (tap)="closeModal()">Valider Session</button>
+        <button ion-button block color="secondary" (tap)="closeModal()">Calculer l'indice</button>
     </ng-template>
 
     </ion-toolbar>

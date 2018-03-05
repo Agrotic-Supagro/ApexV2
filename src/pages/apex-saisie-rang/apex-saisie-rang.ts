@@ -9,22 +9,20 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { GUIDGenerator } from '../../services/guidgenerator.service';
 import { Dateformater } from '../../services/dateformater.service';
 
-const THRESHOLD_APEX: number = 10;
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
 @IonicPage()
 @Component({
-  selector: 'page-apexmodal',
-  templateUrl: 'apexmodal.html',
+  selector: 'page-apex-saisie-rang',
+  templateUrl: 'apex-saisie-rang.html',
 })
-export class ApexmodalPage {
+export class ApexSaisieRangPage {
 
   private db: SQLiteObject;
-  private c_array: number;
-  private r_array: number;
-  private p_array: number;
-  public numberApex: number = 0;
-  public thresholdApex: number = THRESHOLD_APEX;
+
+  public c_array: number;
+  public r_array: number;
+  public p_array: number;
   public guidsession: string;
   public idUser: number;
 
@@ -52,10 +50,6 @@ export class ApexmodalPage {
   }
 
   private initializeVariable():void{
-    this.c_array = 0;
-    this.r_array = 0;
-    this.p_array = 0;
-    this.numberApex = 0;
     this.guidsession = this.guid.getGuid();
     console.log('GUID Session : '+this.guid.getGuid());
   }
@@ -70,31 +64,6 @@ export class ApexmodalPage {
         this.db = db;
       })
       .catch(e => console.log(e));
-  }
-
-  public apexAlert() {
-    let alert = this.alertCtrl.create({
-      title: 'Apex méthode',
-      subTitle: 'Pour calculer l\'Indice d\'Arrêt de Croissance (IAC), il est nécessaire de réaliser des observations sur au moins '+this.thresholdApex+' apex. Vous n\'avez réalisé pour l\'instant que '+this.numberApex+' observations.',
-      buttons: ['Fermer']
-    });
-    alert.present();
-  }
-  
-  public addvalue(apexvalue){
-    this.vibration.vibrate(100);
-    this.numberApex ++;
-    this.saveObservation(apexvalue);
-
-    if (apexvalue == "P") {
-      this.p_array++;
-    } else {
-      if (apexvalue == "R") {
-        this.r_array++;
-      } else {
-        this.c_array++;
-      }
-    }
   }
 
   public saveObservation(apexvalue):void{
@@ -141,7 +110,20 @@ export class ApexmodalPage {
     return (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent));
   }
 
+  public saveObservationLoops():void{
+    for (let i = 0; i < this.p_array; i++) {
+      this.saveObservation('P');
+    }
+    for (let i = 0; i < this.r_array; i++) {
+      this.saveObservation('R');
+    }
+    for (let i = 0; i < this.c_array; i++) {
+      this.saveObservation('C');
+    }
+  }
+
   public closeModal(){
+    this.saveObservationLoops();
     this.saveSession();
     this.viewCtrl.dismiss();
   }
