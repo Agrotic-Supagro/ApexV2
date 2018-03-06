@@ -16,6 +16,7 @@ import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { Vibration } from '@ionic-native/vibration';
 import { Device } from '@ionic-native/device';
 import { SQLite } from '@ionic-native/sqlite';
+import { HTTP } from '@ionic-native/http';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -47,6 +48,7 @@ import { Dateformater } from '../services/dateformater.service';
     BackgroundGeolocation,
     Vibration,
     Device,
+    HTTP,
     SplashScreen,
     SQLite,
     {provide: ErrorHandler, useClass: IonicErrorHandler} ]

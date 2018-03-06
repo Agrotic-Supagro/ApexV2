@@ -96,5 +96,6 @@
     <plugin name="cordova-android-play-services-gradle-release" spec="^1.2.0">
         <variable name="PLAY_SERVICES_VERSION" value="10.+" />
     </plugin>
+    <plugin name="cordova-plugin-advanced-http" spec="^1.11.0" />
     <engine name="android" spec="6.3.0" />
 </widget>

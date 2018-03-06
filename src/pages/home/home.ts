@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
@@ -21,10 +21,11 @@ export class HomePage {
 
   constructor(
     public modalCtrl: ModalController,
+    public alertCtrl: AlertController,
     public navCtrl: NavController,
     private sqlite: SQLite,
     public locationTracker: LocationTracker) {
-
+    
     this.createDatabaseApex();
     this.startGeolocation();
   }
@@ -72,7 +73,7 @@ export class HomePage {
             this.db.executeSql('CREATE TABLE IF NOT EXISTS `Observation` ( `idObservation` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `apexValue` TEXT NOT NULL, `date` INTEGER NOT NULL, `latitude` NUMERIC NOT NULL, `longitude` NUMERIC NOT NULL, `sessionId` TEXT NOT NULL, FOREIGN KEY(`sessionId`) REFERENCES `Session`(`idSession`) )', {})
               .then(() => {
                 console.log('Observation table created');
-                this.createDefaultUser();
+                this.retrieveUser();
               })
               .catch(e => console.log('fail table Observation | ' + e));
           })
@@ -81,17 +82,14 @@ export class HomePage {
       .catch(e => console.log('fail table User | ' + e));
   }
 
-  private createDefaultUser(): void {
-    var structure = 'CA34';
-    var name = '';
+  private createDefaultUser(structure, nom): void {
+    var structure = structure;
+    var name = nom;
     this.db.executeSql('INSERT INTO `User` (structure, name) SELECT ?,? WHERE NOT EXISTS (SELECT 1 FROM `User` WHERE structure=? AND name=?)', [structure,name,structure,name])
       .then(() => {
-        console.log('Default CA34 Users created');
-        structure = 'AgroTIC';
-        name = '';
-        this.db.executeSql('INSERT INTO `User` (structure, name) SELECT ?,? WHERE NOT EXISTS (SELECT 1 FROM `User` WHERE structure=? AND name=?)', [structure,name,structure,name])
-          .then(() => console.log('Default AgroTIC Users created'))
-          .catch(e => console.log(e));
+        console.log('User created ! Structure : '+structure+' and Name : '+name);
+        this.retrieveUser();
+      
       })
       .catch(e => console.log(e));
   }
@@ -100,7 +98,6 @@ export class HomePage {
     this.db.executeSql('select * from `User` order by idUser desc',{})
     .then((data) => {
       if(data == null){
-        console.log('no session yet');
         return;
       }
       if (data.rows) {
@@ -113,6 +110,11 @@ export class HomePage {
               name: data.rows.item(i).name
             });            
           }
+        }
+        else {
+          var authenticationModal = this.modalCtrl.create('AuthenticationPage');
+          authenticationModal.present();
+          //this.alertCreateUser('Avant d\'utiliser l\'application Apex, merci de renseigner les deux champs suivants');
         }
       }
     })
@@ -172,7 +174,36 @@ export class HomePage {
     .catch(e => console.log('fail sql retrieve Observation '+ e));
   }
 
-
+  alertCreateUser(message) {
+    let alert = this.alertCtrl.create({
+      title: 'Login',
+      message: message,
+      inputs: [
+        {
+          name: 'structure',
+          placeholder: 'Structure* (obligatoire)'
+        },
+        {
+          name: 'nom',
+          placeholder: 'Nom',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Login',
+          handler: data => {
+            if (data.structure != '') {
+              console.log(data.structure);
+              console.log(data.nom);
+              this.createDefaultUser(data.structure, data.nom);
+            } else {
+              this.alertCreateUser('Merci de remplir au moins le champs "Structure"');
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
   
 }
-

@@ -1,0 +1,34 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Authentification</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div>
+      <p>Blabla de présentation à mettre pour la première utilisation</p>
+    </div>
+    <div>
+        <ion-item>
+          <ion-label color="primary" stacked>Votre structure*</ion-label>
+          <ion-input placeholder="nom de la structure" [(ngModel)]="structure"></ion-input>
+        </ion-item>
+      </div>
+      <div>
+        <ion-item>
+          <ion-label color="primary" stacked>Votre nom</ion-label>
+          <ion-input placeholder="nom utilisateur" [(ngModel)]="nom"></ion-input>
+        </ion-item>
+      </div>
+
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+      <button ion-button block color="secondary" (tap)="saveUser()">Sauver les informations</button>
+    </ion-toolbar>
+  </ion-footer>
