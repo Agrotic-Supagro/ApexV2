@@ -11,54 +11,24 @@
   <h3>APEX</h3>
   <button ion-button large block (tap)="openModal()">Start Session</button>
   <button ion-button large block color="secondary" (tap)="openSaisieApex()">Start Saisie</button>
-  <p>
-    {{zen}}
-  </p>
+
   <p>Current Latitude: {{locationTracker.lat}}</p>
   <p>Current Longitude: {{locationTracker.lng}}</p>
-
-  <button ion-button color="light" block (tap)="openAuthentication()">test User</button>
-  <button ion-button color="light" block (tap)="retrieveUser()">Retrieve User</button>
-  <ion-list>
-    <ion-item *ngFor="let data of dataUser" >
-      <ion-card>
-        <ion-card-header>
-          ID : {{data.id}}
-        </ion-card-header>
-        <ion-card-content>
-          <p>Structure : {{data.structure}} || Name : {{data.name}} </p>
-        </ion-card-content>
-      </ion-card>
-    </ion-item>
-  </ion-list>
 
   <button ion-button color="light" block (tap)="retrieveSession()">Retrieve Session</button>
   <ion-list>
     <ion-item *ngFor="let dataSess of dataSesion" >
       <ion-card>
-        <ion-card-header>
-          ID : {{dataSess.id}} 
+        <ion-card-header >
+          <p *ngIf="dataSess.score < 40" class="scorebon">ID : {{dataSess.id}}</p>
+          <p *ngIf="dataSess.score > 40 && dataSess.score < 60" class="scoremoyen">ID : {{dataSess.id}}</p>
+          <p *ngIf="dataSess.score > 60" class="scoremauvais">ID : {{dataSess.id}}</p>
         </ion-card-header>
+
         <ion-card-content>
           <p>Score : {{dataSess.score}} </p>
           <p>Name : {{dataSess.name}} || Date : {{dataSess.date}}</p>
           <p>UserId {{dataSess.userId}} || UUID : {{dataSess.uuidPhone}} </p>
-        </ion-card-content>
-      </ion-card>
-    </ion-item>
-  </ion-list>
-
-  <button ion-button color="light" block (tap)="retrieveObservation()">Retrieve Observation</button>
-  <ion-list>
-    <ion-item *ngFor="let dataObs of dataObservation" >
-      <ion-card>
-        <ion-card-header>
-          ID : {{dataObs.id}}
-        </ion-card-header>
-        <ion-card-content>
-          <p>Apex : {{dataObs.apex}} || Date : {{dataObs.date}} </p>
-          <p>Lat : {{dataObs.lat}} || Lng : {{dataObs.lng}} </p>
-          <p>idSession : {{dataObs.idSession}} </p>
         </ion-card-content>
       </ion-card>
     </ion-item>

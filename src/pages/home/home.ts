@@ -25,21 +25,6 @@ export class HomePage {
     public navCtrl: NavController,
     private sqlite: SQLite,
     public locationTracker: LocationTracker) {
-
-/*       if (true) {
-        var authenticationModal = this.modalCtrl.create('AuthenticationPage');
-        authenticationModal.onDidDismiss(data => {
- 
-          this.dataUser = [];
-          this.dataUser.push({
-            id:data.id,
-            structure :data.structure,
-            name: data.name
-          });   
-          console.log(this.dataUser);
-        });
-        authenticationModal.present();
-      } */
       
     this.createDatabaseApex();
     this.startGeolocation();

@@ -27,6 +27,8 @@ export class ApexmodalPage {
   public thresholdApex: number = THRESHOLD_APEX;
   public guidsession: string;
   public idUser: number;
+  public nameSession: string;
+  public numeroSession: number;
 
   constructor(
     public vibration: Vibration,
@@ -70,6 +72,7 @@ export class ApexmodalPage {
         console.log('DB opened !');
         this.db = db;
         this.createSession();
+        this.getNextIndexSession();
       })
       .catch(e => console.log(e));
   }
@@ -119,7 +122,11 @@ export class ApexmodalPage {
 
   public updateSession():void{
     var idSession = this.guidsession;
-    var name = ""; // TODO
+    var name = 'Session N°' + this.numeroSession;
+    if (this.nameSession != null) {
+      name = this.nameSession; 
+    } 
+
     var score = this.computeScore();
 
     console.log('try update Session table')
@@ -128,6 +135,22 @@ export class ApexmodalPage {
     .then(() => console.log('Score updated'))
     .catch(e => console.log(e));
 
+  }
+
+  public getNextIndexSession(){
+    this.db.executeSql('SELECT COUNT(*) as rowcount FROM `Session`',{})
+    .then((data) => {
+      if(data == null){
+        console.log('no session yet');
+        return;
+      }
+      if (data.rows) {
+        if (data.rows.length > 0) {
+          this.numeroSession = data.rows.item(0).rowcount;
+        }
+      }
+    })
+    .catch(e => console.log('fail sql retrieve Sessions '+ e));
   }
 
   public createSession():void{

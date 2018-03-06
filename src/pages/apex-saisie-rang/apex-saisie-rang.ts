@@ -25,6 +25,8 @@ export class ApexSaisieRangPage {
   public p_array: number;
   public guidsession: string;
   public idUser: number;
+  public numeroSession: number;
+  public nameSession: string;
 
   constructor(
     public vibration: Vibration,
@@ -38,15 +40,15 @@ export class ApexSaisieRangPage {
     public dateformater: Dateformater,
     public guid: GUIDGenerator) {
 
-      
+      console.log('try open DB');
+      this.openDataBase();
       this.initializeVariable();
       this.idUser = this.navParams.get('iduser');
     }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ApexmodalPage');
-    console.log('try open DB');
-    this.openDataBase();
+
   }
 
   private initializeVariable():void{
@@ -62,8 +64,25 @@ export class ApexSaisieRangPage {
       .then((db: SQLiteObject) => {
         console.log('DB opened !');
         this.db = db;
+        this.getNextIndexSession();
       })
       .catch(e => console.log(e));
+  }
+ 
+  public getNextIndexSession(){
+    this.db.executeSql('SELECT COUNT(*) as rowcount FROM `Session`',{})
+    .then((data) => {
+      if(data == null){
+        console.log('no session yet');
+        return;
+      }
+      if (data.rows) {
+        if (data.rows.length > 0) {
+          this.numeroSession = data.rows.item(0).rowcount+1;
+        }
+      }
+    })
+    .catch(e => console.log('fail sql retrieve Sessions '+ e));
   }
 
   public saveObservation(apexvalue):void{
@@ -84,7 +103,10 @@ export class ApexSaisieRangPage {
 
   public saveSession():void{
     var idSession = this.guidsession;
-    var name = ""; // TODO
+    var name = 'Session N°' + this.numeroSession;
+    if (this.nameSession != null) {
+      name = this.nameSession; 
+    } 
     var score = this.computeScore();
     var date = this.dateformater.gettimestamp();
     var uuidPhone = this.device.uuid;

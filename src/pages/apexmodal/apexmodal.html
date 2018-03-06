@@ -1,41 +1,42 @@
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>Session - Méthode Apex</ion-title>
-  </ion-navbar>
-
-</ion-header>
 
 
 <ion-content padding class="card-background-page">
+  <div>
+    <ion-item>
+      <ion-label color="dark" stacked>Nom de la session</ion-label>
+      <ion-input placeholder="optionnel" [(ngModel)]="nameSession"></ion-input>
+    </ion-item>
+  </div>
+
   <ion-card (click)="addvalue('P')">
-  <img src="assets/imgs/stadeP.gif" class="card-img"/>
-  <div class="card-title">APEX P</div>
-  <div class="card-subtitle">pousse active</div>
-</ion-card>
+    <img src="assets/imgs/stadeP.gif" class="card-img" />
+    <div class="card-title">APEX P</div>
+    <div class="card-subtitle">pousse active</div>
+  </ion-card>
 
-<ion-card (click)="addvalue('R')">
-  <img src="assets/imgs/stadeR.gif" class="card-img"/>
-  <div class="card-title">APEX R</div>
-  <div class="card-subtitle">rameau tombé ou sec</div>
-</ion-card>
+  <ion-card (click)="addvalue('R')">
+    <img src="assets/imgs/stadeR.gif" class="card-img" />
+    <div class="card-title">APEX R</div>
+    <div class="card-subtitle">rameau tombé ou sec</div>
+  </ion-card>
 
-<ion-card (click)="addvalue('C')">
-  <img src="assets/imgs/stadeC.gif" class="card-img"/>
-  <div class="card-title">APEX C</div>
-  <div class="card-subtitle">rameau croissance ralentie</div>
-</ion-card>
+  <ion-card (click)="addvalue('C')">
+    <img src="assets/imgs/stadeC.gif" class="card-img" />
+    <div class="card-title">APEX C</div>
+    <div class="card-subtitle">rameau croissance ralentie</div>
+  </ion-card>
 
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <ng-container *ngIf="numberApex < thresholdApex; else elseTemplate">
-        <button ion-button block color="dark" (tap)="apexAlert()"> Obs : {{numberApex}}/{{thresholdApex}} </button>
+      <button ion-button block color="dark" (tap)="apexAlert()"> Obs : {{numberApex}}/{{thresholdApex}} </button>
     </ng-container>
     <ng-template #elseTemplate>
-        <button ion-button block color="secondary" (tap)="closeModal()">Calculer l'indice</button>
+      <button ion-button block color="secondary" (tap)="closeModal()">Calculer l'indice</button>
     </ng-template>
 
-    </ion-toolbar>
+  </ion-toolbar>
 </ion-footer>
+
