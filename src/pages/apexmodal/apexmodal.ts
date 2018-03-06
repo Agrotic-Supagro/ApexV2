@@ -42,13 +42,14 @@ export class ApexmodalPage {
 
       
       this.initializeVariable();
+      console.log(this.navParams.get('iduser'));
       this.idUser = this.navParams.get('iduser');
+      console.log('try open DB');
+      this.openDataBase();
     }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ApexmodalPage');
-    console.log('try open DB');
-    this.openDataBase();
   }
 
   private initializeVariable():void{
@@ -68,6 +69,7 @@ export class ApexmodalPage {
       .then((db: SQLiteObject) => {
         console.log('DB opened !');
         this.db = db;
+        this.createSession();
       })
       .catch(e => console.log(e));
   }
@@ -106,17 +108,32 @@ export class ApexmodalPage {
     var lng = this.locationTracker.getLongitude();
     var timestamp = this.dateformater.gettimestamp();
     var apex = apexvalue; 
-
+    var sessionId = this.guidsession;
+    console.log('GUID Session : '+ this.guidsession);
+    console.log('GUID Session 2 : '+ sessionId);
     this.db.executeSql('INSERT INTO `Observation` (apexValue, date, latitude, longitude, sessionId) VALUES(?,?,?,?,?)',
-     [apex,timestamp,lat,lng,this.guidsession])
+     [apex,timestamp,lat,lng,sessionId])
       .then(() => console.log('insert observation OK'))
       .catch(e => console.log('fail insert observation : '+e));
   }
 
-  public saveSession():void{
+  public updateSession():void{
     var idSession = this.guidsession;
     var name = ""; // TODO
     var score = this.computeScore();
+
+    console.log('try update Session table')
+ 
+    this.db.executeSql('UPDATE `Session` SET name = ?, score = ? WHERE idSession = ?', [name, score, idSession])
+    .then(() => console.log('Score updated'))
+    .catch(e => console.log(e));
+
+  }
+
+  public createSession():void{
+    var idSession = this.guidsession;
+    var name = ""; 
+    var score = 0;
     var date = this.dateformater.gettimestamp();
     var uuidPhone = this.device.uuid;
     var userId = this.idUser;
@@ -132,7 +149,6 @@ export class ApexmodalPage {
       .then(() => console.log('insert session OK'))
       .catch(e => console.log('fail insert session : '+e));
   }
-
   public computeScore():any{
     let totalentity = this.p_array + this.r_array + this.c_array;
     let p_purcent = (this.p_array * 100 / totalentity)/100;
@@ -142,7 +158,7 @@ export class ApexmodalPage {
   }
 
   public closeModal(){
-    this.saveSession();
+    this.updateSession();
     this.viewCtrl.dismiss();
   }
 

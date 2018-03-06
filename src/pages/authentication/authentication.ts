@@ -40,9 +40,12 @@ export class AuthenticationPage {
   }
 
   public saveUser():void{
-    if(this.structure != ''){
+    console.log(this.structure);
+    console.log(this.name);
+    if(this.structure != null){
       this.createDefaultUser();
-      this.viewCtrl.dismiss();
+      var data = { id: 1, structure: this.structure, name:this.name };
+      this.viewCtrl.dismiss(data);
     }
     else{
       this.showAlert();
@@ -52,7 +55,7 @@ export class AuthenticationPage {
   private createDefaultUser(): void {
     var structure = this.structure;
     var name = this.name;
-    this.db.executeSql('INSERT INTO `User` (structure, name) SELECT ?,? WHERE NOT EXISTS (SELECT 1 FROM `User` WHERE structure=? AND name=?)', [structure,name,structure,name])
+    this.db.executeSql('INSERT INTO `User` (structure, name) VALUES(?,?)', [structure,name])
       .then(() => console.log('User created ! Structure : '+structure+' and Name : '+name))
       .catch(e => console.log(e));
   }

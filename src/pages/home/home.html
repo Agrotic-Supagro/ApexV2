@@ -17,7 +17,7 @@
   <p>Current Latitude: {{locationTracker.lat}}</p>
   <p>Current Longitude: {{locationTracker.lng}}</p>
 
-
+  <button ion-button color="light" block (tap)="openAuthentication()">test User</button>
   <button ion-button color="light" block (tap)="retrieveUser()">Retrieve User</button>
   <ion-list>
     <ion-item *ngFor="let data of dataUser" >

@@ -25,7 +25,22 @@ export class HomePage {
     public navCtrl: NavController,
     private sqlite: SQLite,
     public locationTracker: LocationTracker) {
-    
+
+/*       if (true) {
+        var authenticationModal = this.modalCtrl.create('AuthenticationPage');
+        authenticationModal.onDidDismiss(data => {
+ 
+          this.dataUser = [];
+          this.dataUser.push({
+            id:data.id,
+            structure :data.structure,
+            name: data.name
+          });   
+          console.log(this.dataUser);
+        });
+        authenticationModal.present();
+      } */
+      
     this.createDatabaseApex();
     this.startGeolocation();
   }
@@ -39,13 +54,13 @@ export class HomePage {
   }
   
   public openModal() {
-    var data = { iduser: 1 };
+    var data = { iduser: this.dataUser[0].id };
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
     apexModal.present();
   }
 
   public openSaisieApex() {
-    var data = { iduser: 1 };
+    var data = { iduser: this.dataUser[0].id };
     var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
     apexSaisie.present();
   }
@@ -82,17 +97,6 @@ export class HomePage {
       .catch(e => console.log('fail table User | ' + e));
   }
 
-  private createDefaultUser(structure, nom): void {
-    var structure = structure;
-    var name = nom;
-    this.db.executeSql('INSERT INTO `User` (structure, name) SELECT ?,? WHERE NOT EXISTS (SELECT 1 FROM `User` WHERE structure=? AND name=?)', [structure,name,structure,name])
-      .then(() => {
-        console.log('User created ! Structure : '+structure+' and Name : '+name);
-        this.retrieveUser();
-      
-      })
-      .catch(e => console.log(e));
-  }
 
   public retrieveUser() {
     this.db.executeSql('select * from `User` order by idUser desc',{})
@@ -110,15 +114,19 @@ export class HomePage {
               name: data.rows.item(i).name
             });            
           }
-        }
+        } 
         else {
-          var authenticationModal = this.modalCtrl.create('AuthenticationPage');
-          authenticationModal.present();
-          //this.alertCreateUser('Avant d\'utiliser l\'application Apex, merci de renseigner les deux champs suivants');
+          this.openAuthentication();
         }
       }
+
     })
     .catch(e => console.log('fail sql retrieve User '+ e));
+  }
+
+  public openAuthentication() {
+    var authenticationModal = this.modalCtrl.create('AuthenticationPage');
+    authenticationModal.present();     
   }
 
   public retrieveSession() {
@@ -165,7 +173,7 @@ export class HomePage {
               date: data.rows.item(i).date,
               lat: data.rows.item(i).latitude,
               lng: data.rows.item(i).longitude,
-              idSession: data.rows.item(i).idSession
+              idSession: data.rows.item(i).sessionId
             });            
           }
         }
@@ -174,36 +182,5 @@ export class HomePage {
     .catch(e => console.log('fail sql retrieve Observation '+ e));
   }
 
-  alertCreateUser(message) {
-    let alert = this.alertCtrl.create({
-      title: 'Login',
-      message: message,
-      inputs: [
-        {
-          name: 'structure',
-          placeholder: 'Structure* (obligatoire)'
-        },
-        {
-          name: 'nom',
-          placeholder: 'Nom',
-        }
-      ],
-      buttons: [
-        {
-          text: 'Login',
-          handler: data => {
-            if (data.structure != '') {
-              console.log(data.structure);
-              console.log(data.nom);
-              this.createDefaultUser(data.structure, data.nom);
-            } else {
-              this.alertCreateUser('Merci de remplir au moins le champs "Structure"');
-            }
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-  
+ 
 }
