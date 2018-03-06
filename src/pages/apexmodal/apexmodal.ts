@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams, AlertController, ViewController } 
 import { Device } from '@ionic-native/device';
 import { Vibration } from '@ionic-native/vibration';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { Keyboard } from '@ionic-native/keyboard';
 
 import { LocationTracker } from '../../services/locationtracker.service';
 import { GUIDGenerator } from '../../services/guidgenerator.service';
@@ -37,12 +38,13 @@ export class ApexmodalPage {
     public alertCtrl: AlertController,
     public device: Device,
     public sqlite: SQLite,
+    public keyboard: Keyboard,
     public navParams: NavParams,
     public locationTracker: LocationTracker,
     public dateformater: Dateformater,
     public guid: GUIDGenerator) {
 
-      
+      this.keyboard.hideKeyboardAccessoryBar(true);
       this.initializeVariable();
       console.log(this.navParams.get('iduser'));
       this.idUser = this.navParams.get('iduser');
@@ -61,6 +63,10 @@ export class ApexmodalPage {
     this.numberApex = 0;
     this.guidsession = this.guid.getGuid();
     console.log('GUID Session : '+this.guid.getGuid());
+  }
+
+  public handleLogin():void{
+    this.keyboard.close();
   }
 
   private openDataBase(): void {

@@ -17,6 +17,7 @@ import { Vibration } from '@ionic-native/vibration';
 import { Device } from '@ionic-native/device';
 import { SQLite } from '@ionic-native/sqlite';
 import { HTTP } from '@ionic-native/http';
+import { Keyboard } from '@ionic-native/keyboard';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -49,6 +50,7 @@ import { Dateformater } from '../services/dateformater.service';
     Vibration,
     Device,
     HTTP,
+    Keyboard,
     SplashScreen,
     SQLite,
     {provide: ErrorHandler, useClass: IonicErrorHandler} ]

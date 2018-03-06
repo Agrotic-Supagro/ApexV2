@@ -4,6 +4,7 @@ import { ModalController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 import { LocationTracker } from '../../services/locationtracker.service';
+import { Dateformater } from '../../services/dateformater.service';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
@@ -18,11 +19,11 @@ export class HomePage {
   private dataSesion: any[];
   private dataObservation: any[];
 
-
   constructor(
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     public navCtrl: NavController,
+    public dateformater: Dateformater,
     private sqlite: SQLite,
     public locationTracker: LocationTracker) {
       
@@ -41,12 +42,18 @@ export class HomePage {
   public openModal() {
     var data = { iduser: this.dataUser[0].id };
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
+    apexModal.onDidDismiss(() => {
+      this.retrieveSession();
+    });
     apexModal.present();
   }
 
   public openSaisieApex() {
     var data = { iduser: this.dataUser[0].id };
     var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
+    apexSaisie.onDidDismiss(() => {
+      this.retrieveSession();
+    });
     apexSaisie.present();
   }
 
@@ -74,6 +81,7 @@ export class HomePage {
               .then(() => {
                 console.log('Observation table created');
                 this.retrieveUser();
+                this.retrieveSession();
               })
               .catch(e => console.log('fail table Observation | ' + e));
           })
@@ -126,11 +134,13 @@ export class HomePage {
           this.dataSesion = [];
           console.log('Push data session');
           for (let i = 0; i < data.rows.length; i++) {
+            var date = this.dateformater.convertToDate(data.rows.item(i).date);
+            var score = this.convertInteger(data.rows.item(i).score);
             this.dataSesion.push({
               id:data.rows.item(i).idSession,
               name: data.rows.item(i).name,
-              score: data.rows.item(i).score,
-              date: data.rows.item(i).date,
+              score: score,
+              date: date,
               uuidPhone: data.rows.item(i).uuidPhone,
               userId: data.rows.item(i).userId
             });            
@@ -167,5 +177,8 @@ export class HomePage {
     .catch(e => console.log('fail sql retrieve Observation '+ e));
   }
 
- 
+  convertInteger(x) {
+    //return Number.parseFloat(x).toFixed(2);
+    return Number.parseInt(x);
+  }
 }

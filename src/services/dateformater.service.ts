@@ -22,5 +22,18 @@ export class Dateformater {
     var datePipe = new DatePipe('fr-FR');
     return datePipe.transform(myDate, 'yyyy-MM-dd');
   }
+
+  convertToDate(timestamp){
+    var myDate = new Date (timestamp*1000);
+    var day = this.zeroPad(myDate.getDate(),2);
+    var month = this.zeroPad(myDate.getMonth(),2);
+    var year = this.zeroPad(myDate.getFullYear(),2);
+    return day+'/'+month+'/'+year;
+  }
+
+  zeroPad(num, places) {
+    var zero = places - num.toString().length + 1;
+    return Array(+(zero > 0 && zero)).join("0") + num;
+  }
 }
 
