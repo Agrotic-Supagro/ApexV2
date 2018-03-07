@@ -4,7 +4,8 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
+import { AboutPage } from '../pages/about/about';
+import { ContactPage } from '../pages/contact/contact';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -28,7 +29,8 @@ import { Dateformater } from '../services/dateformater.service';
   declarations: [
     MyApp,
     HomePage,
-    ListPage
+    AboutPage,
+    ContactPage
    ],
   imports: [
     BrowserModule,
@@ -38,7 +40,8 @@ import { Dateformater } from '../services/dateformater.service';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage
+    AboutPage,
+    ContactPage
   ],
   providers: [
     StatusBar,
