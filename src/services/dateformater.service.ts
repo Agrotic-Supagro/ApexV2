@@ -31,6 +31,13 @@ export class Dateformater {
     return day+'/'+month+'/'+year;
   }
 
+  convertToTime(timestamp){
+    var myDate = new Date (timestamp*1000);
+    var hours = myDate.getHours();
+    var minutes = myDate.getMinutes();
+    return hours+':'+minutes;
+  }
+
   zeroPad(num, places) {
     var zero = places - num.toString().length + 1;
     return Array(+(zero > 0 && zero)).join("0") + num;

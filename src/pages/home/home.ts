@@ -38,7 +38,15 @@ export class HomePage {
   public stopGeolocation(){
     this.locationTracker.stopTracking();
   }
-  
+
+  public openAuthentication() {
+    var authenticationModal = this.modalCtrl.create('AuthenticationPage');
+    authenticationModal.onDidDismiss(() => {
+      this.retrieveUser();
+    });
+    authenticationModal.present();     
+  }
+
   public openModal() {
     var data = { iduser: this.dataUser[0].id };
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
@@ -117,11 +125,6 @@ export class HomePage {
     .catch(e => console.log('fail sql retrieve User '+ e));
   }
 
-  public openAuthentication() {
-    var authenticationModal = this.modalCtrl.create('AuthenticationPage');
-    authenticationModal.present();     
-  }
-
   public retrieveSession() {
     this.db.executeSql('select * from `Session` order by date desc',{})
     .then((data) => {
@@ -135,12 +138,14 @@ export class HomePage {
           console.log('Push data session');
           for (let i = 0; i < data.rows.length; i++) {
             var date = this.dateformater.convertToDate(data.rows.item(i).date);
+            var time = this.dateformater.convertToTime(data.rows.item(i).date);
             var score = this.convertInteger(data.rows.item(i).score);
             this.dataSesion.push({
               id:data.rows.item(i).idSession,
               name: data.rows.item(i).name,
               score: score,
               date: date,
+              time: time,
               uuidPhone: data.rows.item(i).uuidPhone,
               userId: data.rows.item(i).userId
             });            
@@ -177,8 +182,9 @@ export class HomePage {
     .catch(e => console.log('fail sql retrieve Observation '+ e));
   }
 
-  convertInteger(x) {
+  public convertInteger(x) {
     //return Number.parseFloat(x).toFixed(2);
     return Number.parseInt(x);
   }
+
 }

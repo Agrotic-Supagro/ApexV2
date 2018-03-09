@@ -188,7 +188,30 @@ export class ApexmodalPage {
 
   public closeModal(){
     this.updateSession();
+    this.showResult();
     this.viewCtrl.dismiss();
   }
-
+  showResult() {
+    var score = this.convertInteger(this.computeScore());
+    let alert = this.alertCtrl.create({
+      title: 'Score session : '+score,
+      //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+  public convertInteger(x) {
+    //return Number.parseFloat(x).toFixed(2);
+    return Number.parseInt(x);
+  }
+  ionViewCanLeave(): boolean{
+    let totalentity = this.p_array + this.r_array + this.c_array;
+    if(totalentity > 9){
+      console.log('Ok to leave');
+       return true;
+     } else {
+       console.log('Work again');
+       return false;
+     }
+   }
 }

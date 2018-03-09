@@ -125,10 +125,13 @@ export class ApexSaisieRangPage {
   }
 
   public computeScore():any{
-    let totalentity = this.p_array + this.r_array + this.c_array;
-    let p_purcent = (this.p_array * 100 / totalentity)/100;
-    let r_purcent = (this.r_array * 100 / totalentity)/100;
-    let c_purcent = (this.c_array * 100 / totalentity)/100;
+    let p:number = +this.p_array;
+    let r:number = +this.r_array;
+    let c:number = +this.c_array;
+    let totalentity = p + r + c;
+    let p_purcent = (p * 100 / totalentity)/100;
+    let r_purcent = (r * 100 / totalentity)/100;
+    let c_purcent = (c * 100 / totalentity)/100;
     return (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent));
   }
 
@@ -145,9 +148,32 @@ export class ApexSaisieRangPage {
   }
 
   public closeModal(){
-    this.saveObservationLoops();
-    this.saveSession();
-    this.viewCtrl.dismiss();
+    if(this.p_array == null)this.p_array = 0;
+    if(this.c_array == null)this.c_array = 0;
+    if(this.r_array == null)this.r_array = 0;
+
+    if(this.p_array == 0 && this.r_array == 0 && this.c_array == 0){
+      this.viewCtrl.dismiss();
+    }
+    else{
+      this.saveObservationLoops();
+      this.saveSession();
+      this.showResult();
+      this.viewCtrl.dismiss();
+    }
   }
 
+  showResult() {
+    var score = this.convertInteger(this.computeScore());
+    let alert = this.alertCtrl.create({
+      title: 'Score session : '+score,
+      //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+  public convertInteger(x) {
+    //return Number.parseFloat(x).toFixed(2);
+    return Number.parseInt(x);
+  }
 }
