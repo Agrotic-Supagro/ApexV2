@@ -10,7 +10,7 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { GUIDGenerator } from '../../services/guidgenerator.service';
 import { Dateformater } from '../../services/dateformater.service';
 
-const THRESHOLD_APEX: number = 10;
+const THRESHOLD_APEX: number = 50;
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
 @IonicPage()
@@ -30,6 +30,8 @@ export class ApexmodalPage {
   public idUser: number;
   public nameSession: string;
   public numeroSession: number;
+
+  private leavemodal: boolean = false;
 
   constructor(
     public vibration: Vibration,
@@ -189,12 +191,13 @@ export class ApexmodalPage {
   public closeModal(){
     this.updateSession();
     this.showResult();
+    this.leavemodal = true;
     this.viewCtrl.dismiss();
   }
   showResult() {
     var score = this.convertInteger(this.computeScore());
     let alert = this.alertCtrl.create({
-      title: 'Score session : '+score,
+      title: 'IAC : '+score,
       //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
       buttons: ['OK']
     });
@@ -204,11 +207,18 @@ export class ApexmodalPage {
     //return Number.parseFloat(x).toFixed(2);
     return Number.parseInt(x);
   }
+
+
   ionViewCanLeave(): boolean{
     let totalentity = this.p_array + this.r_array + this.c_array;
     if(totalentity > 9){
       console.log('Ok to leave');
-       return true;
+      if (this.leavemodal) {
+        return true;
+      } else {
+        this.closeModal();
+      }
+        
      } else {
        console.log('Work again');
        return false;

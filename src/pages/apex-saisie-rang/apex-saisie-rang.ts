@@ -85,7 +85,7 @@ export class ApexSaisieRangPage {
     .catch(e => console.log('fail sql retrieve Sessions '+ e));
   }
 
-  public saveObservation(apexvalue):void{
+  async saveObservation(apexvalue){
     console.log('timestamp : '+this.dateformater.gettimestamp());
     console.log('Lat : '+this.locationTracker.getLatitude());
     console.log('Lng : '+this.locationTracker.getLongitude());
@@ -101,7 +101,7 @@ export class ApexSaisieRangPage {
       .catch(e => console.log('fail insert observation : '+e));
   }
 
-  public saveSession():void{
+  async saveSession(){
     var idSession = this.guidsession;
     var name = 'Session N°' + this.numeroSession;
     if (this.nameSession != null) {
@@ -135,7 +135,7 @@ export class ApexSaisieRangPage {
     return (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent));
   }
 
-  public saveObservationLoops():void{
+  async saveObservationLoops(){
     for (let i = 0; i < this.p_array; i++) {
       this.saveObservation('P');
     }
@@ -156,9 +156,13 @@ export class ApexSaisieRangPage {
       this.viewCtrl.dismiss();
     }
     else{
-      this.saveObservationLoops();
-      this.saveSession();
-      this.showResult();
+      this.saveObservationLoops().then(() => {
+        this.saveSession().then(() => {
+          this.showResult();
+        })
+        .catch();
+      })
+      .catch();
       this.viewCtrl.dismiss();
     }
   }
@@ -166,7 +170,7 @@ export class ApexSaisieRangPage {
   showResult() {
     var score = this.convertInteger(this.computeScore());
     let alert = this.alertCtrl.create({
-      title: 'Score session : '+score,
+      title: 'IAC : '+score,
       //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
       buttons: ['OK']
     });

@@ -9,46 +9,47 @@
 
 <ion-content padding>
   <h3>APEX</h3>
-  <button ion-button large block (tap)="openModal()">Start Session</button>
-  <button ion-button large block color="secondary" (tap)="openSaisieApex()">Start Saisie</button>
+  <button ion-button large block (tap)="openModal()">Saisie en parcelle</button>
+  <button ion-button large block color="secondary" (tap)="openSaisieApex()">Saisie en bout de rang</button>
 
   <p>Current Latitude: {{locationTracker.lat}}</p>
   <p>Current Longitude: {{locationTracker.lng}}</p>
 
   <h3>Liste des sessions effectuées</h3>
   <ion-list>
-    <ion-item *ngFor="let dataSess of dataSesion" >
+    <ion-item *ngFor="let dataSess of dataSesion">
       <ion-card *ngIf="dataSess.score < 40" class="scorebon">
-        <ion-card-header>
-          <h4>Nom : {{dataSess.name}}</h4>
-        </ion-card-header>
         <ion-card-content>
-          <p>Score : {{dataSess.score}}</p>
-          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>  
+          <h3>Nom : {{dataSess.name}}</h3>
+          <p>IAC :
+            <b>{{dataSess.score}}</b>
+          </p>
+          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
         </ion-card-content>
       </ion-card>
 
       <ion-card *ngIf="dataSess.score >= 40 && dataSess.score <= 60" class="scoremoyen">
-          <ion-card-header>
-            <h4>Nom : {{dataSess.name}}</h4>
-          </ion-card-header>
-          <ion-card-content>
-            <p>Score : {{dataSess.score}}</p>
-            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>  
-          </ion-card-content>
-        </ion-card>
+        <ion-card-content>
+          <h3>Nom : {{dataSess.name}}</h3>
+          <p>IAC :
+            <b>{{dataSess.score}}</b>
+          </p>
+          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
+        </ion-card-content>
+      </ion-card>
 
-        <ion-card *ngIf="dataSess.score > 60" class="scoremauvais">
-            <ion-card-header>
-              <h4>Nom : {{dataSess.name}}</h4>
-            </ion-card-header>
-            <ion-card-content>
-              <p>Score : {{dataSess.score}}</p>
-              <p>Le {{dataSess.date}} à {{dataSess.time}}</p>  
-            </ion-card-content>
-          </ion-card>
+      <ion-card *ngIf="dataSess.score > 60" class="scoremauvais">
+        <ion-card-content>
+          <h3>Nom : {{dataSess.name}}</h3>
+          <p>IAC :
+            <b>{{dataSess.score}}</b>
+          </p>
+          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
+        </ion-card-content>
+      </ion-card>
 
     </ion-item>
   </ion-list>
 
 </ion-content>
+
