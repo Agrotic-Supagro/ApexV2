@@ -211,7 +211,7 @@ export class ApexmodalPage {
 
   ionViewCanLeave(): boolean{
     let totalentity = this.p_array + this.r_array + this.c_array;
-    if(totalentity > 9){
+    if(totalentity > this.thresholdApex || this.leavemodal){
       console.log('Ok to leave');
       if (this.leavemodal) {
         return true;
@@ -220,8 +220,53 @@ export class ApexmodalPage {
       }
         
      } else {
-       console.log('Work again');
+       this.showConfirm();
        return false;
      }
    }
+
+
+   showConfirm() {
+    let confirm = this.alertCtrl.create({
+      title: 'Quitter la saisie en parcelle ?',
+      message: 'Vous n\'avez pas atteint les '+this.thresholdApex+' observations. <br/><br/>En cliquant sur OUI les données ne seront pas sauvegardés.',
+      buttons: [
+        {
+          text: 'Non',
+          handler: () => {
+            console.log('Disagree clicked -  Continue session');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            console.log('Agree clicked - Close Modal, Unsave session and Observation');
+            this.leavemodal = true;
+            this.deleteObservation();
+            this.deleteSession();
+            this.viewCtrl.dismiss();
+
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  //Delete session
+  public deleteSession():void{
+    var idSession = this.guidsession;
+    this.db.executeSql('DELETE FROM `Session` WHERE idSession = ?', [idSession])
+    .then(() => console.log('Session '+idSession+' deleted'))
+    .catch(e => console.log(e));
+  }
+
+  //Delete observations
+  public deleteObservation():void{
+    var idSession = this.guidsession;
+    this.db.executeSql('DELETE FROM `Observation` WHERE sessionId = ?', [idSession])
+    .then(() => console.log('Observations '+idSession+' deleted'))
+    .catch(e => console.log(e));
+  }
+
 }

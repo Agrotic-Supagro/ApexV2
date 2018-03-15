@@ -18,6 +18,7 @@ export class HomePage {
   private dataUser: any[];
   private dataSesion: any[];
   private dataObservation: any[];
+  public filter: string = 'date';
 
   constructor(
     public modalCtrl: ModalController,
@@ -126,7 +127,14 @@ export class HomePage {
   }
 
   public retrieveSession() {
-    this.db.executeSql('select * from `Session` order by date desc',{})
+    var filter = this.filter;
+    console.log(this.filter);
+    var sqlrequest = 'select * from `Session` order by '+filter+' desc';
+    if (filter == 'name') {
+      sqlrequest = 'select * from `Session` order by '+filter+' asc';
+    } 
+    
+    this.db.executeSql(sqlrequest,{})
     .then((data) => {
       if(data == null){
         console.log('no session yet');
@@ -187,4 +195,52 @@ export class HomePage {
     return Number.parseInt(x);
   }
 
+
+  public deleteEntry(e){
+    console.log(e+' to delele ########################');
+    this.deleteConfirm(e);
+  }
+
+  public deleteConfirm(id) {
+    let confirm = this.alertCtrl.create({
+      title: 'Vous voulez supprimer les données de cette parcelle ?',
+      //message: 'Do you agree to use this lightsaber to do good across the intergalactic galaxy?',
+      buttons: [
+        {
+          text: 'non',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Supprimer',
+          handler: () => {
+            this.deleteObservation(id);
+            this.deleteSession(id);
+            console.log('Agree clicked');
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+    //Delete session
+    public deleteSession(id):void{
+      var idSession = id;
+      this.db.executeSql('DELETE FROM `Session` WHERE idSession = ?', [idSession])
+      .then(() => {
+        console.log('Session '+idSession+' deleted');
+        this.retrieveSession();
+      })
+      .catch(e => console.log(e));
+    }
+  
+    //Delete observations
+    public deleteObservation(id):void{
+      var idSession = id;
+      this.db.executeSql('DELETE FROM `Observation` WHERE sessionId = ?', [idSession])
+      .then(() => console.log('Observations '+idSession+' deleted'))
+      .catch(e => console.log(e));
+    }
 }
