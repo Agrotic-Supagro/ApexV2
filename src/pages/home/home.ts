@@ -5,6 +5,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 import { LocationTracker } from '../../services/locationtracker.service';
 import { Dateformater } from '../../services/dateformater.service';
+import { Device } from '@ionic-native/device';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
@@ -26,10 +27,20 @@ export class HomePage {
     public navCtrl: NavController,
     public dateformater: Dateformater,
     private sqlite: SQLite,
+    public device: Device,
     public locationTracker: LocationTracker) {
       
     this.createDatabaseApex();
     this.startGeolocation();
+    this.infophone()
+  }
+
+  public infophone(){
+    console.log('UUID : '+this.device.uuid);
+    console.log('serial : '+this.device.serial);
+    console.log('model : '+this.device.model);
+    console.log('platform : '+this.device.platform);
+    console.log('version : '+this.device.version);
   }
 
   public startGeolocation(){
@@ -80,10 +91,10 @@ export class HomePage {
   }
 
   private createTables(): void {
-    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `structure` TEXT NOT NULL, `name` TEXT )', {})
+    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `structure` TEXT NOT NULL, `name` TEXT )', {})
       .then(() => {
         console.log('User table created');
-        this.db.executeSql('CREATE TABLE IF NOT EXISTS `Session` ( `idSession` TEXT NOT NULL UNIQUE, `name` TEXT, `score` INTEGER NOT NULL, `date` INTEGER NOT NULL, `uuidPhone` TEXT, `userId` INTEGER NOT NULL, PRIMARY KEY(`idSession`), FOREIGN KEY(`userId`) REFERENCES `User`(`idUser`) )', {})
+        this.db.executeSql('CREATE TABLE IF NOT EXISTS `Session` ( `idSession` TEXT NOT NULL UNIQUE, `name` TEXT, `score` INTEGER NOT NULL, `date` INTEGER NOT NULL, `userId` TEXT NOT NULL, PRIMARY KEY(`idSession`), FOREIGN KEY(`userId`) REFERENCES `User`(`idUser`) )', {})
           .then(() => {
             console.log('Session table created');
             this.db.executeSql('CREATE TABLE IF NOT EXISTS `Observation` ( `idObservation` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `apexValue` TEXT NOT NULL, `date` INTEGER NOT NULL, `latitude` NUMERIC NOT NULL, `longitude` NUMERIC NOT NULL, `sessionId` TEXT NOT NULL, FOREIGN KEY(`sessionId`) REFERENCES `Session`(`idSession`) )', {})
@@ -116,6 +127,7 @@ export class HomePage {
               name: data.rows.item(i).name
             });            
           }
+          console.log('idUser : '+this.dataUser[0].id);
         } 
         else {
           this.openAuthentication();
@@ -154,7 +166,6 @@ export class HomePage {
               score: score,
               date: date,
               time: time,
-              uuidPhone: data.rows.item(i).uuidPhone,
               userId: data.rows.item(i).userId
             });            
           }
@@ -195,13 +206,7 @@ export class HomePage {
     return Number.parseInt(x);
   }
 
-
-  public deleteEntry(e){
-    console.log(e+' to delele ########################');
-    this.deleteConfirm(e);
-  }
-
-  public deleteConfirm(id) {
+  public deleteEntry(id) {
     let confirm = this.alertCtrl.create({
       title: 'Vous voulez supprimer les données de cette parcelle ?',
       //message: 'Do you agree to use this lightsaber to do good across the intergalactic galaxy?',

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { Device } from '@ionic-native/device';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
@@ -18,6 +19,7 @@ export class AuthenticationPage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl : ViewController,
+    public device: Device,
     public alertCtrl: AlertController,
     private sqlite: SQLite) {
       this.openDB();
@@ -44,7 +46,7 @@ export class AuthenticationPage {
     console.log(this.name);
     if(this.structure != null){
       this.createDefaultUser();
-      var data = { id: 1, structure: this.structure, name:this.name };
+      var data = { id: this.device.uuid, structure: this.structure, name:this.name };
       this.viewCtrl.dismiss(data);
     }
     else{
@@ -55,7 +57,8 @@ export class AuthenticationPage {
   private createDefaultUser(): void {
     var structure = this.structure;
     var name = this.name;
-    this.db.executeSql('INSERT INTO `User` (structure, name) VALUES(?,?)', [structure,name])
+    var uuidPhone = this.device.uuid;
+    this.db.executeSql('INSERT INTO `User` (idUser, structure, name) VALUES(?,?,?)', [uuidPhone,structure,name])
       .then(() => console.log('User created ! Structure : '+structure+' and Name : '+name))
       .catch(e => console.log(e));
   }

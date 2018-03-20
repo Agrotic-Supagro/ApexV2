@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
 
-import { Device } from '@ionic-native/device';
 import { Vibration } from '@ionic-native/vibration';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -27,7 +26,7 @@ export class ApexmodalPage {
   public numberApex: number = 0;
   public thresholdApex: number = THRESHOLD_APEX;
   public guidsession: string;
-  public idUser: number;
+  public idUser: string;
   public nameSession: string;
   public numeroSession: number;
 
@@ -38,7 +37,6 @@ export class ApexmodalPage {
     public navCtrl: NavController,
     public viewCtrl : ViewController,
     public alertCtrl: AlertController,
-    public device: Device,
     public sqlite: SQLite,
     public keyboard: Keyboard,
     public navParams: NavParams,
@@ -166,17 +164,15 @@ export class ApexmodalPage {
     var name = ""; 
     var score = 0;
     var date = this.dateformater.gettimestamp();
-    var uuidPhone = this.device.uuid;
     var userId = this.idUser;
 
     console.log('GUID Session : '+ idSession);
     console.log('Name Session : '+ name);
     console.log('Date Session : '+ date);
-    console.log('uuidPhone Session : '+ uuidPhone);
     console.log('userId Session : '+ userId);
 
-    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, uuidPhone, userId) VALUES(?,?,?,?,?,?)',
-     [idSession,name,score,date,uuidPhone,userId])
+    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, userId) VALUES(?,?,?,?,?)',
+     [idSession,name,score,date,userId])
       .then(() => console.log('insert session OK'))
       .catch(e => console.log('fail insert session : '+e));
   }

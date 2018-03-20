@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ViewController } from 'ionic-angular';
 
-import { Device } from '@ionic-native/device';
 import { Vibration } from '@ionic-native/vibration';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
@@ -24,7 +23,7 @@ export class ApexSaisieRangPage {
   public r_array: number;
   public p_array: number;
   public guidsession: string;
-  public idUser: number;
+  public idUser: string;
   public numeroSession: number;
   public nameSession: string;
 
@@ -33,7 +32,6 @@ export class ApexSaisieRangPage {
     public navCtrl: NavController,
     public viewCtrl : ViewController,
     public alertCtrl: AlertController,
-    public device: Device,
     public sqlite: SQLite,
     public navParams: NavParams,
     public locationTracker: LocationTracker,
@@ -109,17 +107,15 @@ export class ApexSaisieRangPage {
     } 
     var score = this.computeScore();
     var date = this.dateformater.gettimestamp();
-    var uuidPhone = this.device.uuid;
     var userId = this.idUser;
 
     console.log('GUID Session : '+ idSession);
     console.log('Name Session : '+ name);
     console.log('Date Session : '+ date);
-    console.log('uuidPhone Session : '+ uuidPhone);
     console.log('userId Session : '+ userId);
 
-    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, uuidPhone, userId) VALUES(?,?,?,?,?,?)',
-     [idSession,name,score,date,uuidPhone,userId])
+    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, userId) VALUES(?,?,?,?,?)',
+     [idSession,name,score,date,userId])
       .then(() => console.log('insert session OK'))
       .catch(e => console.log('fail insert session : '+e));
   }
