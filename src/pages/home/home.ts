@@ -7,7 +7,10 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { Dateformater } from '../../services/dateformater.service';
 import { Device } from '@ionic-native/device';
 
+import { HTTP } from '@ionic-native/http';
+
 const DATABASE_APEX_NAME: string = 'dataApex.db';
+const SERVEUR_APEX_NAME: string = 'http://www.gbrunel.fr/ionic/';
 
 @Component({
   selector: 'page-home',
@@ -20,6 +23,7 @@ export class HomePage {
   private dataSesion: any[];
   private dataObservation: any[];
   public filter: string = 'date';
+  public baseURI: string = SERVEUR_APEX_NAME;
 
   constructor(
     public modalCtrl: ModalController,
@@ -28,6 +32,7 @@ export class HomePage {
     public dateformater: Dateformater,
     private sqlite: SQLite,
     public device: Device,
+    private http: HTTP,
     public locationTracker: LocationTracker) {
       
     this.createDatabaseApex();
@@ -248,4 +253,49 @@ export class HomePage {
       .then(() => console.log('Observations '+idSession+' deleted'))
       .catch(e => console.log(e));
     }
+
+    postEntryToServe(data) : void
+    {
+      console.log(data[0].key+' - '+data[0].idUser+' - '+data[0].structure+' - '+data[0].name);
+      let headers 	: any		= { 'Content-Type': 'application/json' };
+      let options 	: any		= {key: 'user', idUser: 'CMB', structure: 'AGS', name: 'Bru'};
+      let url       : any  	= this.baseURI + 'apiApex.php';
+
+      this.http.setDataSerializer('json');
+      this.http.post(url, options, headers)
+          .then(data => {
+            console.log(data);
+        })
+          .catch(error => console.log('Fail Serve '+error));
+    }
+
+    public addUserServeur() {
+      this.db.executeSql('select * from `User` order by idUser desc',{})
+      .then((data) => {
+        if(data == null){
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            var dataUsersOption = [];
+            for (let i = 0; i < data.rows.length; i++) {
+              dataUsersOption.push({
+                key:'user',
+                idUser:data.rows.item(i).idUser,
+                structure :data.rows.item(i).structure,
+                name: data.rows.item(i).name
+              });            
+              console.log(dataUsersOption[0].key+' - '+dataUsersOption[0].idUser+' - '+dataUsersOption[0].structure+' - '+dataUsersOption[0].name);
+              this.postEntryToServe(dataUsersOption);
+            }
+          } 
+          else {
+            return;
+          }
+        }
+  
+      })
+      .catch(e => console.log('fail sql retrieve User '+ e));
+    }
+    
 }
