@@ -23,6 +23,7 @@
     "@ionic-native/background-geolocation": "^4.5.3",
     "@ionic-native/core": "4.4.0",
     "@ionic-native/device": "^4.5.3",
+    "@ionic-native/email-composer": "^4.7.0",
     "@ionic-native/geolocation": "^4.5.3",
     "@ionic-native/http": "^4.6.0",
     "@ionic-native/keyboard": "^4.6.0",
@@ -36,6 +37,7 @@
     "cordova-android-support-gradle-release": "^1.2.1",
     "cordova-plugin-advanced-http": "^1.11.0",
     "cordova-plugin-device": "^2.0.1",
+    "cordova-plugin-email-composer": "^0.8.15",
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-geolocation": "^4.0.1",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
@@ -71,7 +73,8 @@
       "cordova-sqlite-storage": {},
       "cordova-plugin-advanced-http": {},
       "ionic-plugin-keyboard": {},
-      "cordova-plugin-network-information": {}
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-email-composer": {}
     },
     "platforms": []
   }

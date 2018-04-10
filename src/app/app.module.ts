@@ -20,6 +20,7 @@ import { SQLite } from '@ionic-native/sqlite';
 import { HTTP } from '@ionic-native/http';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Network } from '@ionic-native/network';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -52,6 +53,7 @@ import { Dateformater } from '../services/dateformater.service';
     Geolocation,
     BackgroundGeolocation,
     Vibration,
+    EmailComposer,
     Device,
     Network,
     HTTP,

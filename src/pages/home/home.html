@@ -8,14 +8,18 @@
 </ion-header>
 
 <ion-content padding>
-  <h3>APEX</h3>
-  <button ion-button large block (tap)="openModal()">Saisie en parcelle</button>
-  <button ion-button large block color="secondary" (tap)="openSaisieApex()">Saisie en bout de rang</button>
+  <img src="assets/imgs/apex.png" class="imglogo" />
+  <button ion-button block (tap)="openModal()">Saisie en parcelle</button>
+  <button ion-button block color="secondary" (tap)="openSaisieApex()">Saisie en bout de rang</button>
+  <br>
+  <table class="tableGPS">
+    <tr>
+      <td>Longitude: {{locationTracker.lng.toFixed(5)}}</td>
+      <td>Latitude: {{locationTracker.lat.toFixed(5)}}</td>
+    </tr>
+  </table>
 
-  <p>Latitude: {{locationTracker.lat}}</p>
-  <p>Longitude: {{locationTracker.lng}}</p>
-
-  <h3>Liste des sessions effectuées</h3>
+  <h3 class="centerclass">Liste des sessions effectuées</h3>
   <ion-row radio-group [(ngModel)]="filter">
       <ion-col>
         <ion-item>
