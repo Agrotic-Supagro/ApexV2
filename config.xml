@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.GB.apex" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>ApexV2</name>
+    <name>ApeX</name>
     <description>APEX</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <author email="guilhem.brunel@supagro.fr" href="http://gbrunel.fr">Guilhem Brunel</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -84,19 +84,7 @@
     <plugin name="cordova-sqlite-storage" spec="^2.2.1" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="cordova-plugin-mauron85-background-geolocation" spec="^2.3.3">
-        <variable name="GOOGLE_PLAY_SERVICES_VERSION" value="+" />
-        <variable name="ICON" value="@mipmap/icon" />
-        <variable name="SMALL_ICON" value="@mipmap/icon" />
-        <variable name="ACCOUNT_NAME" value="@string/app_name" />
-        <variable name="ACCOUNT_LABEL" value="@string/app_name" />
-        <variable name="ACCOUNT_TYPE" value="$PACKAGE_NAME.account" />
-        <variable name="CONTENT_AUTHORITY" value="$PACKAGE_NAME" />
-    </plugin>
-    <plugin name="cordova-android-support-gradle-release" spec="^1.2.0">
-        <variable name="ANDROID_SUPPORT_VERSION" value="23.+" />
-    </plugin>
     <plugin name="cordova-plugin-advanced-http" spec="^1.11.0" />
-    <engine name="android" spec="6.3.0" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
 </widget>

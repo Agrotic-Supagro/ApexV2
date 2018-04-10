@@ -19,6 +19,7 @@ import { Device } from '@ionic-native/device';
 import { SQLite } from '@ionic-native/sqlite';
 import { HTTP } from '@ionic-native/http';
 import { Keyboard } from '@ionic-native/keyboard';
+import { Network } from '@ionic-native/network';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -52,6 +53,7 @@ import { Dateformater } from '../services/dateformater.service';
     BackgroundGeolocation,
     Vibration,
     Device,
+    Network,
     HTTP,
     Keyboard,
     SplashScreen,
