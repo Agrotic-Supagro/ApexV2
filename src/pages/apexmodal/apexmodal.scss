@@ -30,8 +30,9 @@ page-apexmodal {
 
   .card-title {
     position: absolute;
-    top: 30%;
+    top: 10%;
     font-size: 3.0em;
+    line-height: 1em;
     width: 100%;
     font-weight: bold;
     color: #fff;
@@ -39,9 +40,9 @@ page-apexmodal {
   }
 
   .card-subtitle {
-    font-size: 1.0em;
+    font-size: 1.2em;
     position: absolute;
-    top: 70%;
+    top: 80%;
     width: 100%;
     color: #fff;
     text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;

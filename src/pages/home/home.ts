@@ -207,6 +207,7 @@ export class HomePage {
           handler: () => {
             this.deleteObservation(id);
             this.deleteSession(id);
+            this.retrieveSession();
             console.log('Agree clicked');
           }
         }
