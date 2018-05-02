@@ -15,6 +15,7 @@ export class AuthenticationPage {
   private db: SQLiteObject;
   public structure:string;
   public name:string;
+  public email:string;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -44,29 +45,43 @@ export class AuthenticationPage {
   public saveUser():void{
     console.log(this.structure);
     console.log(this.name);
-    if(this.structure != null){
-      this.createDefaultUser();
-      var data = { id: this.device.uuid, structure: this.structure, name:this.name };
-      this.viewCtrl.dismiss(data);
+    console.log(this.email);
+    if (this.validateEmail(this.email)) {
+      if(this.structure != null && this.name != null && this.email != null){
+        this.createDefaultUser();
+        var data = { id: this.device.uuid, structure: this.structure, name:this.name };
+        this.viewCtrl.dismiss(data);
+      }
+      else{
+        this.showAlert('Merci de renseigner tous les champs');
+      }
     }
     else{
-      this.showAlert();
+      this.showAlert('Merci de renseigner une adresse email correcte');
     }
+
   }
 
+  public validateEmail(email):boolean {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
   private createDefaultUser(): void {
-    var structure = this.structure;
-    var name = this.name;
     var uuidPhone = this.device.uuid;
-    this.db.executeSql('INSERT INTO `User` (idUser, structure, name) VALUES(?,?,?)', [uuidPhone,structure,name])
+    var name = this.name;
+    var email = this.email;
+    var structure = this.structure;
+        
+    this.db.executeSql('INSERT INTO `User` (idUser, name, email, structure) VALUES(?,?,?,?)', [uuidPhone,name, email, structure])
       .then(() => console.log('User created ! Structure : '+structure+' and Name : '+name))
       .catch(e => console.log(e));
   }
 
-  public showAlert():void {
+  public showAlert(txt):void {
     let alert = this.alertCtrl.create({
       title: 'Authentification',
-      subTitle: 'Merci de renseigner au moins le champs "structure" !',
+      subTitle: txt,
       buttons: ['OK']
     });
     alert.present();

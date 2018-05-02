@@ -34,9 +34,11 @@ export class Dateformater {
   convertToTime(timestamp){
     var myDate = new Date (timestamp*1000);
     var hours = myDate.getHours();
-    var minutes = myDate.getMinutes();
+    var minutes = this.zeroPad(myDate.getMinutes(),2);
     return hours+':'+minutes;
   }
+
+
 
   zeroPad(num, places) {
     var zero = places - num.toString().length + 1;

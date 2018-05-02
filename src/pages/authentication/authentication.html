@@ -1,4 +1,3 @@
-
 <ion-header>
 
   <ion-navbar>
@@ -9,26 +8,31 @@
 
 
 <ion-content padding>
-    <div>
-      <p>Pour utiliser l'application Apex, merci de renseigner ces informations.</p>
-    </div>
-    <div>
-        <ion-item>
-          <ion-label color="primary" stacked>Votre entreprise*</ion-label>
-          <ion-input placeholder="nom de la entreprise" [(ngModel)]="structure"></ion-input>
-        </ion-item>
-      </div>
-      <div>
-        <ion-item>
-          <ion-label color="primary" stacked>Votre nom</ion-label>
-          <ion-input placeholder="nom utilisateur" [(ngModel)]="name"></ion-input>
-        </ion-item>
-      </div>
-
+  <div>
+    <p>Pour utiliser l'application Apex, merci de renseigner ces informations.</p>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>Votre nom*</ion-label>
+      <ion-input placeholder="nom utilisateur" [(ngModel)]="name"></ion-input>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>Votre entreprise*</ion-label>
+      <ion-input placeholder="nom de la entreprise" [(ngModel)]="structure"></ion-input>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>Votre email*</ion-label>
+      <ion-input placeholder="email utilisateur" [(ngModel)]="email"></ion-input>
+    </ion-item>
+  </div>
 </ion-content>
 
 <ion-footer>
-    <ion-toolbar>
-      <button ion-button block color="secondary" (tap)="saveUser()">Sauver les informations</button>
-    </ion-toolbar>
-  </ion-footer>
+  <ion-toolbar>
+    <button ion-button block color="secondary" (tap)="saveUser()">Sauver les informations</button>
+  </ion-toolbar>
+</ion-footer>

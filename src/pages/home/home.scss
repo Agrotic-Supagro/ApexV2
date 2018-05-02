@@ -9,6 +9,12 @@ page-home {
     .scoremauvais{
         background-color: rgba(247, 150, 150, 0.616);
     }
+    .scorehorrible{
+        background-color: rgba(0, 0, 0, 0.308);
+    }
+    .datebad{
+        color: rgb(221, 221, 221);
+    }
 
     .title{
         font-weight: bold;
@@ -36,5 +42,10 @@ page-home {
     .tableGPS{
         text-align: center;
         width: 100%;
+    }
+
+    .result{
+        width: 100%;
+        color: rgb(0, 0, 0);
     }
 }

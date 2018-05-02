@@ -25,7 +25,9 @@ export class ApexSaisieRangPage {
   public guidsession: string;
   public idUser: string;
   public numeroSession: number;
-  public nameSession: string;
+  public nomParcelle: string;
+  public latitude: number;
+  public longitude: number;
 
   constructor(
     public vibration: Vibration,
@@ -52,6 +54,8 @@ export class ApexSaisieRangPage {
   private initializeVariable():void{
     this.guidsession = this.guid.getGuid();
     console.log('GUID Session : '+this.guid.getGuid());
+    this.latitude = this.locationTracker.getLatitude();
+    this.longitude = this.locationTracker.getLongitude();
   }
 
   private openDataBase(): void {
@@ -85,11 +89,11 @@ export class ApexSaisieRangPage {
 
   async saveObservation(apexvalue){
     console.log('timestamp : '+this.dateformater.gettimestamp());
-    console.log('Lat : '+this.locationTracker.getLatitude());
-    console.log('Lng : '+this.locationTracker.getLongitude());
+    console.log('Lat : '+this.latitude);
+    console.log('Lng : '+this.longitude);
 
-    var lat = this.locationTracker.getLatitude();
-    var lng = this.locationTracker.getLongitude();
+    var lat = this.latitude;
+    var lng = this.longitude;
     var timestamp = this.dateformater.gettimestamp();
     var apex = apexvalue; 
 
@@ -101,26 +105,33 @@ export class ApexSaisieRangPage {
 
   async saveSession(){
     var idSession = this.guidsession;
-    var name = 'Session N°' + this.numeroSession;
-    if (this.nameSession != null) {
-      name = this.nameSession; 
+    var nomParcelle = 'Session N°' + this.numeroSession;
+    if (this.nomParcelle != null) {
+      nomParcelle = this.nomParcelle; 
     } 
-    var score = this.computeScore();
     var date = this.dateformater.gettimestamp();
+    var globalLatitude = this.latitude;
+    var globalLongitude = this.longitude;
+    var apexP = this.p_array;
+    var apexR = this.r_array;
+    var apexC = this.c_array;
+    var iac = this.computeIAC();
+    var moyenne = this.computeMoyenne();
+    var tauxApexP = this.computeTx();
     var userId = this.idUser;
 
     console.log('GUID Session : '+ idSession);
-    console.log('Name Session : '+ name);
+    console.log('Name Session : '+ nomParcelle);
     console.log('Date Session : '+ date);
     console.log('userId Session : '+ userId);
 
-    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, userId) VALUES(?,?,?,?,?)',
-     [idSession,name,score,date,userId])
+    this.db.executeSql('INSERT INTO `Session` (idSession, nomParcelle, date, globalLatitude, globalLongitude, apexP, apexR, apexC, iac, moyenne, tauxApexP, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+     [idSession,nomParcelle,date,globalLatitude,globalLongitude,apexP,apexR,apexC,iac,moyenne,tauxApexP,userId])
       .then(() => console.log('insert session OK'))
       .catch(e => console.log('fail insert session : '+e));
   }
 
-  public computeScore():any{
+  public computeIAC():any{
     let p:number = +this.p_array;
     let r:number = +this.r_array;
     let c:number = +this.c_array;
@@ -128,7 +139,27 @@ export class ApexSaisieRangPage {
     let p_purcent = (p * 100 / totalentity)/100;
     let r_purcent = (r * 100 / totalentity)/100;
     let c_purcent = (c * 100 / totalentity)/100;
-    return (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent));
+    let iac = (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent))
+    console.log('compute iac : '+iac);
+    return iac;
+  }
+
+  public computeMoyenne():number{
+    var apexP:number = +this.p_array;
+    var apexR:number = +this.r_array;
+    var apexC:number = +this.c_array;
+    var moyenne = ((apexP*2)+(apexR))/(apexC+apexP+apexR);
+    console.log('compute moyenne : '+moyenne);
+    return moyenne;
+  }
+
+  public computeTx():number {
+    var apexP:number = +this.p_array;
+    var apexR:number = +this.r_array;
+    var apexC:number = +this.c_array;
+    var tauxApexP = apexP/(apexC+apexP+apexR)*100;
+    console.log('compute taux Apex P : '+tauxApexP);
+    return tauxApexP;
   }
 
   async saveObservationLoops(){
@@ -164,10 +195,12 @@ export class ApexSaisieRangPage {
   }
 
   showResult() {
-    var score = this.convertInteger(this.computeScore());
+    var iac = this.convertInteger(this.computeIAC());
+    var moyenne = this.computeMoyenne().toFixed(2);
+    var tauxApexP = this.computeTx().toFixed(2);
     let alert = this.alertCtrl.create({
-      title: 'IAC : '+score,
-      //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
+      title: 'IAC : '+iac,
+      subTitle: 'Moyenne : '+moyenne+' <br/> Taux Apex P : '+tauxApexP,
       buttons: ['OK']
     });
     alert.present();

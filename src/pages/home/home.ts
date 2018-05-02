@@ -104,13 +104,13 @@ export class HomePage {
   }
 
   private createTables(): void {
-    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `structure` TEXT NOT NULL, `name` TEXT, `serve` INTEGER DEFAULT 0)', {})
+    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0 )', {})
       .then(() => {
         console.log('User table created');
-        this.db.executeSql('CREATE TABLE IF NOT EXISTS `Session` ( `idSession` TEXT NOT NULL UNIQUE, `name` TEXT, `score` INTEGER NOT NULL, `date` INTEGER NOT NULL, `userId` TEXT NOT NULL, `serve`	INTEGER DEFAULT 0, PRIMARY KEY(`idSession`), FOREIGN KEY(`userId`) REFERENCES `User`(`idUser`) )', {})
+        this.db.executeSql('CREATE TABLE IF NOT EXISTS `Session`( `idSession` TEXT NOT NULL UNIQUE, `nomParcelle` TEXT, `date` INTEGER NOT NULL, `globalLatitude` REAL, `globalLongitude` REAL, `apexP` INTEGER, `apexR` INTEGER, `apexC` INTEGER, `iac` REAL, `moyenne` REAL, `tauxApexP` REAL, `userId` TEXT NOT NULL, `serve` INTEGER DEFAULT 0, FOREIGN KEY(`userId`) REFERENCES `User`(`idUser`), PRIMARY KEY(`idSession`) )', {})
           .then(() => {
             console.log('Session table created');
-            this.db.executeSql('CREATE TABLE IF NOT EXISTS `Observation` ( `idObservation` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `apexValue` TEXT NOT NULL, `date` INTEGER NOT NULL, `latitude` NUMERIC NOT NULL, `longitude` NUMERIC NOT NULL, `sessionId` TEXT NOT NULL, `serve`	INTEGER DEFAULT 0, FOREIGN KEY(`sessionId`) REFERENCES `Session`(`idSession`) )', {})
+            this.db.executeSql('CREATE TABLE IF NOT EXISTS `Observation` ( `idObservation` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `apexValue` TEXT NOT NULL, `date` INTEGER NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `sessionId` TEXT NOT NULL, `serve`	INTEGER DEFAULT 0, FOREIGN KEY(`sessionId`) REFERENCES `Session`(`idSession`) )', {})
               .then(() => {
                 console.log('Observation table created');
                 this.retrieveUser();
@@ -136,8 +136,9 @@ export class HomePage {
             for (let i = 0; i < data.rows.length; i++) {
               this.dataUser.push({
                 id: data.rows.item(i).idUser,
-                structure: data.rows.item(i).structure,
-                name: data.rows.item(i).name
+                name: data.rows.item(i).name,
+                email: data.rows.item(i).email,
+                structure: data.rows.item(i).structure
               });
             }
             console.log('idUser : ' + this.dataUser[0].id);
@@ -154,7 +155,7 @@ export class HomePage {
     var filter = this.filter;
     console.log(this.filter);
     var sqlrequest = 'select * from `Session` order by ' + filter + ' desc';
-    if (filter == 'name') {
+    if (filter == 'nomParcelle') {
       sqlrequest = 'select * from `Session` order by ' + filter + ' asc';
     }
 
@@ -171,13 +172,26 @@ export class HomePage {
             for (let i = 0; i < data.rows.length; i++) {
               var date = this.dateformater.convertToDate(data.rows.item(i).date);
               var time = this.dateformater.convertToTime(data.rows.item(i).date);
-              var score = this.convertInteger(data.rows.item(i).score);
+              var iac = this.convertInteger(data.rows.item(i).iac);
+              var moyenne = data.rows.item(i).moyenne.toFixed(2);
+              var tauxApexP = data.rows.item(i).tauxApexP.toFixed(1);
+              var affichage = this.computeAffichage(moyenne,tauxApexP,iac);
+              console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+              console.log(affichage);
               this.dataSesion.push({
                 id: data.rows.item(i).idSession,
-                name: data.rows.item(i).name,
-                score: score,
+                nomParcelle: data.rows.item(i).nomParcelle,
+                globalLatitude: data.rows.item(i).globalLatitude,
+                globalLongitude: data.rows.item(i).globalLongitude,
+                apexP: data.rows.item(i).apexP,
+                apexR: data.rows.item(i).apexR,
+                apexC: data.rows.item(i).apexC,
+                moyenne: moyenne,
+                tauxApexP: tauxApexP,
+                iac: iac,
                 date: date,
                 time: time,
+                affichage:affichage,
                 userId: data.rows.item(i).userId
               });
             }
@@ -185,6 +199,22 @@ export class HomePage {
         }
       })
       .catch(e => console.log('fail sql retrieve Sessions ' + e));
+  }
+
+  public computeAffichage(moyenne, tx, iac){
+    if (moyenne > 1.5) {
+      return 0;
+    } else {
+      if (tx > 5) {
+        return 1;
+      } else {
+        if (iac < 80) {
+          return 2;
+        } else {
+          return 3;
+        }
+      }
+    }
   }
 
   public convertInteger(x) {
@@ -273,9 +303,10 @@ export class HomePage {
             for (let i = 0; i < data.rows.length; i++) {
               dataUsersOption = {
                 key: 'user',
-                idUser: data.rows.item(i).idUser,
-                structure: data.rows.item(i).structure,
-                name: data.rows.item(i).name
+                id: data.rows.item(i).idUser,
+                name: data.rows.item(i).name,
+                email: data.rows.item(i).email,
+                structure: data.rows.item(i).structure
               };
               this.postEntryToServe(dataUsersOption);
             }
@@ -332,9 +363,16 @@ export class HomePage {
               dataSession = {
                 key: 'session',
                 idSession: data.rows.item(i).idSession,
-                name: data.rows.item(i).name,
-                score: data.rows.item(i).score,
+                nomParcelle: data.rows.item(i).nomParcelle,
+                iac: data.rows.item(i).iac,
                 date: data.rows.item(i).date,
+                globalLatitude: data.rows.item(i).globalLatitude,
+                globalLongitude: data.rows.item(i).globalLongitude,
+                apexP: data.rows.item(i).apexP,
+                apexR: data.rows.item(i).apexR,
+                apexC: data.rows.item(i).apexC,
+                moyenne: data.rows.item(i).moyenne,
+                tauxApexP: data.rows.item(i).tauxApexP,
                 userId: data.rows.item(i).userId
               };
               this.postEntryToServe(dataSession);

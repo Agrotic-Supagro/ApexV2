@@ -9,7 +9,7 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { GUIDGenerator } from '../../services/guidgenerator.service';
 import { Dateformater } from '../../services/dateformater.service';
 
-const THRESHOLD_APEX: number = 50;
+const THRESHOLD_APEX: number = 5;
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
 @IonicPage()
@@ -29,7 +29,8 @@ export class ApexmodalPage {
   public idUser: string;
   public nameSession: string;
   public numeroSession: number;
-
+  public tableLat = [];
+  public tableLng = [];
   private leavemodal: boolean = false;
 
   constructor(
@@ -85,7 +86,7 @@ export class ApexmodalPage {
 
   public apexAlert() {
     let alert = this.alertCtrl.create({
-      title: 'Apex méthode',
+      title: 'Méthode des Apex',
       subTitle: 'Pour calculer l\'Indice d\'Arrêt de Croissance (IAC), il est nécessaire de réaliser des observations sur au moins '+this.thresholdApex+' apex. Vous n\'avez réalisé pour l\'instant que '+this.numberApex+' observations.',
       buttons: ['Fermer']
     });
@@ -115,6 +116,8 @@ export class ApexmodalPage {
 
     var lat = this.locationTracker.getLatitude();
     var lng = this.locationTracker.getLongitude();
+    this.tableLat.push(lat);
+    this.tableLng.push(lng);
     var timestamp = this.dateformater.gettimestamp();
     var apex = apexvalue; 
     var sessionId = this.guidsession;
@@ -128,16 +131,25 @@ export class ApexmodalPage {
 
   public updateSession():void{
     var idSession = this.guidsession;
-    var name = 'Session N°' + this.numeroSession;
+    var nomParcelle = 'Session N°' + this.numeroSession;
     if (this.nameSession != null) {
-      name = this.nameSession; 
+      nomParcelle = this.nameSession; 
     } 
 
-    var score = this.computeScore();
+    var iac = this.computeIAC();
+    var geolocation = this.computeGlobalLocation().lat;
+    var globalLatitude = geolocation.lat;
+    var globalLongitude = geolocation.lng;
+    var moyenne = this.computeMoyenne();
+    var tauxApexP = this.computeTx();
+    var apexP = this.p_array;
+    var apexR = this.r_array;
+    var apexC = this.c_array;
 
     console.log('try update Session table')
  
-    this.db.executeSql('UPDATE `Session` SET name = ?, score = ? WHERE idSession = ?', [name, score, idSession])
+    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, globalLatitude=?, globalLongitude=?, apexP=?, apexR=?, apexC=?  WHERE idSession=?', 
+    [nomParcelle, iac, moyenne, tauxApexP, globalLatitude, globalLongitude, apexP, apexR, apexC, idSession])
     .then(() => console.log('Score updated'))
     .catch(e => console.log(e));
 
@@ -161,27 +173,82 @@ export class ApexmodalPage {
 
   public createSession():void{
     var idSession = this.guidsession;
-    var name = ""; 
-    var score = 0;
+    var nomParcelle = ""; 
     var date = this.dateformater.gettimestamp();
+    var globalLatitude = 0;
+    var globalLongitude = 0;
+    var apexP = 0;
+    var apexR = 0;
+    var apexC = 0;
+    var iac = 0;
+    var moyenne = 0;
+    var tauxApexP = 0;
     var userId = this.idUser;
 
     console.log('GUID Session : '+ idSession);
-    console.log('Name Session : '+ name);
+    console.log('Name Session : '+ nomParcelle);
     console.log('Date Session : '+ date);
     console.log('userId Session : '+ userId);
 
-    this.db.executeSql('INSERT INTO `Session` (idSession, name, score, date, userId) VALUES(?,?,?,?,?)',
-     [idSession,name,score,date,userId])
+    this.db.executeSql('INSERT INTO `Session` (idSession, nomParcelle, date, globalLatitude, globalLongitude, apexP, apexR, apexC, iac, moyenne, tauxApexP, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+     [idSession,nomParcelle,date,globalLatitude,globalLongitude,apexP,apexR,apexC,iac,moyenne,tauxApexP,userId])
       .then(() => console.log('insert session OK'))
       .catch(e => console.log('fail insert session : '+e));
   }
-  public computeScore():any{
-    let totalentity = this.p_array + this.r_array + this.c_array;
-    let p_purcent = (this.p_array * 100 / totalentity)/100;
-    let r_purcent = (this.r_array * 100 / totalentity)/100;
-    let c_purcent = (this.c_array * 100 / totalentity)/100;
-    return (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent));
+
+  public computeIAC():any{
+    let p:number = +this.p_array;
+    let r:number = +this.r_array;
+    let c:number = +this.c_array;
+    let totalentity = p + r + c;
+    let p_purcent = (p * 100 / totalentity)/100;
+    let r_purcent = (r * 100 / totalentity)/100;
+    let c_purcent = (c * 100 / totalentity)/100;
+    let iac = (100/3)*((1-p_purcent)+(r_purcent)+(2*c_purcent))
+    console.log('compute iac : '+iac);
+    return iac;
+  }
+
+  public computeGlobalLocation(): any {
+    var countLat = this.tableLat.length;
+    var countLng = this.tableLng.length;
+    var latTemp:number = 0;
+    var lngTemp:number = 0;
+
+    this.tableLat.forEach(element => {
+      latTemp+=element;
+    });
+
+    this.tableLng.forEach(element => {
+      lngTemp+=element;
+    });
+
+    var lat = latTemp/countLat;
+    var lng = lngTemp/countLng;
+    var globalGeolocation = {
+      lat:lat,
+      lng:lng
+    };
+    console.log('Globale Geolocation - Lat : '+globalGeolocation.lat+' Lng : '+globalGeolocation.lng)
+    return globalGeolocation;
+  }
+
+  public computeMoyenne():number{
+    var apexP:number = +this.p_array;
+    var apexR:number = +this.r_array;
+    var apexC:number = +this.c_array;
+    var moyenne = ((apexP*2)+(apexR))/(apexC+apexP+apexR);
+    console.log('compute moyenne : '+moyenne);
+    return moyenne;
+  }
+
+  public computeTx():number {
+    var apexP:number = +this.p_array;
+    var apexR:number = +this.r_array;
+    var apexC:number = +this.c_array;
+    var tauxApexP = apexP/(apexC+apexP+apexR)*100;
+    console.log('compute taux Apex P : '+tauxApexP);
+    return tauxApexP;
   }
 
   public closeModal(){
@@ -191,9 +258,9 @@ export class ApexmodalPage {
     this.viewCtrl.dismiss();
   }
   showResult() {
-    var score = this.convertInteger(this.computeScore());
+    var iac = this.convertInteger(this.computeIAC());
     let alert = this.alertCtrl.create({
-      title: 'IAC : '+score,
+      title: 'IAC : '+iac,
       //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
       buttons: ['OK']
     });
