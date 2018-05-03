@@ -90,6 +90,18 @@ export class HomePage {
     apexSaisie.present();
   }
 
+  public openEditSession(idsessionUpdate) {
+    var data = {
+      iduser: this.dataUser[0].id,
+      idsession: idsessionUpdate
+    };
+    var editSaisie = this.modalCtrl.create('EditPage', data);
+    editSaisie.onDidDismiss(() => {
+      this.retrieveSession();
+    });
+    editSaisie.present();
+  }
+
   private createDatabaseApex(): void {
     this.sqlite.create({
         name: DATABASE_APEX_NAME,
@@ -176,8 +188,6 @@ export class HomePage {
               var moyenne = data.rows.item(i).moyenne.toFixed(2);
               var tauxApexP = data.rows.item(i).tauxApexP.toFixed(1);
               var affichage = this.computeAffichage(moyenne,tauxApexP,iac);
-              console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-              console.log(affichage);
               this.dataSesion.push({
                 id: data.rows.item(i).idSession,
                 nomParcelle: data.rows.item(i).nomParcelle,

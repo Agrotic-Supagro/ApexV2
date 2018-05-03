@@ -1,0 +1,42 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Modifier une parcelle</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>Nom de la parcelle</ion-label>
+      <ion-input type="text" placeholder="nomParcelle" [(ngModel)]="nomParcelle"></ion-input>
+    </ion-item>
+  </div>
+  <br/>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>APEX P : pousse active</ion-label>
+      <ion-input type="number" placeholder="p_array" [(ngModel)]="p_array"></ion-input>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>APEX R : rameau croissance ralentie</ion-label>
+      <ion-input type="number" placeholder="r_array" [(ngModel)]="r_array"></ion-input>
+    </ion-item>
+  </div>
+  <div>
+    <ion-item>
+      <ion-label color="primary" stacked>APEX C : rameau tombé ou sec</ion-label>
+      <ion-input type="number" placeholder="c_array" [(ngModel)]="c_array"></ion-input>
+    </ion-item>
+  </div>
+
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <button ion-button block color="secondary" (tap)="closeModal()">Modifier la parcelle</button>
+  </ion-toolbar>
+</ion-footer>

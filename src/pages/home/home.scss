@@ -1,5 +1,8 @@
 page-home {
 
+    .homePage{
+        margin-top: 0.4em !important;
+    }
     .scorebon{
         background-color: rgba(150, 247, 155, 0.616);
     }
@@ -18,10 +21,6 @@ page-home {
 
     .title{
         font-weight: bold;
-    }
-
-    .leftsite{
-        float:right;
     }
 
     .deletebutton{
@@ -47,5 +46,9 @@ page-home {
     .result{
         width: 100%;
         color: rgb(0, 0, 0);
+    }
+
+    .iconslice{
+        font-size: 30px;
     }
 }

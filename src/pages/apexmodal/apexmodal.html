@@ -1,12 +1,25 @@
 
 
 <ion-content padding class="card-background-page">
-  <div>
-    <ion-item>
-      <ion-label color="dark" stacked>Nom de la parcelle</ion-label>
-      <ion-input placeholder="optionnel" [(ngModel)]="nameSession" (keyup.enter)="handleLogin()"></ion-input>
-    </ion-item>
-  </div>
+    <div>
+        (Optionel) Nom de la parcelle
+        <table class="parcelle">
+            <tr>
+              <td>
+                <ion-item>
+                  <ion-label>Parcelle</ion-label>
+                  <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()" >
+                  <ion-option *ngFor="let nomParcelle of selectParcelle" [value] = "nomParcelle.nom" [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
+                  </ion-select>
+                </ion-item>
+              </td>
+              <td>
+                <button ion-button small (tap)="addParcelle()">
+                    <ion-icon name="add-circle"></ion-icon>
+                </button></td>
+            </tr>
+          </table>
+    </div>
 
   <ion-card (click)="addvalue('P')">
     <img src="assets/imgs/stadeP.gif" class="card-img" />

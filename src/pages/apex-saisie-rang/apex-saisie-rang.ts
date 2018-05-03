@@ -28,6 +28,7 @@ export class ApexSaisieRangPage {
   public nomParcelle: string;
   public latitude: number;
   public longitude: number;
+  public selectParcelle: any[];
 
   constructor(
     public vibration: Vibration,
@@ -41,6 +42,7 @@ export class ApexSaisieRangPage {
     public guid: GUIDGenerator) {
 
       console.log('try open DB');
+      this.selectParcelle = [];
       this.openDataBase();
       this.initializeVariable();
       this.idUser = this.navParams.get('iduser');
@@ -56,6 +58,7 @@ export class ApexSaisieRangPage {
     console.log('GUID Session : '+this.guid.getGuid());
     this.latitude = this.locationTracker.getLatitude();
     this.longitude = this.locationTracker.getLongitude();
+    
   }
 
   private openDataBase(): void {
@@ -67,6 +70,7 @@ export class ApexSaisieRangPage {
         console.log('DB opened !');
         this.db = db;
         this.getNextIndexSession();
+        this.retrieveNomParcelle();
       })
       .catch(e => console.log(e));
   }
@@ -208,5 +212,59 @@ export class ApexSaisieRangPage {
   public convertInteger(x) {
     //return Number.parseFloat(x).toFixed(2);
     return Number.parseInt(x);
+  }
+
+  //Controle liste déroulante + ajout
+  public retrieveNomParcelle() {
+    this.db.executeSql('select distinct nomParcelle from `Session` order by nomParcelle asc', {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            console.log('Push data session');
+            for (let i = 0; i < data.rows.length; i++) {
+              this.selectParcelle.push({
+                nom: data.rows.item(i).nomParcelle,
+                check:false
+              });
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail sql retrieve Sessions ' + e));
+  }
+
+  public addParcelle() {
+    let alert = this.alertCtrl.create({
+      title: 'Nouvelle parcelle',
+      inputs: [{
+        name: 'nomparcelle',
+        placeholder: 'nom de la parelle'
+      }],
+      buttons: [{
+          text: 'Annuler',
+          role: 'Annuler',
+          handler: data => {
+            this.nomParcelle = null;
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ajouter',
+          handler: data => {
+            this.selectParcelle.push({nom:data.nomparcelle, check:true});
+            this.nomParcelle = data.nomparcelle;
+          }
+        }
+      ]
+    });
+    alert.present();
+}
+
+  public onCancel(){
+    this.nomParcelle = null;
   }
 }

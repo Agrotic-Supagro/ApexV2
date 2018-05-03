@@ -24,6 +24,9 @@ export class AuthenticationPage {
     public alertCtrl: AlertController,
     private sqlite: SQLite) {
       this.openDB();
+      this.showAlert('Cette application a été développée dans le cadre de travaux de recherche. '+
+      'En l\'utilisant, vous acceptez que les données, une fois anonymisées, puissent être utilisées pour des travaux de recherche. '+
+      'L\'application est actuellement en version Béta. N\'hésitez pas à faire remonter des dysfonctionnements que vous pourriez observer.');
   }
 
   ionViewDidLoad() {
@@ -80,7 +83,7 @@ export class AuthenticationPage {
 
   public showAlert(txt):void {
     let alert = this.alertCtrl.create({
-      title: 'Authentification',
+      title: 'Apex',
       subTitle: txt,
       buttons: ['OK']
     });

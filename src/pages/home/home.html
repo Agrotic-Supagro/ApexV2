@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="homePage">
   <img src="assets/imgs/apex.png" class="imglogo" />
   <button ion-button block (tap)="openModal()">Saisie en parcelle</button>
   <button ion-button block color="secondary" (tap)="openSaisieApex()">Saisie en bout de rang</button>
@@ -21,84 +21,117 @@
 
   <h3 class="centerclass">Liste des sessions effectuées</h3>
   <ion-row radio-group [(ngModel)]="filter">
-      <ion-col>
-        <ion-item>
-          Tri par : 
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-          <ion-label>Date</ion-label>
-          <ion-radio checked="true" value="date" (ionSelect)="retrieveSession()"></ion-radio>
-        </ion-item>
-      </ion-col>
-      <ion-col>
-        <ion-item>
-         <ion-label>Nom</ion-label>
-          <ion-radio value="nomParcelle" (ionSelect)="retrieveSession()"></ion-radio>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+    <ion-col>
+      <ion-item>
+        Tri par :
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Date</ion-label>
+        <ion-radio checked="true" value="date" (ionSelect)="retrieveSession()"></ion-radio>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Nom</ion-label>
+        <ion-radio value="nomParcelle" (ionSelect)="retrieveSession()"></ion-radio>
+      </ion-item>
+    </ion-col>
+  </ion-row>
 
   <ion-list>
-    <ion-item *ngFor="let dataSess of dataSesion">
-      <ion-card *ngIf="dataSess.affichage == 0" class="scorebon">
-        <ion-card-content>
-          <span class="title">Nom : {{dataSess.nomParcelle}}</span><span class="leftsite"><ion-icon class="deletebutton" ios="ios-remove-circle" md="md-remove-circle" (tap)="deleteEntry(dataSess.id)"></ion-icon></span>
-          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-          <table class="result">
-            <tr>
-              <td>IAC : <b>{{dataSess.iac}}</b></td>
-              <td>Moy : <b>{{dataSess.moyenne}}</b></td>
-              <td>Taux P : <b>{{dataSess.tauxApexP}}</b></td>
-            </tr>
-          </table>
-        </ion-card-content>
-      </ion-card>
+    <ion-item-sliding #item *ngFor="let dataSess of dataSesion">
 
-      <ion-card *ngIf="dataSess.affichage == 1" class="scoremoyen">
-        <ion-card-content>
-          <span class="title">Nom : {{dataSess.nomParcelle}}</span><span class="leftsite"><ion-icon class="deletebutton" ios="ios-remove-circle" md="md-remove-circle" (tap)="deleteEntry(dataSess.id)"></ion-icon></span>
-          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-          <table class="result">
-            <tr>
-              <td>IAC : <b>{{dataSess.iac}}</b></td>
-              <td>Moy : <b>{{dataSess.moyenne}}</b></td>
-              <td>Taux P : <b>{{dataSess.tauxApexP}}</b></td>
-            </tr>
-          </table>
-        </ion-card-content>
-      </ion-card>
-
-      <ion-card *ngIf="dataSess.affichage == 2" class="scoremauvais">
-        <ion-card-content>
-          <span class="title">Nom : {{dataSess.nomParcelle}}</span><span class="leftsite"><ion-icon class="deletebutton" ios="ios-remove-circle" md="md-remove-circle" (tap)="deleteEntry(dataSess.id)"></ion-icon></span>
-          <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-          <table class="result">
-            <tr>
-              <td>IAC : <b>{{dataSess.iac}}</b></td>
-              <td>Moy : <b>{{dataSess.moyenne}}</b></td>
-              <td>Taux P : <b>{{dataSess.tauxApexP}}</b></td>
-            </tr>
-          </table>
-        </ion-card-content>
-      </ion-card>
-
-      <ion-card *ngIf="dataSess.affichage == 3" class="scorehorrible">
+      <ion-item >
+        <ion-card *ngIf="dataSess.affichage == 0" class="scorebon">
           <ion-card-content>
-            <span class="title">Nom : {{dataSess.nomParcelle}}</span><span class="leftsite"><ion-icon class="deletebutton" ios="ios-remove-circle" md="md-remove-circle" (tap)="deleteEntry(dataSess.id)"></ion-icon></span>
-            <p class="datebad">Le {{dataSess.date}} à {{dataSess.time}}</p>
+            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
+            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
             <table class="result">
               <tr>
-                <td>IAC : <b>{{dataSess.iac}}</b></td>
-                <td>Moy : <b>{{dataSess.moyenne}}</b></td>
-                <td>Taux P : <b>{{dataSess.tauxApexP}}</b></td>
+                <td>IAC :
+                  <b>{{dataSess.iac}}</b>
+                </td>
+                <td>Moy :
+                  <b>{{dataSess.moyenne}}</b>
+                </td>
+                <td>Taux P :
+                  <b>{{dataSess.tauxApexP}}</b>
+                </td>
               </tr>
             </table>
           </ion-card-content>
         </ion-card>
 
-    </ion-item>
+        <ion-card *ngIf="dataSess.affichage == 1" class="scoremoyen">
+          <ion-card-content>
+            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
+            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
+            <table class="result">
+              <tr>
+                <td>IAC :
+                  <b>{{dataSess.iac}}</b>
+                </td>
+                <td>Moy :
+                  <b>{{dataSess.moyenne}}</b>
+                </td>
+                <td>Taux P :
+                  <b>{{dataSess.tauxApexP}}</b>
+                </td>
+              </tr>
+            </table>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="dataSess.affichage == 2" class="scoremauvais">
+          <ion-card-content>
+            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
+            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
+            <table class="result">
+              <tr>
+                <td>IAC :
+                  <b>{{dataSess.iac}}</b>
+                </td>
+                <td>Moy :
+                  <b>{{dataSess.moyenne}}</b>
+                </td>
+                <td>Taux P :
+                  <b>{{dataSess.tauxApexP}}</b>
+                </td>
+              </tr>
+            </table>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card *ngIf="dataSess.affichage == 3" class="scorehorrible">
+          <ion-card-content>
+            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
+            <p class="datebad">Le {{dataSess.date}} à {{dataSess.time}}</p>
+            <table class="result">
+              <tr>
+                <td>IAC :
+                  <b>{{dataSess.iac}}</b>
+                </td>
+                <td>Moy :
+                  <b>{{dataSess.moyenne}}</b>
+                </td>
+                <td>Taux P :
+                  <b>{{dataSess.tauxApexP}}</b>
+                </td>
+              </tr>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-item>
+
+      <ion-item-options side="left">
+          <button ion-button color="danger" (click)="deleteEntry(dataSess.id)"><ion-icon name="trash" class="iconslice"></ion-icon></button>
+       </ion-item-options>
+      <ion-item-options side="right">
+          <button ion-button color="secondary" (click)="openEditSession(dataSess.id)"><ion-icon name="create" class="iconslice"></ion-icon></button>
+        </ion-item-options>
+      </ion-item-sliding>
   </ion-list>
 
 </ion-content>

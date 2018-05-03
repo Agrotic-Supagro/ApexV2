@@ -27,11 +27,12 @@ export class ApexmodalPage {
   public thresholdApex: number = THRESHOLD_APEX;
   public guidsession: string;
   public idUser: string;
-  public nameSession: string;
+  public nomParcelle: string;
   public numeroSession: number;
   public tableLat = [];
   public tableLng = [];
   private leavemodal: boolean = false;
+  public selectParcelle: any[];
 
   constructor(
     public vibration: Vibration,
@@ -45,6 +46,7 @@ export class ApexmodalPage {
     public dateformater: Dateformater,
     public guid: GUIDGenerator) {
 
+      this.selectParcelle = [];
       this.keyboard.hideKeyboardAccessoryBar(true);
       this.initializeVariable();
       console.log(this.navParams.get('iduser'));
@@ -78,6 +80,7 @@ export class ApexmodalPage {
       .then((db: SQLiteObject) => {
         console.log('DB opened !');
         this.db = db;
+        this.retrieveSession();
         this.createSession();
         this.getNextIndexSession();
       })
@@ -132,8 +135,8 @@ export class ApexmodalPage {
   public updateSession():void{
     var idSession = this.guidsession;
     var nomParcelle = 'Session N°' + this.numeroSession;
-    if (this.nameSession != null) {
-      nomParcelle = this.nameSession; 
+    if (this.nomParcelle != null) {
+      nomParcelle = this.nomParcelle; 
     } 
 
     var iac = this.computeIAC();
@@ -332,4 +335,58 @@ export class ApexmodalPage {
     .catch(e => console.log(e));
   }
 
+
+  //Controle liste déroulante + ajout
+  public retrieveSession() {
+    this.db.executeSql('select distinct nomParcelle from `Session` order by nomParcelle asc', {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            console.log('Push data session');
+            for (let i = 0; i < data.rows.length; i++) {
+              this.selectParcelle.push({
+                nom: data.rows.item(i).nomParcelle,
+                check:false
+              });
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail sql retrieve Sessions ' + e));
+  }
+
+  public addParcelle() {
+    let alert = this.alertCtrl.create({
+      title: 'Nouvelle parcelle',
+      inputs: [{
+        name: 'nomparcelle',
+        placeholder: 'nom de la parelle'
+      }],
+      buttons: [{
+          text: 'Annuler',
+          role: 'Annuler',
+          handler: data => {
+            this.nomParcelle = null;
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ajouter',
+          handler: data => {
+            this.selectParcelle.push({nom:data.nomparcelle, check:true});
+            this.nomParcelle = data.nomparcelle;
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  public onCancel(){
+    this.nomParcelle = null;
+  }
 }

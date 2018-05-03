@@ -5,7 +5,27 @@
 </ion-header>
 
 <ion-content padding>
+  <div>
+      (Optionel) Nom de la parcelle
+      <table class="parcelle">
+          <tr>
+            <td>
+              <ion-item>
+                <ion-label>Parcelle</ion-label>
+                <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()" >
+                <ion-option *ngFor="let nomParcelle of selectParcelle" [value] = "nomParcelle.nom" [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
+                </ion-select>
+              </ion-item>
+            </td>
+            <td>
+              <button ion-button small (tap)="addParcelle()">
+                  <ion-icon name="add-circle"></ion-icon>
+              </button></td>
+          </tr>
+        </table>
+  </div>
 
+  <br/>
   <div>
     <ion-item>
       <ion-label color="primary" stacked>APEX P : pousse active</ion-label>
@@ -25,14 +45,6 @@
     </ion-item>
   </div>
 
-  <br/>
-
-  <div>
-      <ion-item>
-        <ion-label color="dark" stacked>(Optionel) Nom de la parcelle</ion-label>
-        <ion-input placeholder="nom session" [(ngModel)]="nomParcelle"></ion-input>
-      </ion-item>
-  </div>
 </ion-content>
 
 <ion-footer>
@@ -40,3 +52,4 @@
     <button ion-button block color="secondary" (tap)="closeModal()">Calculer l'indice</button>
   </ion-toolbar>
 </ion-footer>
+
