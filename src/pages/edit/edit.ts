@@ -14,10 +14,11 @@ export class EditPage {
 
   private db: SQLiteObject;
 
-  public c_array: number;
-  public r_array: number;
-  public p_array: number;
+  public apexC: number;
+  public apexR: number;
+  public apexP: number;
   public nomParcelle: string;
+  public nomParcelleSave: string;
   public idUser: string;
   public guidsession: string;
 
@@ -61,9 +62,11 @@ export class EditPage {
             console.log('Push data session');
             for (let i = 0; i < data.rows.length; i++) {
               this.nomParcelle = data.rows.item(i).nomParcelle;
-              this.p_array = data.rows.item(i).apexP;
-              this.r_array = data.rows.item(i).apexR;
-              this.c_array = data.rows.item(i).apexC;
+              this.nomParcelleSave = data.rows.item(i).nomParcelle;
+              this.apexP = data.rows.item(i).apexP;
+              this.apexP = data.rows.item(i).apexP;
+              this.apexR = data.rows.item(i).apexR;
+              this.apexC = data.rows.item(i).apexC;
             }
           }
         }
@@ -77,9 +80,9 @@ export class EditPage {
     var iac = this.computeIAC();
     var moyenne = this.computeMoyenne();
     var tauxApexP = this.computeTx();
-    var apexP = this.p_array;
-    var apexR = this.r_array;
-    var apexC = this.c_array;
+    var apexP = this.apexP;
+    var apexR = this.apexR;
+    var apexC = this.apexC;
 
     console.log('try update Session table')
  
@@ -91,9 +94,9 @@ export class EditPage {
   }
 
   public computeIAC():any{
-    let p:number = +this.p_array;
-    let r:number = +this.r_array;
-    let c:number = +this.c_array;
+    let p:number = +this.apexP;
+    let r:number = +this.apexR;
+    let c:number = +this.apexC;
     let totalentity = p + r + c;
     let p_purcent = (p * 100 / totalentity)/100;
     let r_purcent = (r * 100 / totalentity)/100;
@@ -104,26 +107,42 @@ export class EditPage {
   }
 
   public computeMoyenne():number{
-    var apexP:number = +this.p_array;
-    var apexR:number = +this.r_array;
-    var apexC:number = +this.c_array;
+    var apexP:number = +this.apexP;
+    var apexR:number = +this.apexR;
+    var apexC:number = +this.apexC;
     var moyenne = ((apexP*2)+(apexR))/(apexC+apexP+apexR);
     console.log('compute moyenne : '+moyenne);
     return moyenne;
   }
 
   public computeTx():number {
-    var apexP:number = +this.p_array;
-    var apexR:number = +this.r_array;
-    var apexC:number = +this.c_array;
+    var apexP:number = +this.apexP;
+    var apexR:number = +this.apexR;
+    var apexC:number = +this.apexC;
     var tauxApexP = apexP/(apexC+apexP+apexR)*100;
     console.log('compute taux Apex P : '+tauxApexP);
     return tauxApexP;
   }
 
   public closeModal() {
-    this.updateSession();
-    this.viewCtrl.dismiss();
+    if(this.apexP == null || this.apexP.toString() == "")this.apexP = 0;
+    if(this.apexR == null || this.apexR.toString() == "")this.apexR = 0;
+    if(this.apexC == null || this.apexC.toString() == "")this.apexC = 0;
+    if(this.nomParcelle == null || this.nomParcelle == ""){
+      this.showAlert();
+    }
+    else{
+      this.updateSession();
+      this.viewCtrl.dismiss();
+    }
   }
 
+  public showAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Modifier Parcelle',
+      subTitle: 'Merci de donner un nom à votre parcelle',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 }

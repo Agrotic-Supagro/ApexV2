@@ -262,6 +262,7 @@ export class HomePage {
     this.db.executeSql('DELETE FROM `Session` WHERE idSession = ?', [idSession])
       .then(() => {
         console.log('Session ' + idSession + ' deleted');
+        this.dataSesion = [];
         this.retrieveSession();
       })
       .catch(e => console.log(e));
