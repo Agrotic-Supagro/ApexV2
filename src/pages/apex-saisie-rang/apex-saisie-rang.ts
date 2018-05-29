@@ -91,22 +91,6 @@ export class ApexSaisieRangPage {
     .catch(e => console.log('fail sql retrieve Sessions '+ e));
   }
 
-  async saveObservation(apexvalue){
-    console.log('timestamp : '+this.dateformater.gettimestamp());
-    console.log('Lat : '+this.latitude);
-    console.log('Lng : '+this.longitude);
-
-    var lat = this.latitude;
-    var lng = this.longitude;
-    var timestamp = this.dateformater.gettimestamp();
-    var apex = apexvalue; 
-
-    this.db.executeSql('INSERT INTO `Observation` (apexValue, date, latitude, longitude, sessionId) VALUES(?,?,?,?,?)',
-     [apex,timestamp,lat,lng,this.guidsession])
-      .then(() => console.log('insert observation OK'))
-      .catch(e => console.log('fail insert observation : '+e));
-  }
-
   async saveSession(){
     var idSession = this.guidsession;
     var nomParcelle = 'Session N°' + this.numeroSession;
@@ -166,18 +150,6 @@ export class ApexSaisieRangPage {
     return tauxApexP;
   }
 
-  async saveObservationLoops(){
-    for (let i = 0; i < this.p_array; i++) {
-      this.saveObservation('P');
-    }
-    for (let i = 0; i < this.r_array; i++) {
-      this.saveObservation('R');
-    }
-    for (let i = 0; i < this.c_array; i++) {
-      this.saveObservation('C');
-    }
-  }
-
   public closeModal(){
     if(this.p_array == null)this.p_array = 0;
     if(this.c_array == null)this.c_array = 0;
@@ -187,11 +159,8 @@ export class ApexSaisieRangPage {
       this.viewCtrl.dismiss();
     }
     else{
-      this.saveObservationLoops().then(() => {
-        this.saveSession().then(() => {
-          this.showResult();
-        })
-        .catch();
+      this.saveSession().then(() => {
+        this.showResult();
       })
       .catch();
       this.viewCtrl.dismiss();

@@ -262,18 +262,20 @@ export class ApexmodalPage {
   }
   showResult() {
     var iac = this.convertInteger(this.computeIAC());
+    var moyenne = this.computeMoyenne().toFixed(2);
+    var tauxApexP = this.computeTx().toFixed(2);
     let alert = this.alertCtrl.create({
       title: 'IAC : '+iac,
-      //subTitle: 'Your friend, Obi wan Kenobi, just accepted your friend request!',
+      subTitle: 'Moyenne : '+moyenne+' <br/> Taux Apex P : '+tauxApexP,
       buttons: ['OK']
     });
     alert.present();
   }
+
   public convertInteger(x) {
     //return Number.parseFloat(x).toFixed(2);
     return Number.parseInt(x);
   }
-
 
   ionViewCanLeave(): boolean{
     let totalentity = this.p_array + this.r_array + this.c_array;

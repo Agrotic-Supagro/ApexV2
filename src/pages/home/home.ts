@@ -9,6 +9,9 @@ import { Dateformater } from '../../services/dateformater.service';
 import { Device } from '@ionic-native/device';
 
 import { HTTP } from '@ionic-native/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+
 import { Network } from '@ionic-native/network';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
@@ -27,6 +30,7 @@ export class HomePage {
   private dataSesion: any[];
   public filter: string = 'date';
   public baseURI: string = SERVEUR_APEX_NAME;
+  public testArray = [];
 
   constructor(
     public modalCtrl: ModalController,
@@ -37,18 +41,15 @@ export class HomePage {
     private network: Network,
     public device: Device,
     private http: HTTP,
+    private httpclient:HttpClient,
     public locationTracker: LocationTracker) {
 
     this.createDatabaseApex();
     this.startGeolocation();
+    
   }
-
-  ionViewWillEnter() {
-    if (this.network.type === '4g' || this.network.type === '3g' || this.network.type === 'wifi') {
-      this.checkServeUpdate();
-    }
-  }
-
+  ionViewDidLoad() {}
+  ionViewDidEnter() {}
   ionViewWillLeave() {}
 
 
@@ -64,6 +65,7 @@ export class HomePage {
     var authenticationModal = this.modalCtrl.create('AuthenticationPage');
     authenticationModal.onDidDismiss(() => {
       this.retrieveUser();
+      this.checkServeUpdate();
     });
     authenticationModal.present();
   }
@@ -75,6 +77,7 @@ export class HomePage {
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
     apexModal.onDidDismiss(() => {
       this.retrieveSession();
+      this.checkServeUpdate();
     });
     apexModal.present();
   }
@@ -86,6 +89,7 @@ export class HomePage {
     var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
     apexSaisie.onDidDismiss(() => {
       this.retrieveSession();
+      this.checkServeUpdate();
     });
     apexSaisie.present();
   }
@@ -98,6 +102,7 @@ export class HomePage {
     var editSaisie = this.modalCtrl.create('EditPage', data);
     editSaisie.onDidDismiss(() => {
       this.retrieveSession();
+      this.checkServeUpdate();
     });
     editSaisie.present();
   }
@@ -166,9 +171,11 @@ export class HomePage {
   public retrieveSession() {
     var filter = this.filter;
     console.log(this.filter);
-    var sqlrequest = 'select * from `Session` order by ' + filter + ' desc';
+    var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' desc';
     if (filter == 'nomParcelle') {
-      sqlrequest = 'select * from `Session` order by ' + filter + ' asc';
+      //A METTRE POUR VOIR LES SESSIONS MASQUEES = SUPPRIMEES
+      //sqlrequest = 'select * from `Session` order by ' + filter + ' asc';
+      sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' asc';
     }
 
     this.db.executeSql(sqlrequest, {})
@@ -180,7 +187,6 @@ export class HomePage {
         if (data.rows) {
           if (data.rows.length > 0) {
             this.dataSesion = [];
-            console.log('Push data session');
             for (let i = 0; i < data.rows.length; i++) {
               var date = this.dateformater.convertToDate(data.rows.item(i).date);
               var time = this.dateformater.convertToTime(data.rows.item(i).date);
@@ -245,7 +251,7 @@ export class HomePage {
         {
           text: 'Supprimer',
           handler: () => {
-            this.deleteObservation(id);
+            //this.deleteObservation(id);
             this.deleteSession(id);
             this.retrieveSession();
             console.log('Agree clicked');
@@ -256,12 +262,12 @@ export class HomePage {
     confirm.present();
   }
 
-  //Delete session
+  //Delete session - Rend invisible la session à l'utilisation mais ne la supprime pas de la base
   public deleteSession(id): void {
     var idSession = id;
-    this.db.executeSql('DELETE FROM `Session` WHERE idSession = ?', [idSession])
+    this.db.executeSql('UPDATE `Session` SET serve = 2 WHERE idSession = ?', [idSession])
       .then(() => {
-        console.log('Session ' + idSession + ' deleted');
+        console.log('Session ' + idSession + ' hidden');
         this.dataSesion = [];
         this.retrieveSession();
       })
@@ -276,31 +282,7 @@ export class HomePage {
       .catch(e => console.log(e));
   }
 
-  postEntryToServe(dataOption): void {
-    console.log('KEY : ' + dataOption.key);
-    let headers: any = {
-      'Content-Type': 'application/json'
-    };
-    let options: any = dataOption;
-    let url: any = this.baseURI + 'apiApex.php';
 
-    this.http.setDataSerializer('json');
-    this.http.post(url, options, headers)
-      .then(data => {
-        console.log('Upadte Serve');
-        let request = "";
-        if (dataOption.key == 'observation') {
-          request = 'UPDATE `Observation` SET serve = 1 WHERE idObservation = ' + dataOption.idObservation;
-        }
-        if (dataOption.key == 'session') {
-          request = 'UPDATE `Session` SET serve = 1 WHERE idSession = ' + dataOption.idSession;
-        }
-        this.db.executeSql(request, {})
-          .then(() => console.log('Serve updated'))
-          .catch(e => console.log('Serve Fail updated : ' + e));
-      })
-      .catch(error => console.log('Fail Serve ' + error));
-  }
 
   public addUserServeur() {
     this.db.executeSql('select * from `User` where serve=0', {})
@@ -349,7 +331,7 @@ export class HomePage {
                 longitude: data.rows.item(i).longitude,
                 sessionId: data.rows.item(i).sessionId,
                 idObservation: data.rows.item(i).idObservation
-              };
+              }; 
               this.postEntryToServe(dataObservation);
             }
           }
@@ -361,7 +343,7 @@ export class HomePage {
   }
 
   public addSessionServeur() {
-    this.db.executeSql('select * from `Session` where serve=0', {})
+    this.db.executeSql('select * from `Session` where serve=0 or serve=2', {})
       .then((data) => {
         if (data == null) {
           console.log('no session yet');
@@ -384,6 +366,7 @@ export class HomePage {
                 apexC: data.rows.item(i).apexC,
                 moyenne: data.rows.item(i).moyenne,
                 tauxApexP: data.rows.item(i).tauxApexP,
+                serve:data.rows.item(i).serve,
                 userId: data.rows.item(i).userId
               };
               this.postEntryToServe(dataSession);
@@ -397,9 +380,214 @@ export class HomePage {
   }
 
   public checkServeUpdate() {
-    this.addUserServeur();
-    this.addObservationServeur();
-    this.addSessionServeur();
+    if (this.network.type === '4g' || this.network.type === '3g' || this.network.type === 'wifi') {
+
+    }
+    else{
+      console.log("No Network "+ this.network.type);
+    }
+    //TODO **************************************************************************************************
+    //this.addObservationServeur();
+    //this.addUserServeur();
+    //this.addSessionServeur();
   }
+
+  async addSessionServeurv2() {
+    //this.db.executeSql('select * from `Session` where serve=0 or serve=2', {})
+    this.db.executeSql('select * from `Session`', {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.testArray.push({
+                key: 'session',
+                idSession: data.rows.item(i).idSession,
+                nomParcelle: data.rows.item(i).nomParcelle,
+                iac: data.rows.item(i).iac,
+                date: data.rows.item(i).date,
+                globalLatitude: data.rows.item(i).globalLatitude,
+                globalLongitude: data.rows.item(i).globalLongitude,
+                apexP: data.rows.item(i).apexP,
+                apexR: data.rows.item(i).apexR,
+                apexC: data.rows.item(i).apexC,
+                moyenne: data.rows.item(i).moyenne,
+                tauxApexP: data.rows.item(i).tauxApexP,
+                serve:data.rows.item(i).serve,
+                userId: data.rows.item(i).userId
+              });
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail sql retrieve Session ' + e));
+  }
+
+  async postEntryToServe(dataOption){
+    console.log('KEY : ' + dataOption.key);
+    let headers: any = {
+      'Content-Type': 'application/json'
+    };
+    let options: any = dataOption;
+    //let url: any = this.baseURI + 'apiApex.php';
+    //let url: any = this.baseURI + 'apiApexv2.php';
+    let url: any = this.baseURI + 'apitest.php';
+
+    this.http.setDataSerializer('json');
+    this.http.post(url, options, headers)
+      .then(data => {
+        console.log('Upadte Serve');
+        let request = "";
+        if (dataOption.key == 'observation') {
+          request = 'UPDATE `Observation` SET serve = 1 WHERE idObservation = ' + dataOption.idObservation;
+        }
+        else if (dataOption.key == 'session') {
+          if (dataOption.serve == 0) {
+            request = 'UPDATE `Session` SET serve = 1 WHERE idSession = ' + dataOption.idSession;
+          } else {
+            request = 'UPDATE `Session` SET serve = 3 WHERE idSession = ' + dataOption.idSession;
+          }
+          
+        } else {
+          request = 'UPDATE `User` SET serve = 1 WHERE idUser = ' + dataOption.idUser;
+        }
+
+        this.db.executeSql(request, {})
+          .then(() => console.log('Serve updated'))
+          .catch(e => console.log('Serve Fail updated : ' + e));
+      })
+      .catch(error => console.log('Fail Serve ' + error));
+  }
+
+   addObservationServeurv2() {
+    this.db.executeSql('select * from `Observation` where serve=0', {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.testArray.push({
+                key: 'observation',
+                apexValue: data.rows.item(i).apexValue,
+                date: data.rows.item(i).date,
+                latitude: data.rows.item(i).latitude,
+                longitude: data.rows.item(i).longitude,
+                sessionId: data.rows.item(i).sessionId,
+                idObservation: data.rows.item(i).idObservation
+              }); 
+            }
+          }
+        } 
+      })
+      .catch(e => console.log('fail sql retrieve Observation ' + e));
+  }
+
+  async addUserServeurv2() {
+    this.db.executeSql('select * from `User` where serve=0', {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.testArray.push({
+                key: 'user',
+                id: data.rows.item(i).idUser,
+                name: data.rows.item(i).name,
+                email: data.rows.item(i).email,
+                structure: data.rows.item(i).structure
+              });
+            }
+          } 
+        }
+      })
+      .catch(e => console.log('fail sql retrieve User ' + e));
+  }
+
+  async postEntryToServev2(value){
+    console.log(value+ " "+this.testArray.length);
+    var count = 0+value;
+    if (count < this.testArray.length) {
+      var dataOption;
+      console.log('KEY : ' + dataOption.key);
+      let headers: any = {
+        'Content-Type': 'application/json'
+      };
+      let options: any = dataOption;
+      //let url: any = this.baseURI + 'apiApex.php';
+      let url: any = this.baseURI + 'apiApexv2.php';
+  
+      this.http.setDataSerializer('json');
+      this.http.post(url, options, headers)
+        .then(data => {
+          console.log('Upadte Serve');
+          let request = "";
+          if (dataOption.key == 'observation') {
+            request = 'UPDATE `Observation` SET serve = 1 WHERE idObservation = ' + dataOption.idObservation;
+          }
+          else if (dataOption.key == 'session') {
+            if (dataOption.serve == 0) {
+              request = 'UPDATE `Session` SET serve = 1 WHERE idSession = ' + dataOption.idSession;
+            } else {
+              request = 'UPDATE `Session` SET serve = 3 WHERE idSession = ' + dataOption.idSession;
+            }
+            
+          } else {
+            request = 'UPDATE `User` SET serve = 1 WHERE idUser = ' + dataOption.idUser;
+          }
+  
+          this.db.executeSql(request, {})
+            .then(() => {
+              console.log('Serve updated');
+              count++;
+              this.postEntryToServev2(count);
+            })
+            .catch(e => console.log('Serve Fail updated : ' + e));
+        })
+        .catch(error => console.log('Fail Serve ' + error));
+    }
+    else{
+      console.log('no');
+    }
+  }
+
+  testserve(){
+    var arraytest:any=[];    
+    arraytest.push({key:'t1', nom:'toto0', check:false, num:0});
+    arraytest.push({key:'t1', nom:'art', check:true, num:1});
+    arraytest.push({key:'t1', nom:'bar', check:false});
+    arraytest.push({key:'t2', nom:'toto3', check:false});
+    arraytest.push({key:'t2', nom:'car', check:false});
+    arraytest.push({key:'t2', nom:'far', check:false});
+
+    
+    arraytest.forEach(element => {
+      //this.postEntryToServe(element);
+      var toto = this.addUser(element);
+      console.log(toto);
+      toto.then(data =>{
+
+        console.log(data);
+      });
+    });
+  }
+
+  addUser(data) {
+    return new Promise((resolve, reject) => {
+      let url: any = this.baseURI + 'apitest.php';
+      this.httpclient.post(url, JSON.stringify(data))
+        .subscribe(res => {
+          resolve(res);
+        }, (err) => {
+          reject(err);
+        });
+    });
+  }
+
 
 }

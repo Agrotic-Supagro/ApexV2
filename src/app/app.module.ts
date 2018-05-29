@@ -25,6 +25,9 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { LocationTracker } from '../services/locationtracker.service';
 import { GUIDGenerator } from '../services/guidgenerator.service';
 import { Dateformater } from '../services/dateformater.service';
+import { RetrieveDATA } from '../services/retrievedata.service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import { Dateformater } from '../services/dateformater.service';
    ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
   ],
   bootstrap: [IonicApp],
@@ -49,6 +53,7 @@ import { Dateformater } from '../services/dateformater.service';
     Dateformater,
     GUIDGenerator,
     LocationTracker,
+    RetrieveDATA,
     Geolocation,
     BackgroundGeolocation,
     Vibration,
