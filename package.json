@@ -26,7 +26,7 @@
     "@ionic-native/email-composer": "^4.7.0",
     "@ionic-native/geolocation": "^4.5.3",
     "@ionic-native/http": "^4.6.0",
-    "@ionic-native/keyboard": "^4.6.0",
+    "@ionic-native/keyboard": "^4.7.0",
     "@ionic-native/network": "^4.6.0",
     "@ionic-native/splash-screen": "4.4.0",
     "@ionic-native/sqlite": "^4.5.3",
@@ -72,9 +72,9 @@
       "cordova-plugin-vibration": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-advanced-http": {},
-      "ionic-plugin-keyboard": {},
       "cordova-plugin-network-information": {},
-      "cordova-plugin-email-composer": {}
+      "cordova-plugin-email-composer": {},
+      "ionic-plugin-keyboard": {}
     },
     "platforms": []
   }
