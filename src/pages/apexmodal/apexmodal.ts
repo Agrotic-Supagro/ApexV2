@@ -9,7 +9,7 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { GUIDGenerator } from '../../services/guidgenerator.service';
 import { Dateformater } from '../../services/dateformater.service';
 
-const THRESHOLD_APEX: number = 5;
+const THRESHOLD_APEX: number = 50;
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 
 @IonicPage()
@@ -140,9 +140,11 @@ export class ApexmodalPage {
     } 
 
     var iac = this.computeIAC();
-    var geolocation = this.computeGlobalLocation().lat;
-    var globalLatitude = geolocation.lat;
-    var globalLongitude = geolocation.lng;
+    var geolocation = this.computeGlobalLocation();
+    var globalLatitude = 0+geolocation.lat;
+    var globalLongitude = 0+geolocation.lng;
+    console.log('Globale Geolocation - Lat : '+globalLatitude+' Lng : '+globalLongitude)
+
     var moyenne = this.computeMoyenne();
     var tauxApexP = this.computeTx();
     var apexP = this.p_array;

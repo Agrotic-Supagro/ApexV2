@@ -25,7 +25,7 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { LocationTracker } from '../services/locationtracker.service';
 import { GUIDGenerator } from '../services/guidgenerator.service';
 import { Dateformater } from '../services/dateformater.service';
-import { RetrieveDATA } from '../services/retrievedata.service';
+import { ApexData } from '../services/apexdata.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -53,7 +53,7 @@ import { HttpClientModule } from '@angular/common/http';
     Dateformater,
     GUIDGenerator,
     LocationTracker,
-    RetrieveDATA,
+    ApexData,
     Geolocation,
     BackgroundGeolocation,
     Vibration,
