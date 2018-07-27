@@ -16,8 +16,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Network } from '@ionic-native/network';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
-const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
-const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
+/* configuration pour la version release */
+//const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
+//const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
+
+/* Configuration pour les tests */
+const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/dev/';
+const SERVEUR_APEX_FILE: string = 'apiApexv3_dev.php';
 
 @Component({
   selector: 'page-home',
@@ -99,6 +104,19 @@ export class HomePage {
     apexSaisie.present();
   }
 
+  public openViewSession(idsessionUpdate) {
+    var data = {
+      iduser: this.dataUser[0].id,
+      idsession: idsessionUpdate
+    };
+    var viewData = this.modalCtrl.create('ViewdataPage', data);
+    viewData.onDidDismiss(() => {
+      this.retrieveSession();
+      this.checkServeUpdate();
+    });
+    viewData.present();
+  }
+
   public openEditSession(idsessionUpdate) {
     var data = {
       iduser: this.dataUser[0].id,
@@ -110,6 +128,39 @@ export class HomePage {
       this.checkServeUpdate();
     });
     editSaisie.present();
+  }
+
+  public showInfoSesssion(dataSession) {
+    let alert = this.alertCtrl.create({
+      cssClass:'alertInput',
+      title: 'Information sur: '+dataSession.nomParcelle,
+      message: 'Le '+dataSession.date+' à '+dataSession.time+
+      '<br/><br/>Nombre Apex: P('+dataSession.apexP+'), R('+dataSession.apexR+'), C('+dataSession.apexC+')'+
+      '<br/><br/>IAC: '+dataSession.iac+' - Moy: '+dataSession.moyenne+' - Taux P :'+dataSession.tauxApexP+
+      '<br/><br/>Coordonnées: '+dataSession.globalLongitude.toFixed(5)+'/'+dataSession.globalLatitude.toFixed(5),
+      buttons: [
+        {
+          text: 'Suppr.',
+          handler: () => {
+            this.deleteEntry(dataSession.id);
+          }
+        },
+        {
+          text: 'Editer',
+          handler: () => {
+            this.openEditSession(dataSession.id);
+          }
+        },
+        {
+          text: 'Fermer',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   private createDatabaseApex(): void {
@@ -177,11 +228,11 @@ export class HomePage {
   public retrieveSession() {
     var filter = this.filter;
     console.log(this.filter);
-    var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' desc';
+    var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' desc LIMIT 10';
     if (filter == 'nomParcelle') {
       //A METTRE POUR VOIR LES SESSIONS MASQUEES = SUPPRIMEES
       //sqlrequest = 'select * from `Session` order by ' + filter + ' asc';
-      sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' asc';
+      sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' asc LIMIT 10';
     }
 
     this.db.executeSql(sqlrequest, {})
@@ -194,28 +245,33 @@ export class HomePage {
           if (data.rows.length > 0) {
             this.dataSesion = [];
             for (let i = 0; i < data.rows.length; i++) {
-              var date = this.dateformater.convertToDate(data.rows.item(i).date);
-              var time = this.dateformater.convertToTime(data.rows.item(i).date);
-              var iac = this.convertInteger(data.rows.item(i).iac);
-              var moyenne = data.rows.item(i).moyenne.toFixed(2);
-              var tauxApexP = data.rows.item(i).tauxApexP.toFixed(1);
-              var affichage = this.computeAffichage(moyenne,tauxApexP,iac);
-              this.dataSesion.push({
-                id: data.rows.item(i).idSession,
-                nomParcelle: data.rows.item(i).nomParcelle,
-                globalLatitude: data.rows.item(i).globalLatitude,
-                globalLongitude: data.rows.item(i).globalLongitude,
-                apexP: data.rows.item(i).apexP,
-                apexR: data.rows.item(i).apexR,
-                apexC: data.rows.item(i).apexC,
-                moyenne: moyenne,
-                tauxApexP: tauxApexP,
-                iac: iac,
-                date: date,
-                time: time,
-                affichage:affichage,
-                userId: data.rows.item(i).userId
-              });
+              if (data.rows.item(i).apexP==0 && data.rows.item(i).apexR==0 && data.rows.item(i).apexC==0) {
+                this.deleteObservation(data.rows.item(i).idSession);
+                this.deleteSession(data.rows.item(i).idSession);
+              } else {
+                var date = this.dateformater.convertToDate(data.rows.item(i).date);
+                var time = this.dateformater.convertToTime(data.rows.item(i).date);
+                var iac = this.convertInteger(data.rows.item(i).iac);
+                var moyenne = data.rows.item(i).moyenne.toFixed(2);
+                var tauxApexP = data.rows.item(i).tauxApexP.toFixed(1);
+                var affichage = this.computeAffichage(moyenne,tauxApexP,iac);
+                this.dataSesion.push({
+                  id: data.rows.item(i).idSession,
+                  nomParcelle: data.rows.item(i).nomParcelle,
+                  globalLatitude: data.rows.item(i).globalLatitude,
+                  globalLongitude: data.rows.item(i).globalLongitude,
+                  apexP: data.rows.item(i).apexP,
+                  apexR: data.rows.item(i).apexR,
+                  apexC: data.rows.item(i).apexC,
+                  moyenne: moyenne,
+                  tauxApexP: tauxApexP,
+                  iac: iac,
+                  date: date,
+                  time: time,
+                  affichage:affichage,
+                  userId: data.rows.item(i).userId
+                });
+              }
             }
           }
         }
@@ -257,8 +313,7 @@ export class HomePage {
         {
           text: 'Supprimer',
           handler: () => {
-            //this.deleteObservation(id);
-            this.deleteSession(id);
+            this.hiddenSession(id);
             this.retrieveSession();
             console.log('Agree clicked');
           }
@@ -268,8 +323,8 @@ export class HomePage {
     confirm.present();
   }
 
-  //Delete session - Rend invisible la session à l'utilisation mais ne la supprime pas de la base
-  public deleteSession(id): void {
+  //Hidde session - Rend invisible la session à l'utilisation mais ne la supprime pas de la base
+  public hiddenSession(id): void {
     var idSession = id;
     this.db.executeSql('UPDATE `Session` SET serve = 2 WHERE idSession = ?', [idSession])
       .then(() => {
@@ -280,12 +335,20 @@ export class HomePage {
       .catch(e => console.log(e));
   }
 
+  //Delete session
+  public deleteSession(id):void{
+    var idSession = id
+    this.db.executeSql('DELETE FROM `Session` WHERE idSession = ?', [idSession])
+    .then(() => console.log('Session '+idSession+' deleted'))
+    .catch(e => console.log(e));
+  }
+
   //Delete observations
-  public deleteObservation(id): void {
+  public deleteObservation(id):void{
     var idSession = id;
     this.db.executeSql('DELETE FROM `Observation` WHERE sessionId = ?', [idSession])
-      .then(() => console.log('Observations ' + idSession + ' deleted'))
-      .catch(e => console.log(e));
+    .then(() => console.log('Observations '+idSession+' deleted'))
+    .catch(e => console.log(e));
   }
 
   public addUserServeur() {

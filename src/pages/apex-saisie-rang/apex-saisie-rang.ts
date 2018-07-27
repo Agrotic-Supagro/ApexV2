@@ -185,7 +185,7 @@ export class ApexSaisieRangPage {
 
   //Controle liste déroulante + ajout
   public retrieveNomParcelle() {
-    this.db.executeSql('select distinct nomParcelle from `Session` order by nomParcelle asc', {})
+    this.db.executeSql('select distinct nomParcelle from `Session` where serve=0 or serve=1 order by nomParcelle asc', {})
       .then((data) => {
         if (data == null) {
           console.log('no session yet');
@@ -224,8 +224,12 @@ export class ApexSaisieRangPage {
         {
           text: 'Ajouter',
           handler: data => {
-            this.selectParcelle.push({nom:data.nomparcelle, check:true});
-            this.nomParcelle = data.nomparcelle;
+            if (data.nomparcelle == '' || data.nomparcelle.length === 0 || /^\s*$/.test(data.nomparcelle)) {
+              this.nomParcelle = null;
+            } else {
+              this.selectParcelle.push({nom:data.nomparcelle, check:true});
+              this.nomParcelle = data.nomparcelle;
+            }
           }
         }
       ]

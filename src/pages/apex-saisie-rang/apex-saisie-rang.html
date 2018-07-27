@@ -6,7 +6,7 @@
 
 <ion-content padding>
   <div>
-      (Optionel) Nom de la parcelle
+      Nom de la parcelle : <span class="parcelleName">{{nomParcelle}}</span>
       <table class="parcelle">
           <tr>
             <td>
@@ -17,7 +17,7 @@
                 </ion-select>
               </ion-item>
             </td>
-            <td>
+            <td class="al-right">
               <button ion-button small (tap)="addParcelle()">
                   <ion-icon name="add-circle"></ion-icon>
               </button></td>

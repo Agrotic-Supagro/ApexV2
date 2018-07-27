@@ -9,8 +9,13 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { GUIDGenerator } from '../../services/guidgenerator.service';
 import { Dateformater } from '../../services/dateformater.service';
 
-const THRESHOLD_APEX: number = 50;
 const DATABASE_APEX_NAME: string = 'dataApex.db';
+//const THRESHOLD_APEX: number = 50;
+
+/* POUR LES TESTS */
+const THRESHOLD_APEX: number = 50;
+
+
 
 @IonicPage()
 @Component({
@@ -97,19 +102,23 @@ export class ApexmodalPage {
   }
   
   public addvalue(apexvalue){
-    this.vibration.vibrate(100);
-    this.numberApex ++;
-    this.saveObservation(apexvalue);
-
     if (apexvalue == "P") {
       this.p_array++;
+      this.vibration.vibrate(100);
     } else {
       if (apexvalue == "R") {
         this.r_array++;
+        this.vibration.vibrate(300);
       } else {
         this.c_array++;
+        this.vibration.vibrate(100);
       }
     }
+    this.numberApex ++;
+    if(this.numberApex == this.thresholdApex){
+      this.vibration.vibrate(600);
+    }
+    this.saveObservation(apexvalue);
   }
 
   public saveObservation(apexvalue):void{
@@ -342,7 +351,7 @@ export class ApexmodalPage {
 
   //Controle liste déroulante + ajout
   public retrieveSession() {
-    this.db.executeSql('select distinct nomParcelle from `Session` order by nomParcelle asc', {})
+    this.db.executeSql('select distinct nomParcelle from `Session` where serve=0 or serve=1 order by nomParcelle asc', {})
       .then((data) => {
         if (data == null) {
           console.log('no session yet');
@@ -381,8 +390,12 @@ export class ApexmodalPage {
         {
           text: 'Ajouter',
           handler: data => {
-            this.selectParcelle.push({nom:data.nomparcelle, check:true});
-            this.nomParcelle = data.nomparcelle;
+            if (data.nomparcelle == '' || data.nomparcelle.length === 0 || /^\s*$/.test(data.nomparcelle)) {
+              this.nomParcelle = null;
+            } else {
+              this.selectParcelle.push({nom:data.nomparcelle, check:true});
+              this.nomParcelle = data.nomparcelle;
+            }
           }
         }
       ]

@@ -1,6 +1,15 @@
 page-apex-saisie-rang {
+    .parcelleName{
+        font-weight: bold;
+        color: maroon;
+      }
 
     .parcelle{
         width: 100%;
     }
+
+    .al-right{
+        text-align: right;
+      }
 }
+

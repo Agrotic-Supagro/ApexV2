@@ -49,6 +49,25 @@ page-home {
     }
 
     .iconslice{
-        font-size: 30px;
+        font-size: 35px;
     }
+}
+.alertInput {
+	button.alert-button:nth-child(1) {
+		color:rgb(255, 123, 0);
+	}
+	button.alert-button:nth-child(2) {
+		font-weight: bold;
+	}
+	button.alert-button:nth-child(3) {
+		font-weight: bold;
+	}
+}
+
+.alertInput button.alert-button-group {
+	width: 33.33%;
+}
+
+.alertInput .alert-button-group-vertical {
+	flex-direction: row ;
 }

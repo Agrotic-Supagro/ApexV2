@@ -86,7 +86,7 @@ export class EditPage {
 
     console.log('try update Session table')
  
-    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, apexP=?, apexR=?, apexC=?  WHERE idSession=?', 
+    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, apexP=?, apexR=?, apexC=? WHERE idSession=?', 
     [nomParcelle, iac, moyenne, tauxApexP, apexP, apexR, apexC, idSession])
     .then(() => console.log('Session updated'))
     .catch(e => console.log(e));

@@ -1,54 +1,64 @@
 page-apexmodal {
 
-}
-
-.apexbutton{
-  height: 25%;
-}
-
-.apeximg{
-  height: 100%;
-}
-
-.card-background-page {
-
-  ion-card {
-    height: 28%;
-    width: 70%;
-    position: relative;
-    text-align: center;
-    background-color: #4F5966;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .card-img{
-    height: 100%;
-    // width: 60%;
-
-  }
-
-  .card-title {
-    position: absolute;
-    top: 10%;
-    font-size: 3.0em;
-    line-height: 1em;
-    width: 100%;
+  .parcelleName{
     font-weight: bold;
-    color: #fff;
-    text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+    color: maroon;
   }
 
-  .card-subtitle {
-    font-size: 1.2em;
-    position: absolute;
-    top: 80%;
-    width: 100%;
-    color: #fff;
-    text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+  .apexbutton{
+    height: 25%;
+  }
+  
+  .apeximg{
+    height: 100%;
+  }
+  
+  .al-right{
+    text-align: right;
   }
 
-  .parcelle{
-    width: 100%;
+  .card-background-page {
+  
+    ion-card {
+      height: 28%;
+      width: 70%;
+      position: relative;
+      text-align: center;
+      background-color: #4F5966;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+    .card-img{
+      height: 100%;
+      // width: 60%;
+  
+    }
+  
+    .card-title {
+      position: absolute;
+      top: 10%;
+      font-size: 3.0em;
+      line-height: 1em;
+      width: 100%;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+    }
+  
+    .card-subtitle {
+      font-size: 1.2em;
+      position: absolute;
+      top: 80%;
+      width: 100%;
+      color: #fff;
+      text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+    }
+  
+    .parcelle{
+      width: 100%;
+    }
   }
 }
+
+
