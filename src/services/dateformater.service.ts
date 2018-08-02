@@ -19,30 +19,31 @@ export class Dateformater {
 
   getdate() {
     var myDate = new Date();
-    var datePipe = new DatePipe('fr-FR');
-    return datePipe.transform(myDate, 'yyyy-MM-dd');
+    var day = this.zeroPad(myDate.getDate());
+    var month = this.zeroPad(myDate.getMonth());
+    var year = this.zeroPad(myDate.getFullYear());
+    return day+'-'+month+'-'+year;
   }
 
   convertToDate(timestamp){
     var myDate = new Date (timestamp*1000);
-    var day = this.zeroPad(myDate.getDate(),2);
-    var month = this.zeroPad(myDate.getMonth(),2);
-    var year = this.zeroPad(myDate.getFullYear(),2);
+    var day = this.zeroPad(myDate.getDate());
+    var month = this.zeroPad(myDate.getMonth()+1);
+    var year = this.zeroPad(myDate.getFullYear());
     return day+'/'+month+'/'+year;
   }
 
   convertToTime(timestamp){
     var myDate = new Date (timestamp*1000);
     var hours = myDate.getHours();
-    var minutes = this.zeroPad(myDate.getMinutes(),2);
+    var minutes = this.zeroPad(myDate.getMinutes());
     return hours+'h'+minutes;
   }
 
 
 
-  zeroPad(num, places) {
-    var zero = places - num.toString().length + 1;
-    return Array(+(zero > 0 && zero)).join("0") + num;
+  zeroPad(n) {
+    return n<10 ? '0'+n : n
   }
 }
 

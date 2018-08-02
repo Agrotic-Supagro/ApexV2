@@ -1,20 +1,34 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Informations : {{dataSession.nomParcelle}}</ion-title>
+  <ion-navbar [ngClass]='categorie'>
+    <ion-title>Parcelle : {{dataSession.nomParcelle}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
-  Todo
+  <h5>Informations</h5>
+  Observations réalisées le {{dataSession.date}} à {{dataSession.time}}
+  <br/>
+  <br/> Coordonnées géographiques:
+  <br/>{{dataSession.globalLatitude}} / {{dataSession.globalLongitude}}
+  <br/>
+  <h5>Observations :</h5>
+  <br/> Nombre d'apex P (2) : <b>{{dataSession.apexP}} </b>
+  <br/> Nombre d'apex R (1) : <b>{{dataSession.apexR}} </b>
+  <br/> Nombre d'apex C (0) : <b>{{dataSession.apexC}} </b>
+  <br/>
+  <h5>Indices calculés :</h5>
+  <br/> IAC : <b>{{dataSession.iac}}</b>
+  <br/> Moyenne : <b>{{dataSession.moyenne}}</b>
+  <br/> Taux apex P : <b>{{dataSession.tauxApexP}}</b>
+  <br/>
+  <h5>Contrainte hydrique : <span [ngClass]='categorie'>{{dataSession.affichage}}</span></h5>
+  <i>Nb: La valeur de la contrainte hydrique est indicative</i>
 </ion-content>
 
 <ion-footer>
-    <ion-toolbar>
-      <button ion-button block color="primary" (tap)="closeModal()">Fermer</button>
-    </ion-toolbar>
-  </ion-footer>
-  
-  
+  <ion-toolbar>
+    <button ion-button block color="primary" (tap)="closeModal()">Fermer</button>
+  </ion-toolbar>
+</ion-footer>

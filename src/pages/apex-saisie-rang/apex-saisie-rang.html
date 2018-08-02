@@ -26,25 +26,41 @@
   </div>
 
   <br/>
-  <div>
-    <ion-item>
-      <ion-label color="primary" stacked>APEX P : pousse active</ion-label>
-      <ion-input type="number" placeholder="nombre apex P" [(ngModel)]="p_array"></ion-input>
-    </ion-item>
-  </div>
-  <div>
-    <ion-item>
-      <ion-label color="primary" stacked>APEX R : rameau croissance ralentie</ion-label>
-      <ion-input type="number" placeholder="nombre apex R" [(ngModel)]="r_array"></ion-input>
-    </ion-item>
-  </div>
-  <div>
-    <ion-item>
-      <ion-label color="primary" stacked>APEX C : rameau tombé ou sec</ion-label>
-      <ion-input type="number" placeholder="nombre apex C" [(ngModel)]="c_array"></ion-input>
-    </ion-item>
-  </div>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/stadeP.jpg" class="imgsize"/>
+      </ion-col>
+      <ion-col col-auto>
+        <ion-item>
+          <ion-label color="primary" stacked>APEX P : pousse active</ion-label>
+          <ion-input type="number" placeholder="nombre apex P" [(ngModel)]="p_array"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/stadeR.jpg" class="imgsize"/>
+      </ion-col>
+      <ion-col col-auto>
+        <ion-item>
+          <ion-label color="primary" stacked>APEX R : croissance ralentie</ion-label>
+          <ion-input type="number" placeholder="nombre apex R" [(ngModel)]="r_array"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/stadeC.jpg" class="imgsize"/>
+      </ion-col>
+      <ion-col col-auto>
+        <ion-item>
+          <ion-label color="primary" stacked>APEX C : rameau tombé ou sec</ion-label>
+          <ion-input type="number" placeholder="nombre apex C" [(ngModel)]="c_array"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer>

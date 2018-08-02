@@ -10,10 +10,10 @@ import { GUIDGenerator } from '../../services/guidgenerator.service';
 import { Dateformater } from '../../services/dateformater.service';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
-//const THRESHOLD_APEX: number = 50;
+const THRESHOLD_APEX: number = 50;
 
 /* POUR LES TESTS */
-const THRESHOLD_APEX: number = 50;
+//const THRESHOLD_APEX: number = 5;
 
 
 
@@ -108,7 +108,7 @@ export class ApexmodalPage {
     } else {
       if (apexvalue == "R") {
         this.r_array++;
-        this.vibration.vibrate(300);
+        this.vibration.vibrate(220);
       } else {
         this.c_array++;
         this.vibration.vibrate(100);

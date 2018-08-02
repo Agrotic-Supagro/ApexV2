@@ -18,6 +18,12 @@ export class ViewdataPage {
   public idUser: string;
   public guidsession: string;
   public dataSession;
+  public categorie: any = {
+    absente:false,
+    moderee:false,
+    forte:false,
+    excessive:false
+  };
 
   constructor( public navCtrl: NavController,
     public viewCtrl : ViewController,
@@ -92,15 +98,19 @@ export class ViewdataPage {
 
   public computeAffichage(moyenne, tx, iac){
     if (moyenne > 1.5) {
-      return 0;
+      this.categorie.absente = true;
+      return 'absente';
     } else {
       if (tx > 5) {
-        return 1;
+        this.categorie.moderee = true;
+        return 'modérée';
       } else {
         if (iac < 80) {
-          return 2;
+          this.categorie.forte = true;
+          return 'forte';
         } else {
-          return 3;
+          this.categorie.excessive = true;
+          return 'excessive';
         }
       }
     }

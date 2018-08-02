@@ -20,6 +20,7 @@ import { HTTP } from '@ionic-native/http';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Network } from '@ionic-native/network';
 import { EmailComposer } from '@ionic-native/email-composer';
+import { File } from '@ionic-native/file';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -60,6 +61,7 @@ import { HttpClientModule } from '@angular/common/http';
     EmailComposer,
     Device,
     Network,
+    File,
     HTTP,
     Keyboard,
     SplashScreen,

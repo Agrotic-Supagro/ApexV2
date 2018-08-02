@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content class="homePage">
-  <img src="assets/imgs/apex.png" class="imglogo" />
+  <img src="assets/imgs/apex.png" class="imglogo" (tap)="writeData()"/>
   <button ion-button block (tap)="openModal()">Saisie en parcelle</button>
   <button ion-button block color="secondary" (tap)="openSaisieApex()">Saisie en bout de rang</button>
   <br>
@@ -29,13 +29,13 @@
     <ion-col>
       <ion-item>
         <ion-label>Date</ion-label>
-        <ion-radio checked="true" value="date" (ionSelect)="retrieveSession()"></ion-radio>
+        <ion-radio checked="true" value="date" (ionSelect)="changeFilter()"></ion-radio>
       </ion-item>
     </ion-col>
     <ion-col>
       <ion-item>
         <ion-label>Nom</ion-label>
-        <ion-radio value="nomParcelle" (ionSelect)="retrieveSession()"></ion-radio>
+        <ion-radio value="nomParcelle" (ionSelect)="changeFilter()"></ion-radio>
       </ion-item>
     </ion-col>
   </ion-row>
@@ -44,7 +44,7 @@
     <ion-item-sliding #item *ngFor="let dataSess of dataSesion">
 
       <ion-item >
-        <ion-card *ngIf="dataSess.affichage == 0" class="scorebon" (press)="showInfoSesssion(dataSess)">
+        <ion-card *ngIf="dataSess.affichage == 0" class="scorebon" >
           <ion-card-content>
             <span class="title">Nom : {{dataSess.nomParcelle}}</span>
             <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
@@ -64,7 +64,7 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card *ngIf="dataSess.affichage == 1" class="scoremoyen" (press)="showInfoSesssion(dataSess)">
+        <ion-card *ngIf="dataSess.affichage == 1" class="scoremoyen" >
           <ion-card-content>
             <span class="title">Nom : {{dataSess.nomParcelle}}</span>
             <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
@@ -84,7 +84,7 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card *ngIf="dataSess.affichage == 2" class="scoremauvais" (press)="showInfoSesssion(dataSess)">
+        <ion-card *ngIf="dataSess.affichage == 2" class="scoremauvais" >
           <ion-card-content>
             <span class="title">Nom : {{dataSess.nomParcelle}}</span>
             <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
@@ -104,7 +104,7 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-card *ngIf="dataSess.affichage == 3" class="scorehorrible" (press)="showInfoSesssion(dataSess)">
+        <ion-card *ngIf="dataSess.affichage == 3" class="scorehorrible" >
           <ion-card-content>
             <span class="title">Nom : {{dataSess.nomParcelle}}</span>
             <p class="datebad">Le {{dataSess.date}} à {{dataSess.time}}</p>

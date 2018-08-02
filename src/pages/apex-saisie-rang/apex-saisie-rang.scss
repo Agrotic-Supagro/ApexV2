@@ -1,7 +1,7 @@
 page-apex-saisie-rang {
     .parcelleName{
         font-weight: bold;
-        color: maroon;
+        color: rgb(39, 63, 87);
       }
 
     .parcelle{
@@ -11,5 +11,10 @@ page-apex-saisie-rang {
     .al-right{
         text-align: right;
       }
+
+    .imgsize{
+        width: 60px;
+        height: 60px;
+    }
 }
 

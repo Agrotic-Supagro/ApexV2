@@ -1,28 +1,28 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Subscription} from 'rxjs/Subscription';
 
 import { LocationTracker } from '../../services/locationtracker.service';
 import { Dateformater } from '../../services/dateformater.service';
 import { ApexData } from '../../services/apexdata.service';
-import { Device } from '@ionic-native/device';
 
-import { HTTP } from '@ionic-native/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { Device } from '@ionic-native/device';
+import { File } from '@ionic-native/file';
+import { HTTP } from '@ionic-native/http';
 import { Network } from '@ionic-native/network';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 /* configuration pour la version release */
-//const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
-//const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
+const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
+const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
 
 /* Configuration pour les tests */
-const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/dev/';
-const SERVEUR_APEX_FILE: string = 'apiApexv3_dev.php';
+//const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/dev/';
+//const SERVEUR_APEX_FILE: string = 'apiApexv3_dev.php';
 
 @Component({
   selector: 'page-home',
@@ -49,6 +49,7 @@ export class HomePage {
     public device: Device,
     private http: HTTP,
     private httpclient:HttpClient,
+    public file: File,
     public apexData: ApexData,
     public locationTracker: LocationTracker) {
 
@@ -130,39 +131,6 @@ export class HomePage {
     editSaisie.present();
   }
 
-  public showInfoSesssion(dataSession) {
-    let alert = this.alertCtrl.create({
-      cssClass:'alertInput',
-      title: 'Information sur: '+dataSession.nomParcelle,
-      message: 'Le '+dataSession.date+' à '+dataSession.time+
-      '<br/><br/>Nombre Apex: P('+dataSession.apexP+'), R('+dataSession.apexR+'), C('+dataSession.apexC+')'+
-      '<br/><br/>IAC: '+dataSession.iac+' - Moy: '+dataSession.moyenne+' - Taux P :'+dataSession.tauxApexP+
-      '<br/><br/>Coordonnées: '+dataSession.globalLongitude.toFixed(5)+'/'+dataSession.globalLatitude.toFixed(5),
-      buttons: [
-        {
-          text: 'Suppr.',
-          handler: () => {
-            this.deleteEntry(dataSession.id);
-          }
-        },
-        {
-          text: 'Editer',
-          handler: () => {
-            this.openEditSession(dataSession.id);
-          }
-        },
-        {
-          text: 'Fermer',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
   private createDatabaseApex(): void {
     this.sqlite.create({
         name: DATABASE_APEX_NAME,
@@ -225,15 +193,21 @@ export class HomePage {
       .catch(e => console.log('fail sql retrieve User ' + e));
   }
 
-  public retrieveSession() {
-    var filter = this.filter;
-    console.log(this.filter);
-    var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' desc LIMIT 10';
-    if (filter == 'nomParcelle') {
-      //A METTRE POUR VOIR LES SESSIONS MASQUEES = SUPPRIMEES
-      //sqlrequest = 'select * from `Session` order by ' + filter + ' asc';
-      sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by ' + filter + ' asc LIMIT 10';
+  public changeFilter(){
+    console.log('Filter : '+this.filter);
+    if (this.filter == 'nomParcelle') {
+      this.dataSesion.sort(function (a, b) {
+        return a.nomParcelle.localeCompare(b.nomParcelle);
+      });
+    } else {
+      this.dataSesion.sort(function (a, b) {
+        return b.timestamp - a.timestamp;
+      });
     }
+  }
+
+  public retrieveSession() {
+    var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
 
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
@@ -249,6 +223,7 @@ export class HomePage {
                 this.deleteObservation(data.rows.item(i).idSession);
                 this.deleteSession(data.rows.item(i).idSession);
               } else {
+                var timestamp = data.rows.item(i).date;
                 var date = this.dateformater.convertToDate(data.rows.item(i).date);
                 var time = this.dateformater.convertToTime(data.rows.item(i).date);
                 var iac = this.convertInteger(data.rows.item(i).iac);
@@ -268,6 +243,7 @@ export class HomePage {
                   iac: iac,
                   date: date,
                   time: time,
+                  timestamp: timestamp,
                   affichage:affichage,
                   userId: data.rows.item(i).userId
                 });
@@ -494,6 +470,51 @@ export class HomePage {
     else{
       console.log("No Network "+ this.network.type);
     }
+  }
+
+  public writeData(){
+    var filename = this.dateformater.getdate()+'_apexData.csv';
+    var sqlrequest = 'select * from `Session`';
+    var alldata='id;Parcelle;Date;Heure;Latitude;Longitude;ApexP;ApexR;apexC;IAC;Moyenne;TauxApexP';
+
+    this.db.executeSql(sqlrequest, {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              var date = this.dateformater.convertToDate(data.rows.item(i).date);
+              var time = this.dateformater.convertToTime(data.rows.item(i).date);
+              alldata = alldata+'\n'+
+                data.rows.item(i).idSession+';'+
+                data.rows.item(i).nomParcelle+';'+
+                date+';'+
+                time+';'+
+                data.rows.item(i).globalLatitude+';'+
+                data.rows.item(i).globalLongitude+';'+
+                data.rows.item(i).apexP+';'+
+                data.rows.item(i).apexR+';'+
+                data.rows.item(i).apexC+';'+
+                data.rows.item(i).iac+';'+
+                data.rows.item(i).moyenne+';'+
+                data.rows.item(i).tauxApexP;
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail write CSV file : ' + e));
+
+    this.file.createDir(this.file.externalRootDirectory, 'apex', true).then(data => {
+      this.file.writeFile(this.file.externalRootDirectory+'/apex',filename, alldata, {replace: true});
+    });
+
+  }
+  
+  public testconsole(){
+    console.log('## TEST ##');
   }
 
 }

@@ -1,3 +1,27 @@
 page-viewdata {
 
+    .absente .toolbar-background{
+        background-color: rgba(150, 247, 155, 0.616);
+    }
+    .moderee .toolbar-background{
+        background-color: rgba(241, 183, 106, 0.616);
+    }
+    .forte .toolbar-background{
+        background-color: rgba(247, 150, 150, 0.616);
+    }
+    .excessive .toolbar-background{
+        background-color: rgba(0, 0, 0, 0.308);
+    }
+
+    .absente{
+        color: green;
+    }
+    .moderee {
+        color: orange;
+    }
+
+    .forte{
+        color: darkred;
+    }
+
 }
