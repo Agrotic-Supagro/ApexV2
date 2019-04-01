@@ -1,7 +1,13 @@
 page-home {
+    .imgnav{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        height: 80px;
+      }
 
     .homePage{
-        margin-top: 0.4em !important;
+        margin-top: 0.3em !important;
     }
     .scorebon{
         background-color: rgba(150, 247, 155, 0.616);
@@ -21,6 +27,7 @@ page-home {
 
     .title{
         font-weight: bold;
+        text-align: center;
     }
 
     .deletebutton{
@@ -33,9 +40,12 @@ page-home {
 
     .imglogo{
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        height: 30px;
+    }
+
+    .fleche{
         height: 40px;
+        width: 40px;
     }
 
     .tableGPS{

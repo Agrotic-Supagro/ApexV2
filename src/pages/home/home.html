@@ -3,134 +3,38 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Accueil</ion-title>
+    <ion-title>Accueil V2</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="homePage">
-  <img src="assets/imgs/apex.png" class="imglogo" (tap)="writeData()"/>
-  <button ion-button block (tap)="openModal()">Saisie en parcelle</button>
-  <button ion-button block color="secondary" (tap)="openSaisieApex()">Saisie en bout de rang</button>
-  <br>
-  <table class="tableGPS">
-    <tr>
-      <td>Longitude: {{locationTracker.lng.toFixed(5)}}</td>
-      <td>Latitude: {{locationTracker.lat.toFixed(5)}}</td>
-    </tr>
-  </table>
-
+    <ion-grid>
+        <ion-row>
+          <ion-col>
+            <img src="assets/imgs/leaf.png" class="imgnav" (click)="openModal()"/>
+          </ion-col>
+          <ion-col>
+            <img src="assets/imgs/rang.png" class="imgnav" (click)="openSaisieApex()"/>
+          </ion-col>
+        </ion-row>
+        </ion-grid>
   <h3 class="centerclass">Liste des sessions effectuées</h3>
-  <ion-row radio-group [(ngModel)]="filter">
-    <ion-col>
-      <ion-item>
-        Tri par :
-      </ion-item>
-    </ion-col>
-    <ion-col>
-      <ion-item>
-        <ion-label>Date</ion-label>
-        <ion-radio checked="true" value="date" (ionSelect)="changeFilter()"></ion-radio>
-      </ion-item>
-    </ion-col>
-    <ion-col>
-      <ion-item>
-        <ion-label>Nom</ion-label>
-        <ion-radio value="nomParcelle" (ionSelect)="changeFilter()"></ion-radio>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-
-  <ion-list>
+   <ion-list>
     <ion-item-sliding #item *ngFor="let dataSess of dataSesion">
 
       <ion-item >
-        <ion-card *ngIf="dataSess.affichage == 0" class="scorebon" >
+        <ion-card>
           <ion-card-content>
-            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
+            <h4 class="title">{{dataSess.nomParcelle}}</h4>
             <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-            <table class="result">
-              <tr>
-                <td>IAC :
-                  <b>{{dataSess.iac}}</b>
-                </td>
-                <td>Moy :
-                  <b>{{dataSess.moyenne}}</b>
-                </td>
-                <td>Taux P :
-                  <b>{{dataSess.tauxApexP}}</b>
-                </td>
-              </tr>
-            </table>
+            <canvas id="{{dataSess.nomParcelle}}"></canvas>
+            <p><img src="{{dataSess.fleche}}" class="fleche" /></p>
           </ion-card-content>
         </ion-card>
+     </ion-item>
 
-        <ion-card *ngIf="dataSess.affichage == 1" class="scoremoyen" >
-          <ion-card-content>
-            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
-            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-            <table class="result">
-              <tr>
-                <td>IAC :
-                  <b>{{dataSess.iac}}</b>
-                </td>
-                <td>Moy :
-                  <b>{{dataSess.moyenne}}</b>
-                </td>
-                <td>Taux P :
-                  <b>{{dataSess.tauxApexP}}</b>
-                </td>
-              </tr>
-            </table>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card *ngIf="dataSess.affichage == 2" class="scoremauvais" >
-          <ion-card-content>
-            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
-            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-            <table class="result">
-              <tr>
-                <td>IAC :
-                  <b>{{dataSess.iac}}</b>
-                </td>
-                <td>Moy :
-                  <b>{{dataSess.moyenne}}</b>
-                </td>
-                <td>Taux P :
-                  <b>{{dataSess.tauxApexP}}</b>
-                </td>
-              </tr>
-            </table>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-card *ngIf="dataSess.affichage == 3" class="scorehorrible" >
-          <ion-card-content>
-            <span class="title">Nom : {{dataSess.nomParcelle}}</span>
-            <p class="datebad">Le {{dataSess.date}} à {{dataSess.time}}</p>
-            <table class="result">
-              <tr>
-                <td>IAC :
-                  <b>{{dataSess.iac}}</b>
-                </td>
-                <td>Moy :
-                  <b>{{dataSess.moyenne}}</b>
-                </td>
-                <td>Taux P :
-                  <b>{{dataSess.tauxApexP}}</b>
-                </td>
-              </tr>
-            </table>
-          </ion-card-content>
-        </ion-card>
-      </ion-item>
-
-      <ion-item-options side="left">
-          <button ion-button color="danger" (click)="deleteEntry(dataSess.id)"><ion-icon name="trash" class="iconslice"></ion-icon></button>
-       </ion-item-options>
       <ion-item-options side="right">
           <button ion-button color="primary" (click)="openViewSession(dataSess.id)"><ion-icon name="eye" class="iconslice"></ion-icon></button>
-          <button ion-button color="secondary" (click)="openEditSession(dataSess.id)"><ion-icon name="create" class="iconslice"></ion-icon></button>
         </ion-item-options>
       </ion-item-sliding>
   </ion-list>

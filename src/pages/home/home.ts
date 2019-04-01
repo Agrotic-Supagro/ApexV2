@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { Subscription} from 'rxjs/Subscription';
@@ -20,6 +20,9 @@ const DATABASE_APEX_NAME: string = 'dataApex.db';
 const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
 const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
 
+import { Chart } from 'chart.js';
+
+
 /* Configuration pour les tests */
 //const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/dev/';
 //const SERVEUR_APEX_FILE: string = 'apiApexv3_dev.php';
@@ -35,9 +38,12 @@ export class HomePage {
   private db: SQLiteObject;
   private dataUser: any[];
   private dataSesion: any[];
+  private dataChart: any[];
   public filter: string = 'date';
   public baseURI: string = SERVEUR_APEX_NAME;
   public testArray = [];
+  public doughnutChartLabels:string[] = ['Apex 2', 'Apex 1', 'Apex 0'];
+
 
   constructor(
     public modalCtrl: ModalController,
@@ -55,8 +61,7 @@ export class HomePage {
 
     this.createDatabaseApex();
     this.startGeolocation();
-
-    
+  
 
   }
   ionViewDidLoad() {}
@@ -77,6 +82,7 @@ export class HomePage {
     authenticationModal.onDidDismiss(() => {
       this.retrieveUser();
       this.checkServeUpdate();
+     
     });
     authenticationModal.present();
   }
@@ -88,6 +94,7 @@ export class HomePage {
     var apexModal = this.modalCtrl.create('ApexmodalPage', data);
     apexModal.onDidDismiss(() => {
       this.retrieveSession();
+      this.getDataForChart();
       this.checkServeUpdate();
     });
     apexModal.present();
@@ -100,6 +107,7 @@ export class HomePage {
     var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
     apexSaisie.onDidDismiss(() => {
       this.retrieveSession();
+      this.getDataForChart();
       this.checkServeUpdate();
     });
     apexSaisie.present();
@@ -113,6 +121,7 @@ export class HomePage {
     var viewData = this.modalCtrl.create('ViewdataPage', data);
     viewData.onDidDismiss(() => {
       this.retrieveSession();
+      this.getDataForChart();
       this.checkServeUpdate();
     });
     viewData.present();
@@ -126,6 +135,7 @@ export class HomePage {
     var editSaisie = this.modalCtrl.create('EditPage', data);
     editSaisie.onDidDismiss(() => {
       this.retrieveSession();
+      this.getDataForChart();
       this.checkServeUpdate();
     });
     editSaisie.present();
@@ -156,6 +166,7 @@ export class HomePage {
                 console.log('Observation table created');
                 this.retrieveUser();
                 this.retrieveSession();
+                this.getDataForChart();
                 this.checkServeUpdate();
               })
               .catch(e => console.log('fail table Observation | ' + e));
@@ -207,7 +218,9 @@ export class HomePage {
   }
 
   public retrieveSession() {
-    var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
+    var sqlrequest = 'select distinct `nomParcelle` from `Session`';
+    //var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
+    this.dataSesion = [];
 
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
@@ -217,37 +230,48 @@ export class HomePage {
         }
         if (data.rows) {
           if (data.rows.length > 0) {
-            this.dataSesion = [];
             for (let i = 0; i < data.rows.length; i++) {
-              if (data.rows.item(i).apexP==0 && data.rows.item(i).apexR==0 && data.rows.item(i).apexC==0) {
-                this.deleteObservation(data.rows.item(i).idSession);
-                this.deleteSession(data.rows.item(i).idSession);
-              } else {
-                var timestamp = data.rows.item(i).date;
-                var date = this.dateformater.convertToDate(data.rows.item(i).date);
-                var time = this.dateformater.convertToTime(data.rows.item(i).date);
-                var iac = this.convertInteger(data.rows.item(i).iac);
-                var moyenne = data.rows.item(i).moyenne.toFixed(2);
-                var tauxApexP = data.rows.item(i).tauxApexP.toFixed(1);
-                var affichage = this.computeAffichage(moyenne,tauxApexP,iac);
-                this.dataSesion.push({
-                  id: data.rows.item(i).idSession,
-                  nomParcelle: data.rows.item(i).nomParcelle,
-                  globalLatitude: data.rows.item(i).globalLatitude,
-                  globalLongitude: data.rows.item(i).globalLongitude,
-                  apexP: data.rows.item(i).apexP,
-                  apexR: data.rows.item(i).apexR,
-                  apexC: data.rows.item(i).apexC,
-                  moyenne: moyenne,
-                  tauxApexP: tauxApexP,
-                  iac: iac,
-                  date: date,
-                  time: time,
-                  timestamp: timestamp,
-                  affichage:affichage,
-                  userId: data.rows.item(i).userId
-                });
-              }
+              console.log(data.rows.item(i).nomParcelle);
+              this.db.executeSql('select * from `Session` WHERE nomParcelle = ? order by date desc LIMIT 2', [data.rows.item(i).nomParcelle])
+                .then((data) => {
+                  if (data == null) {
+                    console.log('no session yet');
+                    return;
+                  }
+                  if (data.rows) {
+                    if (data.rows.length > 0) {
+                      var fleche = 'assets/imgs/f2.jpg';
+
+                      if (data.rows.length == 2) {
+                        var tauxApexPa = data.rows.item(0).tauxApexP.toFixed(2);
+                        var tauxApexPb = data.rows.item(1).tauxApexP.toFixed(2);
+                        var diff = tauxApexPb-tauxApexPa;
+                        if (diff > 0) {
+                          fleche = 'assets/imgs/f3.jpg';
+                        } else {
+                          if(diff < 0) fleche = 'assets/imgs/f1.jpg';
+                        }
+
+                      }
+                      this.dataSesion.push({
+                        id: data.rows.item(0).idSession,
+                        nomParcelle: data.rows.item(0).nomParcelle,
+                        apexP: data.rows.item(0).apexP,
+                        apexR: data.rows.item(0).apexR,
+                        apexC: data.rows.item(0).apexC,
+                        fleche: fleche,
+                        date: this.dateformater.convertToDate(data.rows.item(0).date),
+                        time: this.dateformater.convertToTime(data.rows.item(0).date),
+                        timestamp: data.rows.item(0).date,
+                        userId: data.rows.item(0).userId
+                      });
+                      this.dataSesion.sort(function (a, b) {
+                        return b.timestamp - a.timestamp;
+                      });
+                    }
+                  }
+                })
+                .catch(e => console.log('fail sql retrieve Sessions ' + e));
             }
           }
         }
@@ -291,6 +315,7 @@ export class HomePage {
           handler: () => {
             this.hiddenSession(id);
             this.retrieveSession();
+            this.getDataForChart();
             console.log('Agree clicked');
           }
         }
@@ -307,6 +332,7 @@ export class HomePage {
         console.log('Session ' + idSession + ' hidden');
         this.dataSesion = [];
         this.retrieveSession();
+        this.getDataForChart();
       })
       .catch(e => console.log(e));
   }
@@ -517,4 +543,99 @@ export class HomePage {
     console.log('## TEST ##');
   }
 
+  makeChart(data) {
+    console.log('>> '+data.nomParcelle);
+    var ctx = (<any>document.getElementById(data.nomParcelle)).getContext('2d');
+    new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'pie',
+        // The data for our dataset
+        data: {
+            labels: ["Apex 2", "Apex 1", "Apex 0"],
+            datasets: [{
+              label: "My First dataset",
+              backgroundColor: [
+                'rgb(104,205,117)',
+                'rgb(181,195,122)',
+                'rgb(150,159,151)',
+
+                'rgba(96,198,213, 1)',
+                'rgba(206,178,170, 1)',
+                'rgba(184, 151, 195, 1)',
+
+                'rgba(96,198,213, 1)',
+                'rgba(206,178,170, 1)',
+                'rgba(195,184,151, 1)',
+
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255,99,132,1)',
+              ],
+              borderColor: [
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255,99,132,1)',
+              ],
+              data: [data.apexP,data.apexR,data.apexC],
+              borderWidth: 1
+            }]
+       },
+       options: {
+        legend: {
+          position: 'left'
+        }
+    }
+    });
+  }
+
+  computeChart(data){
+    data.forEach(element => {
+      this.makeChart(element);
+    });
+  }
+  public getDataForChart() {
+    var sqlrequest = 'select distinct `nomParcelle` from `Session`';
+    //var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
+    this.dataChart = [];
+
+    this.db.executeSql(sqlrequest, {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              console.log(data.rows.item(i).nomParcelle);
+              this.db.executeSql('select * from `Session` WHERE nomParcelle = ? order by date desc LIMIT 2', [data.rows.item(i).nomParcelle])
+                .then((data) => {
+                  if (data == null) {
+                    console.log('no session yet');
+                    return;
+                  }
+                  if (data.rows) {
+                    if (data.rows.length > 0) {
+                        this.dataChart.push({
+                          id: data.rows.item(0).idSession,
+                          nomParcelle: data.rows.item(0).nomParcelle,
+                          apexP: data.rows.item(0).apexP,
+                          apexR: data.rows.item(0).apexR,
+                          apexC: data.rows.item(0).apexC,
+                          userId: data.rows.item(0).userId
+                        });
+                        this.computeChart(this.dataChart);
+                    }
+                  }
+                })
+                .catch(e => console.log('fail sql retrieve Sessions ' + e));
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail sql retrieve Sessions ' + e));
+  }
 }

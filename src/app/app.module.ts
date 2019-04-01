@@ -29,7 +29,6 @@ import { Dateformater } from '../services/dateformater.service';
 import { ApexData } from '../services/apexdata.service';
 import { HttpClientModule } from '@angular/common/http';
 
-
 @NgModule({
   declarations: [
     MyApp,
