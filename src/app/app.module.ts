@@ -6,6 +6,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
+import { SenddataPage } from '../pages/senddata/senddata';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -21,6 +22,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { Network } from '@ionic-native/network';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { File } from '@ionic-native/file';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -29,11 +31,13 @@ import { Dateformater } from '../services/dateformater.service';
 import { ApexData } from '../services/apexdata.service';
 import { HttpClientModule } from '@angular/common/http';
 
+
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     AboutPage,
+    SenddataPage,
     ContactPage
    ],
   imports: [
@@ -46,13 +50,15 @@ import { HttpClientModule } from '@angular/common/http';
     MyApp,
     HomePage,
     AboutPage,
-    ContactPage
+    ContactPage,
+    SenddataPage
   ],
   providers: [
     StatusBar,
     Dateformater,
     GUIDGenerator,
     LocationTracker,
+    ScreenOrientation,
     ApexData,
     Geolocation,
     BackgroundGeolocation,

@@ -7,8 +7,6 @@ import { LocationTracker } from '../../services/locationtracker.service';
 import { Dateformater } from '../../services/dateformater.service';
 import { ApexData } from '../../services/apexdata.service';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Device } from '@ionic-native/device';
 import { File } from '@ionic-native/file';
@@ -39,11 +37,10 @@ export class HomePage {
   private dataUser: any[];
   private dataSesion: any[];
   private dataChart: any[];
-  public filter: string = 'date';
   public baseURI: string = SERVEUR_APEX_NAME;
   public testArray = [];
   public doughnutChartLabels:string[] = ['Apex 2', 'Apex 1', 'Apex 0'];
-
+  public isToggled: boolean;
 
   constructor(
     public modalCtrl: ModalController,
@@ -54,7 +51,6 @@ export class HomePage {
     private network: Network,
     public device: Device,
     private http: HTTP,
-    private httpclient:HttpClient,
     public file: File,
     public apexData: ApexData,
     public locationTracker: LocationTracker) {
@@ -113,10 +109,10 @@ export class HomePage {
     apexSaisie.present();
   }
 
-  public openViewSession(idsessionUpdate) {
+  public openViewSession(nomParcelleView) {
     var data = {
       iduser: this.dataUser[0].id,
-      idsession: idsessionUpdate
+      nomParcelleView: nomParcelleView
     };
     var viewData = this.modalCtrl.create('ViewdataPage', data);
     viewData.onDidDismiss(() => {
@@ -205,8 +201,7 @@ export class HomePage {
   }
 
   public changeFilter(){
-    console.log('Filter : '+this.filter);
-    if (this.filter == 'nomParcelle') {
+    if (this.isToggled) {
       this.dataSesion.sort(function (a, b) {
         return a.nomParcelle.localeCompare(b.nomParcelle);
       });
@@ -240,16 +235,39 @@ export class HomePage {
                   }
                   if (data.rows) {
                     if (data.rows.length > 0) {
+                      // DEFINITION DES VARIABLES
                       var fleche = 'assets/imgs/f2.jpg';
+                      var classe = 'forte';
+                      var apexP= data.rows.item(0).apexP;
+                      var apexR= data.rows.item(0).apexR;
+                      var apexC= data.rows.item(0).apexC;
+                      var moyenne = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
+                      var tauxApexP = data.rows.item(0).tauxApexP.toFixed(2);
+                      var tauxApexC = apexC/(apexC+apexP+apexR)*100;
 
+                      // GESTION DES CLASSES
+                      if (moyenne >= 0.75) {
+                        classe = 'absente';
+                      } else {
+                        if (tauxApexP >= 5) {
+                          classe = 'moderee';
+                        } else {
+                          if (tauxApexC <= 90) {
+                            classe = 'importante';
+                          }
+                        }
+                      }
+                      // GESTION DE LA DYNAMIQUE
                       if (data.rows.length == 2) {
-                        var tauxApexPa = data.rows.item(0).tauxApexP.toFixed(2);
-                        var tauxApexPb = data.rows.item(1).tauxApexP.toFixed(2);
-                        var diff = tauxApexPb-tauxApexPa;
-                        if (diff > 0) {
+                        var apexPOld= data.rows.item(1).apexP;
+                        var apexROld= data.rows.item(1).apexR;
+                        var apexCOld= data.rows.item(1).apexC;
+                        var moyenneOld = ((apexPOld)+(apexROld/2))/(apexPOld+apexROld+apexCOld);
+                        var diffMoyenne = moyenneOld-moyenne;
+                        if (diffMoyenne > 0.2) {
                           fleche = 'assets/imgs/f3.jpg';
                         } else {
-                          if(diff < 0) fleche = 'assets/imgs/f1.jpg';
+                          if(diffMoyenne < -0.2) fleche = 'assets/imgs/f1.jpg';
                         }
 
                       }
@@ -260,6 +278,7 @@ export class HomePage {
                         apexR: data.rows.item(0).apexR,
                         apexC: data.rows.item(0).apexC,
                         fleche: fleche,
+                        classe:classe,
                         date: this.dateformater.convertToDate(data.rows.item(0).date),
                         time: this.dateformater.convertToTime(data.rows.item(0).date),
                         timestamp: data.rows.item(0).date,
@@ -551,17 +570,22 @@ export class HomePage {
         type: 'pie',
         // The data for our dataset
         data: {
-            labels: ["Apex 2", "Apex 1", "Apex 0"],
+            labels: ["Apex 1", "Apex 0,5", "Apex 0"],
             datasets: [{
               label: "My First dataset",
               backgroundColor: [
-                'rgb(104,205,117)',
-                'rgb(181,195,122)',
-                'rgb(150,159,151)',
+                
+                '#486B58',
+                '#4D9799',
+                '#7CC3C0',
 
                 'rgba(96,198,213, 1)',
                 'rgba(206,178,170, 1)',
                 'rgba(184, 151, 195, 1)',
+
+                'rgb(104,205,117)',
+                'rgb(181,195,122)',
+                'rgb(150,159,151)',
 
                 'rgba(96,198,213, 1)',
                 'rgba(206,178,170, 1)',
@@ -584,6 +608,8 @@ export class HomePage {
             }]
        },
        options: {
+        responsive: true,
+        maintainAspectRatio: false,
         legend: {
           position: 'left'
         }

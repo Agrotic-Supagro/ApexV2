@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
+import { SenddataPage } from '../pages/senddata/senddata';
 
 @Component({
   templateUrl: 'app.html'
@@ -24,7 +25,8 @@ export class MyApp {
     this.pages = [
       { title: 'Accueil', component: HomePage },
       { title: 'Au sujet d\'Apex', component: AboutPage },
-      { title: 'Contact', component: ContactPage }
+      { title: 'Contact', component: ContactPage },
+      { title: 'Données', component: SenddataPage }
     
     ];
 

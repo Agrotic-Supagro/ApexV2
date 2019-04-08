@@ -19,18 +19,20 @@ export class EditPage {
   public apexP: number;
   public nomParcelle: string;
   public nomParcelleSave: string;
-  public idUser: string;
   public guidsession: string;
+  public selectParcelle: any[];
+  public categorie: any = {
+    list:false,
+  };
 
   constructor( public navCtrl: NavController,
     public viewCtrl : ViewController,
     public alertCtrl: AlertController,
     public sqlite: SQLite,
     public navParams: NavParams) {
-
-      this.openDataBase();
-      this.idUser = this.navParams.get('iduser');
       this.guidsession = this.navParams.get('idsession');
+      this.nomParcelle = this.navParams.get('nomParcelle');
+      this.openDataBase();
   }
 
   ionViewDidLoad() {
@@ -48,6 +50,34 @@ export class EditPage {
         this.retrieveSession();
       })
       .catch(e => console.log(e));
+  }
+  
+  //Controle liste déroulante + ajout
+  public retrieveNomParcelle() {
+    this.selectParcelle = [];
+    this.db.executeSql('select distinct nomParcelle from `Session` order by nomParcelle asc', {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            console.log('Push data session');
+            for (let i = 0; i < data.rows.length; i++) {
+              var checked = false;
+              if (data.rows.item(i).nomParcelle == this.nomParcelle) {
+                checked=true;
+              }
+              this.selectParcelle.push({
+                nom: data.rows.item(i).nomParcelle,
+                check:checked
+              });
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail sql retrieve Sessions ' + e));
   }
 
   public retrieveSession() {
@@ -72,6 +102,54 @@ export class EditPage {
         }
       })
       .catch(e => console.log('fail sql retrieve Sessions ' + e));
+      this.retrieveNomParcelle();
+  }
+
+  public addParcelle() {
+    let alert = this.alertCtrl.create({
+      title: 'Nouvelle parcelle',
+      inputs: [{
+        name: 'nomparcelle',
+        placeholder: 'nom de la parelle'
+      }],
+      buttons: [{
+          text: 'Annuler',
+          role: 'Annuler',
+          handler: data => {
+            this.nomParcelle = null;
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Ajouter',
+          handler: data => {
+            if (data.nomparcelle == '' || data.nomparcelle.length === 0 || /^\s*$/.test(data.nomparcelle)) {
+              this.nomParcelle = null;
+            } else {
+              this.selectParcelle.push({nom:data.nomparcelle, check:true});
+              this.nomParcelle = data.nomparcelle;
+              this.categorie.list = false;
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  
+  public onCancel(){
+    this.nomParcelle = null;
+    this.categorie.list = true;
+  }
+
+  public resetNomParcelle(){
+    this.nomParcelle = '';
+    this.categorie.list = true;
+  }
+
+  public changeClass() {
+    this.categorie.list = false;
   }
 
   public updateSession():void{
@@ -83,11 +161,11 @@ export class EditPage {
     var apexP = this.apexP;
     var apexR = this.apexR;
     var apexC = this.apexC;
-
+    var serve = 0;
     console.log('try update Session table')
  
-    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, apexP=?, apexR=?, apexC=? WHERE idSession=?', 
-    [nomParcelle, iac, moyenne, tauxApexP, apexP, apexR, apexC, idSession])
+    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, apexP=?, apexR=?, apexC=?, serve=? WHERE idSession=?', 
+    [nomParcelle, iac, moyenne, tauxApexP, apexP, apexR, apexC, serve, idSession])
     .then(() => console.log('Session updated'))
     .catch(e => console.log(e));
 
@@ -110,7 +188,7 @@ export class EditPage {
     var apexP:number = +this.apexP;
     var apexR:number = +this.apexR;
     var apexC:number = +this.apexC;
-    var moyenne = ((apexP*2)+(apexR))/(apexC+apexP+apexR);
+    var moyenne = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
     console.log('compute moyenne : '+moyenne);
     return moyenne;
   }

@@ -19,22 +19,42 @@
         </ion-row>
         </ion-grid>
   <h3 class="centerclass">Liste des sessions effectuées</h3>
+
+  <ion-item><ion-label>Trier par nom de parcelle</ion-label><ion-toggle [(ngModel)]="isToggled" (ionChange)="changeFilter()"></ion-toggle></ion-item>
+
    <ion-list>
     <ion-item-sliding #item *ngFor="let dataSess of dataSesion">
-
       <ion-item >
-        <ion-card>
+        <ion-card class="globalcard">
           <ion-card-content>
-            <h4 class="title">{{dataSess.nomParcelle}}</h4>
-            <p>Le {{dataSess.date}} à {{dataSess.time}}</p>
-            <canvas id="{{dataSess.nomParcelle}}"></canvas>
+            <p class="titlecard">{{dataSess.nomParcelle}}</p>
+            <p class="subtitlecard">Croissance au {{dataSess.date}} à {{dataSess.time}}</p>
+            <div class="pieCard"><canvas id="{{dataSess.nomParcelle}}" class="chart"></canvas></div>
+            <p class="subtitlecard">Dynamique de la croissance</p>
             <p><img src="{{dataSess.fleche}}" class="fleche" /></p>
+            <p class="titleCH">Interprétation de la contrainte hydrique</p>
+            <ion-grid>
+              <ion-row>
+                <ion-col [ngClass]="(dataSess.classe == 'absente') ? 'absente' : 'absenteLight'" >
+                  Absente
+                </ion-col>
+                <ion-col [ngClass]="(dataSess.classe == 'moderee') ? 'moderee' : 'modereeLight'" >
+                  Modérée
+                </ion-col>
+                <ion-col [ngClass]="(dataSess.classe == 'importante') ? 'importante' : 'importanteLight'" >
+                  Importante
+                </ion-col>
+                <ion-col [ngClass]="(dataSess.classe == 'forte') ? 'forte' : 'forteLight'" >
+                  Forte
+                </ion-col>
+              </ion-row>
+              </ion-grid>
           </ion-card-content>
         </ion-card>
      </ion-item>
 
       <ion-item-options side="right">
-          <button ion-button color="primary" (click)="openViewSession(dataSess.id)"><ion-icon name="eye" class="iconslice"></ion-icon></button>
+          <button ion-button color="primary" (click)="openViewSession(dataSess.nomParcelle)"><ion-icon name="eye" class="iconslice"></ion-icon></button>
         </ion-item-options>
       </ion-item-sliding>
   </ion-list>

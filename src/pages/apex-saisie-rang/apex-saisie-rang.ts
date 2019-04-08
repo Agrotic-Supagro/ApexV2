@@ -29,6 +29,9 @@ export class ApexSaisieRangPage {
   public latitude: number;
   public longitude: number;
   public selectParcelle: any[];
+  public categorie: any = {
+    list:true,
+  };
 
   constructor(
     public vibration: Vibration,
@@ -136,7 +139,7 @@ export class ApexSaisieRangPage {
     var apexP:number = +this.p_array;
     var apexR:number = +this.r_array;
     var apexC:number = +this.c_array;
-    var moyenne = ((apexP*2)+(apexR))/(apexC+apexP+apexR);
+    var moyenne = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
     console.log('compute moyenne : '+moyenne);
     return moyenne;
   }
@@ -168,12 +171,10 @@ export class ApexSaisieRangPage {
   }
 
   showResult() {
-    var iac = this.convertInteger(this.computeIAC());
     var moyenne = this.computeMoyenne().toFixed(2);
-    var tauxApexP = this.computeTx().toFixed(2);
     let alert = this.alertCtrl.create({
-      title: 'IAC : '+iac,
-      subTitle: 'Moyenne : '+moyenne+' <br/> Taux Apex P : '+tauxApexP,
+      title: 'Moyenne : '+moyenne,
+      subTitle: 'Apex 1 : '+this.p_array+' <br/> Apex 0,5 : '+this.r_array+' <br/> Apex 0 : '+this.c_array,
       buttons: ['OK']
     });
     alert.present();
@@ -229,6 +230,7 @@ export class ApexSaisieRangPage {
             } else {
               this.selectParcelle.push({nom:data.nomparcelle, check:true});
               this.nomParcelle = data.nomparcelle;
+              this.categorie.list = false;
             }
           }
         }
@@ -239,5 +241,15 @@ export class ApexSaisieRangPage {
 
   public onCancel(){
     this.nomParcelle = null;
+    this.categorie.list = true;
+  }
+
+  public resetNomParcelle(){
+    this.nomParcelle = '';
+    this.categorie.list = true;
+  }
+
+  public changeClass() {
+    this.categorie.list = false;
   }
 }

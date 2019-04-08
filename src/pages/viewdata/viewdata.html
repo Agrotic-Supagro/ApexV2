@@ -1,30 +1,89 @@
 <ion-header>
-
-  <ion-navbar [ngClass]='categorie'>
-    <ion-title>Parcelle : {{dataSession.nomParcelle}}</ion-title>
+  <ion-navbar>
+    <ion-title>{{nomParcelle}}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-<ion-content padding>
-  <h5>Informations</h5>
-  Observations réalisées le {{dataSession.date}} à {{dataSession.time}}
-  <br/>
-  <br/> Coordonnées géographiques:
-  <br/>{{dataSession.globalLatitude}} / {{dataSession.globalLongitude}}
-  <br/>
-  <h5>Observations :</h5>
-  <br/> Nombre d'apex P (2) : <b>{{dataSession.apexP}} </b>
-  <br/> Nombre d'apex R (1) : <b>{{dataSession.apexR}} </b>
-  <br/> Nombre d'apex C (0) : <b>{{dataSession.apexC}} </b>
-  <br/>
-  <h5>Indices calculés :</h5>
-  <br/> IAC : <b>{{dataSession.iac}}</b>
-  <br/> Moyenne : <b>{{dataSession.moyenne}}</b>
-  <br/> Taux apex P : <b>{{dataSession.tauxApexP}}</b>
-  <br/>
-  <h5>Contrainte hydrique : <span [ngClass]='categorie'>{{dataSession.affichage}}</span></h5>
-  <i>Nb: La valeur de la contrainte hydrique est indicative</i>
+<ion-content>
+    
+  <ion-card>
+    <ion-card-header>
+      <span class="titleCard">Suivi de la croissance</span>
+    </ion-card-header>
+    <ion-card-content class="cardChart" >
+        <canvas #lineCanvasCroissance></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <span class="titleCard">Interprétation contrainte hydrique</span>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #lineCanvasContrainte></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header (click)="isLocalisation = !isLocalisation">
+      <ion-icon name="arrow-dropup" *ngIf="isLocalisation"></ion-icon>
+      <ion-icon name="arrow-dropdown" *ngIf="!isLocalisation"></ion-icon>
+      <span class="titleCard">Localisation</span>
+    </ion-card-header>
+    <ion-card-content *ngIf="isLocalisation">
+        <ion-grid>
+            <ion-row>
+              <ion-col class="center">
+                  Longitude: {{globalLng}}
+              </ion-col>
+              <ion-col class="center">
+                  Latitude: {{globalLat}}
+              </ion-col>
+            </ion-row>
+            </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header (click)="isList=!isList">
+      <ion-icon name="arrow-dropup" *ngIf="isList"></ion-icon>
+      <ion-icon name="arrow-dropdown" *ngIf="!isList"></ion-icon>
+      <span class="titleCard">Liste des observations</span>
+    </ion-card-header>
+    <ion-card-content *ngIf="isList">
+      <ion-list>
+        <ion-item >
+          <ion-grid *ngFor="let dataParcelle of dataSession">
+            <ion-row>
+              <ion-col col-auto>
+                <p>Le {{dataParcelle.date}} à {{dataParcelle.time}}</p>
+              </ion-col>
+              <ion-col class="right edit">
+                <ion-icon name="build" (click)="editSession(dataParcelle.id)"></ion-icon>
+              </ion-col>
+              <ion-col class="right trash">
+                <ion-icon name="trash" (click)="trashSession(dataParcelle.id)"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header (click)="isDelete = !isDelete">
+      <ion-icon name="arrow-dropup" *ngIf="isDelete"></ion-icon>
+      <ion-icon name="arrow-dropdown" *ngIf="!isDelete"></ion-icon>
+      <span class="titleCard">Supprimer la parcelle</span>
+    </ion-card-header>
+    <ion-card-content *ngIf="isDelete">
+      <p>Cette action est irréversible et supprimera toutes les informations concernant la parcelle {{nomParcelle}}.</p>
+      <button ion-button block color="danger" (tap)="deleteParcelle()">Supprimer</button>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
 
 <ion-footer>

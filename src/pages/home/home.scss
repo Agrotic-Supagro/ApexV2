@@ -6,6 +6,10 @@ page-home {
         height: 80px;
       }
 
+    .pieCard{
+        height: 100px;;
+    }
+
     .homePage{
         margin-top: 0.3em !important;
     }
@@ -25,9 +29,107 @@ page-home {
         color: rgb(221, 221, 221);
     }
 
-    .title{
+    .absente{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        text-align: center;
+        font-weight: bold;
+        background-color: #97bf0d;
+    }
+    .absenteLight{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        text-align: center;
+        background-color: rgba(152, 191, 13, 0.15);
+    }
+    .modereeLight{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        text-align: center;
+        background-color: rgba(215, 219, 35, 0.15);
+    }
+    .moderee{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
         font-weight: bold;
         text-align: center;
+        background-color: #d7db23;
+    }
+    .importante{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        font-weight: bold;
+        text-align: center;
+        background-color: #ffd000;
+    }
+    .importanteLight{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        text-align: center;
+        background-color: rgba(255, 208, 0, 0.15);
+    }
+    .forte{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        font-weight: bold;
+        text-align: center;
+        background-color: #cf4913;
+    }
+    .forteLight{
+        border: white solid 1px;
+        width: 25%;
+        font-size: 0.8em;
+        text-align: center;
+        background-color: rgba(207, 72, 19, 0.15);
+    }
+
+    .titlecard{
+        background-color: #86919b;
+        color: white;
+        font-variant: small-caps;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.3em;
+        padding: 0.1em;
+        margin-bottom: 0.1em;
+    }
+
+    .fleche{
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .constrainteHydrique{
+        margin-left: auto;
+        margin-right: auto;
+        height: 1.5em;
+        width: 100%;
+    }
+
+    .chart{
+       width: 60%;
+    }
+
+    .subtitlecard{
+        font-weight: bold;
+    }
+
+    .titleCH{
+        font-weight: bold;
+        background-color: lavender;
+        margin-bottom: 0.4em;
+    }
+
+    .globalcard{
+        text-align: center;
+        //margin: auto;
     }
 
     .deletebutton{

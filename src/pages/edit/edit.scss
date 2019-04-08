@@ -1,3 +1,18 @@
 page-edit {
+    .list .toolbar-background{
+        background-color: rgba(241, 194, 106, 0.5);
+      }
+      
+      .parcelleName {
+        text-align: center;
+        //font-weight: bold;
+        color: rgb(39, 63, 87);
+      }
 
+      .title {
+        text-align: center;
+      }    
+      .parcelle {
+        width: 100%;
+      }
 }

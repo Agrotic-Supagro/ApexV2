@@ -1,55 +1,67 @@
-
-
-<ion-content padding class="card-background-page">
-    <div>
-        Nom de la parcelle : <span class="parcelleName">{{nomParcelle}}</span>
-        <table class="parcelle">
-            <tr>
-              <td>
-                <ion-item>
-                  <ion-label>Parcelle</ion-label>
-                  <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()" >
-                  <ion-option *ngFor="let nomParcelle of selectParcelle" [value] = "nomParcelle.nom" [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
-                  </ion-select>
-                </ion-item>
-              </td>
-              <td class="al-right">
-                <button ion-button small (tap)="addParcelle()">
-                    <ion-icon name="add-circle"></ion-icon>
-                </button></td>
-            </tr>
-          </table>
+<ion-header>
+  <ion-toolbar [ngClass]='categorie'>
+    <ion-title *ngIf="nomParcelle" (click)="resetNomParcelle()">{{nomParcelle}}</ion-title>
+    <div *ngIf="!nomParcelle">
+      <table class="parcelle">
+        <tr>
+          <td>
+            <ion-item>
+              <ion-label>Parcelle</ion-label>
+              <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"
+                (ionChange)="changeClass()">
+                <ion-option *ngFor="let nomParcelle of selectParcelle" [value]="nomParcelle.nom"
+                  [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
+              </ion-select>
+            </ion-item>
+          </td>
+          <td class="al-right">
+            <button ion-button small (tap)="addParcelle()">
+              <ion-icon name="add-circle"></ion-icon>
+            </button></td>
+        </tr>
+      </table>
     </div>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-card (click)="addvalue('P')">
-    <img src="assets/imgs/stadeP.jpg" class="card-img" />
-    <div class="card-title">Pousse active</div>
-    <div class="card-subtitle">APEX P (2)</div>
-  </ion-card>
-
-  <ion-card (click)="addvalue('R')">
-    <img src="assets/imgs/stadeR.jpg" class="card-img" />
-    <div class="card-title">Croissance ralentie</div>
-    <div class="card-subtitle">APEX R (1)</div>
-  </ion-card>
-
-  <ion-card (click)="addvalue('C')">
-    <img src="assets/imgs/stadeC.jpg" class="card-img" />
-    <div class="card-title">Tombé ou sec</div>
-    <div class="card-subtitle">APEX C (0)</div>
-  </ion-card>
-  
+<ion-content class="card-background-page">
+  <ion-grid>
+    <ion-row (click)="addvalue('P')" class="box boxtop">
+      <ion-col>
+        <img src="assets/imgs/stadeP.jpg" class="imgBox" />
+      </ion-col>
+      <ion-col >
+        <span class="apex-title">Pousse active</span>
+      </ion-col>
+    </ion-row>
+    <ion-row (click)="addvalue('R')" class="box boxbottom">
+      <ion-col>
+        <img src="assets/imgs/stadeR.jpg" class="imgBox" />
+      </ion-col>
+      <ion-col >
+        <span class="apex-title">Croissance ralentie</span>
+      </ion-col>
+    </ion-row>
+    <ion-row (click)="addvalue('C')" class="box">
+      <ion-col>
+        <img src="assets/imgs/stadeC.jpg" class="imgBox" />
+      </ion-col>
+      <ion-col >
+        <span class="apex-title">Tombé ou sec</span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <ng-container *ngIf="numberApex < thresholdApex; else elseTemplate">
-      <button ion-button block color="dark" (tap)="apexAlert()"> Observation : {{numberApex}}/{{thresholdApex}} </button>
+      <button ion-button block color="dark" (tap)="apexAlert()"> Observation : {{numberApex}}/{{thresholdApex}}
+      </button>
     </ng-container>
     <ng-template #elseTemplate>
-      <button ion-button block color="secondary" (tap)="closeModal()">Calculer l'indice</button>
+      <button ion-button block color="secondary" (tap)="closeModal()">Calculer les indices</button>
     </ng-template>
 
   </ion-toolbar>
 </ion-footer>
-

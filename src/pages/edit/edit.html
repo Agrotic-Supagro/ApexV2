@@ -1,35 +1,45 @@
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>Modifier une parcelle</ion-title>
-  </ion-navbar>
-
+  <ion-toolbar [ngClass]='categorie'>
+    <ion-title *ngIf="nomParcelle" (click)="resetNomParcelle()">{{nomParcelle}}</ion-title>
+    <div *ngIf="!nomParcelle">
+      <table class="parcelle">
+        <tr>
+          <td>
+            <ion-item>
+              <ion-label>Parcelle</ion-label>
+              <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"
+                (ionChange)="changeClass()">
+                <ion-option *ngFor="let nomParcelle of selectParcelle" [value]="nomParcelle.nom"
+                  [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
+              </ion-select>
+            </ion-item>
+          </td>
+          <td class="al-right">
+            <button ion-button small (tap)="addParcelle()">
+              <ion-icon name="add-circle"></ion-icon>
+            </button></td>
+        </tr>
+      </table>
+    </div>
+  </ion-toolbar>
 </ion-header>
-
 
 <ion-content padding>
   <div>
     <ion-item>
-      <ion-label color="primary" stacked>Nom de la parcelle</ion-label>
-      <ion-input type="text" placeholder="nomParcelle" [(ngModel)]="nomParcelle"></ion-input>
-    </ion-item>
-  </div>
-  <br/>
-  <div>
-    <ion-item>
-      <ion-label color="primary" stacked>APEX P : pousse active</ion-label>
+      <ion-label color="primary" stacked>APEX 1 : pousse active</ion-label>
       <ion-input type="number" placeholder="apexP" [(ngModel)]="apexP"></ion-input>
     </ion-item>
   </div>
   <div>
     <ion-item>
-      <ion-label color="primary" stacked>APEX R : rameau croissance ralentie</ion-label>
+      <ion-label color="primary" stacked>APEX 0,5 : rameau croissance ralentie</ion-label>
       <ion-input type="number" placeholder="apexR" [(ngModel)]="apexR"></ion-input>
     </ion-item>
   </div>
   <div>
     <ion-item>
-      <ion-label color="primary" stacked>APEX C : rameau tombé ou sec</ion-label>
+      <ion-label color="primary" stacked>APEX 0 : rameau tombé ou sec</ion-label>
       <ion-input type="number" placeholder="apexC" [(ngModel)]="apexC"></ion-input>
     </ion-item>
   </div>
