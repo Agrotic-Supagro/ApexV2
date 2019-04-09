@@ -27,13 +27,13 @@
       <ion-item >
         <ion-card class="globalcard">
           <ion-card-content>
-            <p class="titlecard">{{dataSess.nomParcelle}}</p>
-            <p class="subtitlecard">Croissance au {{dataSess.date}} à {{dataSess.time}}</p>
+            <p class="titlecard" (click)="openViewSession(dataSess.nomParcelle)">{{dataSess.nomParcelle}}</p>
+            <p class="subtitlecard" (click)="openViewSession(dataSess.nomParcelle)">Croissance au {{dataSess.date}} à {{dataSess.time}}</p>
             <div class="pieCard"><canvas id="{{dataSess.nomParcelle}}" class="chart"></canvas></div>
-            <p class="subtitlecard">Dynamique de la croissance</p>
-            <p><img src="{{dataSess.fleche}}" class="fleche" /></p>
-            <p class="titleCH">Interprétation de la contrainte hydrique</p>
-            <ion-grid>
+            <p class="subtitlecard" (click)="openViewSession(dataSess.nomParcelle)">Dynamique de la croissance</p>
+            <p (click)="openViewSession(dataSess.nomParcelle)"><img src="{{dataSess.fleche}}" class="fleche" /></p>
+            <p class="titleCH" (click)="openViewSession(dataSess.nomParcelle)">Interprétation de la contrainte hydrique</p>
+            <ion-grid (click)="openViewSession(dataSess.nomParcelle)">
               <ion-row>
                 <ion-col [ngClass]="(dataSess.classe == 'absente') ? 'absente' : 'absenteLight'" >
                   Absente

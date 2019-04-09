@@ -312,6 +312,16 @@ export class ApexmodalPage {
       message: 'Vous n\'avez pas atteint les '+this.thresholdApex+' observations. <br/><br/>En cliquant sur OUI les données ne seront pas sauvegardés.',
       buttons: [
         {
+          text: 'Parcelle rognée',
+          handler: () => {
+            this.leavemodal = true;
+            this.deleteObservation();
+            this.deleteSession();
+            this.viewCtrl.dismiss();
+            console.log('Disagree clicked -  Continue session');
+          }
+        },
+        {
           text: 'Non',
           handler: () => {
             console.log('Disagree clicked -  Continue session');
