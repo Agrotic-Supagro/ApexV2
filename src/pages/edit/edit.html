@@ -5,7 +5,7 @@
       <table class="parcelle">
         <tr>
           <td>
-            <ion-item>
+            <ion-item class="shadowInput">
               <ion-label>Parcelle</ion-label>
               <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"
                 (ionChange)="changeClass()">
@@ -27,20 +27,20 @@
 <ion-content padding>
   <div>
     <ion-item>
-      <ion-label color="primary" stacked>APEX 1 : pousse active</ion-label>
-      <ion-input type="number" placeholder="apexP" [(ngModel)]="apexP"></ion-input>
+      <ion-label color="primary" stacked>APEX pleine croissance</ion-label>
+      <ion-input type="number" placeholder="nombre ..." [(ngModel)]="apexP"></ion-input>
     </ion-item>
   </div>
   <div>
     <ion-item>
-      <ion-label color="primary" stacked>APEX 0,5 : rameau croissance ralentie</ion-label>
-      <ion-input type="number" placeholder="apexR" [(ngModel)]="apexR"></ion-input>
+      <ion-label color="primary" stacked>APEX croissance ralentie</ion-label>
+      <ion-input type="number" placeholder="nombre ..." [(ngModel)]="apexR"></ion-input>
     </ion-item>
   </div>
   <div>
     <ion-item>
-      <ion-label color="primary" stacked>APEX 0 : rameau tombé ou sec</ion-label>
-      <ion-input type="number" placeholder="apexC" [(ngModel)]="apexC"></ion-input>
+      <ion-label color="primary" stacked>APEX croissance ralentie</ion-label>
+      <ion-input type="number" placeholder="nombre ..." [(ngModel)]="apexC"></ion-input>
     </ion-item>
   </div>
 

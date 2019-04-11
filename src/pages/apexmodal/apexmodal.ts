@@ -277,8 +277,8 @@ export class ApexmodalPage {
   showResult() {
     var moyenne = this.computeMoyenne().toFixed(2);
     let alert = this.alertCtrl.create({
-      title: 'Moyenne : '+moyenne,
-      subTitle: 'Apex 1 : '+this.p_array+' <br/> Apex 0,5 : '+this.r_array+' <br/> Apex 0 : '+this.c_array,
+      title: 'Indice de croissance : '+moyenne,
+      subTitle: 'Apex pleine croissance : '+this.p_array+' <br/> Apex croissance ralentie : '+this.r_array+' <br/> Apex croissance arrétée : '+this.c_array,
       buttons: ['OK']
     });
     alert.present();
@@ -311,16 +311,6 @@ export class ApexmodalPage {
       title: 'Quitter la saisie en parcelle ?',
       message: 'Vous n\'avez pas atteint les '+this.thresholdApex+' observations. <br/><br/>En cliquant sur OUI les données ne seront pas sauvegardés.',
       buttons: [
-        {
-          text: 'Parcelle rognée',
-          handler: () => {
-            this.leavemodal = true;
-            this.deleteObservation();
-            this.deleteSession();
-            this.viewCtrl.dismiss();
-            console.log('Disagree clicked -  Continue session');
-          }
-        },
         {
           text: 'Non',
           handler: () => {
@@ -428,4 +418,50 @@ export class ApexmodalPage {
   public changeClass() {
     this.categorie.list = false;
   }
+
+  public closeRognee(){
+    let confirm = this.alertCtrl.create({
+      title: 'Marquer la parcelle comme rognée ?',
+      buttons: [
+        {
+          text: 'Non',
+          handler: () => {
+            console.log('Disagree clicked -  Continue session');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            console.log('Agree clicked - Close Modal, Parcelle Rognée');
+            this.leavemodal = true;
+            this.deleteObservation();
+            this.addDataRognee();
+            this.viewCtrl.dismiss();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  public addDataRognee(){
+    var idSession = this.guidsession;
+    var nomParcelle = 'Session N°' + this.numeroSession;
+    if (this.nomParcelle != null) nomParcelle = this.nomParcelle; 
+
+    var globalLatitude = this.locationTracker.getLatitude();
+    var globalLongitude = this.locationTracker.getLongitude();
+
+    var iac = 999;
+    var moyenne = 999;
+    var tauxApexP = 999;
+    var apexP = 999;
+    var apexR = 999;
+    var apexC = 999;
+    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, globalLatitude=?, globalLongitude=?, apexP=?, apexR=?, apexC=?  WHERE idSession=?', 
+    [nomParcelle, iac, moyenne, tauxApexP, globalLatitude, globalLongitude, apexP, apexR, apexC, idSession])
+    .then(() => console.log('Score updated '+nomParcelle+' '+globalLatitude+' '+idSession))
+    .catch(e => console.log(e));
+  }
+
 }

@@ -49,7 +49,7 @@ export class SenddataPage {
   public writeData(){
     this.filename = this.dateformater.getdate()+'_apexData.csv';
     var sqlrequest = 'select * from `Session`';
-    var alldata='id;Parcelle;Date;Heure;Latitude;Longitude;ApexP;ApexR;apexC;IAC;Moyenne;TauxApexP';
+    var alldata='id;Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;IAC;Moyenne;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
 
     this.db.executeSql(sqlrequest, {})
       .then((data) => {

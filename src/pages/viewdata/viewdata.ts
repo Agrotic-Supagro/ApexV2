@@ -89,35 +89,51 @@ export class ViewdataPage {
               var date = this.dateformater.convertToDate(data.rows.item(i).date);
               //var time = this.dateformater.convertToTime(data.rows.item(i).date);
               
-              if(i < 5) {
-                var moyenne = data.rows.item(i).moyenne.toFixed(2);
+              if(i < 6) {
                 var apexP= data.rows.item(i).apexP;
-                var apexR= data.rows.item(i).apexR;
-                var apexC= data.rows.item(i).apexC;
-                var moyenne2 = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
-                var tauxApexP = apexP/(apexC+apexP+apexR)*100;
-                var tauxApexR = apexR/(apexC+apexP+apexR)*100;
-                var tauxApexC = apexC/(apexC+apexP+apexR)*100;
-                var classe = '3';
+                var moyenne;
+                var tauxApexP;
+                var tauxApexR;
+                var tauxApexC;
+                var classe;
+
+                // PARCELLE ROGNEE
+                if (apexP == 999) {
+                  moyenne = null;
+                  tauxApexP =null;
+                  tauxApexR =null;
+                  tauxApexC =null;
+                  classe=null;
+                }else{
+                  moyenne = data.rows.item(i).moyenne.toFixed(2);
+                  var apexR= data.rows.item(i).apexR;
+                  var apexC= data.rows.item(i).apexC;
+                  var moyenne2 = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
+                  tauxApexP = apexP/(apexC+apexP+apexR)*100;
+                  tauxApexR = apexR/(apexC+apexP+apexR)*100;
+                  tauxApexC = apexC/(apexC+apexP+apexR)*100;
+                  classe = '3';
+  
+                  // GESTION DES CLASSES
+                  if (moyenne2 >= 0.75) {
+                    classe = '0';
+                  } else {
+                    if (tauxApexP >= 5) {
+                      classe = '1';
+                    } else {
+                      if (tauxApexC <= 90) {
+                        classe = '2';
+                      }
+                    }
+                  }
+                }
+
 
                 this.dataMoyenne.push(moyenne);
                 this.dataTxApexP.push(tauxApexP);
                 this.dataTxApexR.push(tauxApexR);
                 this.dataTxApexC.push(tauxApexC);
                 this.dataDates.push(date);
-
-                // GESTION DES CLASSES
-                if (moyenne2 >= 0.75) {
-                  classe = '0';
-                } else {
-                  if (tauxApexP >= 5) {
-                    classe = '1';
-                  } else {
-                    if (tauxApexC <= 90) {
-                      classe = '2';
-                    }
-                  }
-                }
                 this.dataClasses.push(classe);
               }
               
@@ -226,7 +242,7 @@ export class ViewdataPage {
             data: this.dataMoyenne.reverse()
           },
           {
-            label: '% Apex 1',
+            label: '% pleine croiss.',
             yAxisID: 'B',
             fill: true,
             hidden: true,
@@ -249,7 +265,7 @@ export class ViewdataPage {
             data: this.dataTxApexP.reverse()
           },
           {
-            label: '% Apex 0.5',
+            label: '% croiss. ralentie',
             yAxisID: 'B',
             fill: true,
             hidden: false,
@@ -272,7 +288,7 @@ export class ViewdataPage {
             data: this.dataTxApexR.reverse()
           },
           {
-            label: '% Apex 0',
+            label: '% croiss. arrétée',
             yAxisID: 'B',
             fill: true,
             hidden: true,

@@ -41,6 +41,7 @@ export class HomePage {
   public testArray = [];
   public doughnutChartLabels:string[] = ['Apex 2', 'Apex 1', 'Apex 0'];
   public isToggled: boolean;
+  public filter: string = 'date';
 
   constructor(
     public modalCtrl: ModalController,
@@ -201,7 +202,8 @@ export class HomePage {
   }
 
   public changeFilter(){
-    if (this.isToggled) {
+    console.log('Filter : '+this.filter);
+    if (this.filter == 'nomParcelle') {
       this.dataSesion.sort(function (a, b) {
         return a.nomParcelle.localeCompare(b.nomParcelle);
       });
@@ -236,47 +238,56 @@ export class HomePage {
                   if (data.rows) {
                     if (data.rows.length > 0) {
                       // DEFINITION DES VARIABLES
-                      var fleche = 'assets/imgs/f2.jpg';
+                      var fleche = 'assets/imgs/f0.jpg';
                       var classe = 'forte';
                       var apexP= data.rows.item(0).apexP;
                       var apexR= data.rows.item(0).apexR;
                       var apexC= data.rows.item(0).apexC;
                       var moyenne = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
-                      var tauxApexP = data.rows.item(0).tauxApexP.toFixed(2);
+                      var tauxApexP = data.rows.item(0).tauxApexP;
                       var tauxApexC = apexC/(apexC+apexP+apexR)*100;
+                      var visibility:boolean = true;
 
-                      // GESTION DES CLASSES
-                      if (moyenne >= 0.75) {
-                        classe = 'absente';
+                      if (apexP == 999) {
+                        visibility = false;
+                        classe = 'none';
                       } else {
-                        if (tauxApexP >= 5) {
-                          classe = 'moderee';
+                        // GESTION DES CLASSES
+                        if (moyenne >= 0.75) {
+                          classe = 'absente';
                         } else {
-                          if (tauxApexC <= 90) {
-                            classe = 'importante';
+                          if (tauxApexP >= 5) {
+                            classe = 'moderee';
+                          } else {
+                            if (tauxApexC <= 90) {
+                              classe = 'importante';
+                            }
+                          }
+                        }
+                        // GESTION DE LA DYNAMIQUE
+                        if (data.rows.length == 2) {
+                          fleche = 'assets/imgs/f2.jpg';
+                          var apexPOld= data.rows.item(1).apexP;
+                          var apexROld= data.rows.item(1).apexR;
+                          var apexCOld= data.rows.item(1).apexC;
+                          var moyenneOld = ((apexPOld)+(apexROld/2))/(apexPOld+apexROld+apexCOld);
+                          var diffMoyenne = moyenneOld-moyenne;
+                          if (diffMoyenne > 0.2) {
+                            fleche = 'assets/imgs/f3.jpg';
+                          } else {
+                            if(diffMoyenne < -0.2) fleche = 'assets/imgs/f1.jpg';
                           }
                         }
                       }
-                      // GESTION DE LA DYNAMIQUE
-                      if (data.rows.length == 2) {
-                        var apexPOld= data.rows.item(1).apexP;
-                        var apexROld= data.rows.item(1).apexR;
-                        var apexCOld= data.rows.item(1).apexC;
-                        var moyenneOld = ((apexPOld)+(apexROld/2))/(apexPOld+apexROld+apexCOld);
-                        var diffMoyenne = moyenneOld-moyenne;
-                        if (diffMoyenne > 0.2) {
-                          fleche = 'assets/imgs/f3.jpg';
-                        } else {
-                          if(diffMoyenne < -0.2) fleche = 'assets/imgs/f1.jpg';
-                        }
 
-                      }
+
                       this.dataSesion.push({
                         id: data.rows.item(0).idSession,
                         nomParcelle: data.rows.item(0).nomParcelle,
                         apexP: data.rows.item(0).apexP,
                         apexR: data.rows.item(0).apexR,
                         apexC: data.rows.item(0).apexC,
+                        visibility: visibility,
                         fleche: fleche,
                         classe:classe,
                         date: this.dateformater.convertToDate(data.rows.item(0).date),
@@ -295,7 +306,7 @@ export class HomePage {
           }
         }
       })
-      .catch(e => console.log('fail sql retrieve Sessions ' + e));
+      .catch(e => console.log('fail Open DB ' + e));
   }
 
   public computeAffichage(moyenne, tx, iac){
@@ -570,18 +581,22 @@ export class HomePage {
         type: 'pie',
         // The data for our dataset
         data: {
-            labels: ["Apex 1", "Apex 0,5", "Apex 0"],
+            labels: ["% Pleine croissance", "% Croissance ralentie", "% Croissance arrétée"],
             datasets: [{
               label: "My First dataset",
               backgroundColor: [
                 
-                '#486B58',
-                '#4D9799',
-                '#7CC3C0',
+                'rgb(104,205,117)',
+                'rgb(181,195,122)',
+                'rgb(150,159,151)',
 
                 'rgba(96,198,213, 1)',
                 'rgba(206,178,170, 1)',
                 'rgba(184, 151, 195, 1)',
+
+                '#486B58',
+                '#4D9799',
+                '#7CC3C0',
 
                 'rgb(104,205,117)',
                 'rgb(181,195,122)',
@@ -636,32 +651,41 @@ export class HomePage {
         if (data.rows) {
           if (data.rows.length > 0) {
             for (let i = 0; i < data.rows.length; i++) {
-              console.log(data.rows.item(i).nomParcelle);
+              console.log('## '+data.rows.item(i).nomParcelle);
               this.db.executeSql('select * from `Session` WHERE nomParcelle = ? order by date desc LIMIT 2', [data.rows.item(i).nomParcelle])
-                .then((data) => {
-                  if (data == null) {
+                .then((dataforchart) => {
+                  if (dataforchart == null) {
                     console.log('no session yet');
                     return;
                   }
-                  if (data.rows) {
-                    if (data.rows.length > 0) {
+                  if (dataforchart.rows) {
+                    if (dataforchart.rows.length > 0) {
+                      if (dataforchart.rows.item(0).apexP != 999) {
+                        var apexP:number= dataforchart.rows.item(0).apexP;
+                        var apexR:number= dataforchart.rows.item(0).apexR;
+                        var apexC:number= dataforchart.rows.item(0).apexC;
+                        var tauxApexP:number = Math.round(apexP/(apexC+apexP+apexR)*100);
+                        var tauxApexR:number = Math.round(apexR/(apexC+apexP+apexR)*100);
+                        var tauxApexC:number = Math.round(apexC/(apexC+apexP+apexR)*100);
                         this.dataChart.push({
-                          id: data.rows.item(0).idSession,
-                          nomParcelle: data.rows.item(0).nomParcelle,
-                          apexP: data.rows.item(0).apexP,
-                          apexR: data.rows.item(0).apexR,
-                          apexC: data.rows.item(0).apexC,
-                          userId: data.rows.item(0).userId
+                          id: dataforchart.rows.item(0).idSession,
+                          nomParcelle: dataforchart.rows.item(0).nomParcelle,
+                          apexP: tauxApexP,
+                          apexR: tauxApexR,
+                          apexC: tauxApexC,
+                          userId: dataforchart.rows.item(0).userId
                         });
                         this.computeChart(this.dataChart);
+                      }
+
                     }
                   }
                 })
-                .catch(e => console.log('fail sql retrieve Sessions ' + e));
+                .catch(e => console.log('fail sql retrieve Sessions for DataChart ' + e));
             }
           }
         }
       })
-      .catch(e => console.log('fail sql retrieve Sessions ' + e));
+      .catch(e => console.log('fail Open DB DataChart ' + e));
   }
 }

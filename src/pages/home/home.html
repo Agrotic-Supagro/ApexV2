@@ -3,61 +3,96 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Accueil V2</ion-title>
+    <ion-title>Accueil APEX</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="homePage">
-    <ion-grid>
-        <ion-row>
-          <ion-col>
-            <img src="assets/imgs/leaf.png" class="imgnav" (click)="openModal()"/>
-          </ion-col>
-          <ion-col>
-            <img src="assets/imgs/rang.png" class="imgnav" (click)="openSaisieApex()"/>
-          </ion-col>
-        </ion-row>
-        </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/leaf.png" class="imgnav" (click)="openModal()" />
+      </ion-col>
+      <ion-col>
+        <img src="assets/imgs/rang.png" class="imgnav" (click)="openSaisieApex()" />
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <h3 class="centerclass">Liste des sessions effectuées</h3>
 
-  <ion-item><ion-label>Trier par nom de parcelle</ion-label><ion-toggle [(ngModel)]="isToggled" (ionChange)="changeFilter()"></ion-toggle></ion-item>
+  <ion-row radio-group [(ngModel)]="filter">
+    <ion-col>
+      <ion-item>
+        Tri par :
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Date</ion-label>
+        <ion-radio checked="true" value="date" (ionSelect)="changeFilter()"></ion-radio>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Nom</ion-label>
+        <ion-radio value="nomParcelle" (ionSelect)="changeFilter()"></ion-radio>
+      </ion-item>
+    </ion-col>
+  </ion-row>
 
-   <ion-list>
+  <ion-list>
     <ion-item-sliding #item *ngFor="let dataSess of dataSesion">
-      <ion-item >
+      <ion-item>
         <ion-card class="globalcard">
           <ion-card-content>
             <p class="titlecard" (click)="openViewSession(dataSess.nomParcelle)">{{dataSess.nomParcelle}}</p>
-            <p class="subtitlecard" (click)="openViewSession(dataSess.nomParcelle)">Croissance au {{dataSess.date}} à {{dataSess.time}}</p>
-            <div class="pieCard"><canvas id="{{dataSess.nomParcelle}}" class="chart"></canvas></div>
+            <p class="subtitlecard" (click)="openViewSession(dataSess.nomParcelle)">Croissance au {{dataSess.date}} à
+              {{dataSess.time}}</p>
+            <!--<div [ngClass]="(dataSess.visibility) ? 'pieCard' : 'pieCardHidde'" ><canvas id="{{dataSess.nomParcelle}}" class="chart"></canvas></div>-->
+            <div *ngIf="dataSess.visibility; else rognee"><canvas id="{{dataSess.nomParcelle}}" class="chart"></canvas>
+            </div>
+            <ng-template #rognee>
+              <ion-grid>
+                <ion-row>
+                  <ion-col >
+                    <img src="assets/imgs/rognee.png" class="iconRognee"/>
+                  </ion-col>
+                  <ion-col class="parcelleRognee"> 
+                    Parcelle rognée
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ng-template>
             <p class="subtitlecard" (click)="openViewSession(dataSess.nomParcelle)">Dynamique de la croissance</p>
             <p (click)="openViewSession(dataSess.nomParcelle)"><img src="{{dataSess.fleche}}" class="fleche" /></p>
-            <p class="titleCH" (click)="openViewSession(dataSess.nomParcelle)">Interprétation de la contrainte hydrique</p>
+            <p class="titleCH" (click)="openViewSession(dataSess.nomParcelle)">Interprétation de la contrainte hydrique
+            </p>
             <ion-grid (click)="openViewSession(dataSess.nomParcelle)">
               <ion-row>
-                <ion-col [ngClass]="(dataSess.classe == 'absente') ? 'absente' : 'absenteLight'" >
+                <ion-col [ngClass]="(dataSess.classe == 'absente') ? 'absente' : 'absenteLight'">
                   Absente
                 </ion-col>
-                <ion-col [ngClass]="(dataSess.classe == 'moderee') ? 'moderee' : 'modereeLight'" >
+                <ion-col [ngClass]="(dataSess.classe == 'moderee') ? 'moderee' : 'modereeLight'">
                   Modérée
                 </ion-col>
-                <ion-col [ngClass]="(dataSess.classe == 'importante') ? 'importante' : 'importanteLight'" >
+                <ion-col [ngClass]="(dataSess.classe == 'importante') ? 'importante' : 'importanteLight'">
                   Importante
                 </ion-col>
-                <ion-col [ngClass]="(dataSess.classe == 'forte') ? 'forte' : 'forteLight'" >
+                <ion-col [ngClass]="(dataSess.classe == 'forte') ? 'forte' : 'forteLight'">
                   Forte
                 </ion-col>
               </ion-row>
-              </ion-grid>
+            </ion-grid>
           </ion-card-content>
         </ion-card>
-     </ion-item>
+      </ion-item>
 
       <ion-item-options side="right">
-          <button ion-button color="primary" (click)="openViewSession(dataSess.nomParcelle)"><ion-icon name="eye" class="iconslice"></ion-icon></button>
-        </ion-item-options>
-      </ion-item-sliding>
+        <button ion-button color="primary" (click)="openViewSession(dataSess.nomParcelle)">
+          <ion-icon name="eye" class="iconslice"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 
 </ion-content>
-

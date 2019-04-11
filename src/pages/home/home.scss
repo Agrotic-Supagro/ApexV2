@@ -1,4 +1,17 @@
 page-home {
+
+    .parcelleRognee{
+        margin: auto; /* eh oui, tout bêtement */
+        color: #656565;
+    }
+
+    .iconRognee{
+        margin-left: auto;
+        margin-right: auto;
+        height: 80px;
+        width: 80px;
+    }
+
     .imgnav{
         display: block;
         margin-left: auto;
@@ -7,8 +20,15 @@ page-home {
       }
 
     .pieCard{
-        height: 100px;;
+        height: 100px;
     }
+    .pieCardHidde{
+        visibility:hidden;
+        display: none;
+    }
+    .chart{
+        width: 60%;
+     }
 
     .homePage{
         margin-top: 0.3em !important;
@@ -30,7 +50,7 @@ page-home {
     }
 
     .absente{
-        border: white solid 1px;
+        border: #494949 solid 1px;
         width: 25%;
         font-size: 0.8em;
         text-align: center;
@@ -52,7 +72,7 @@ page-home {
         background-color: rgba(215, 219, 35, 0.15);
     }
     .moderee{
-        border: white solid 1px;
+        border: #494949 solid 1px;
         width: 25%;
         font-size: 0.8em;
         font-weight: bold;
@@ -60,7 +80,7 @@ page-home {
         background-color: #d7db23;
     }
     .importante{
-        border: white solid 1px;
+        border: #494949 solid 1px;
         width: 25%;
         font-size: 0.8em;
         font-weight: bold;
@@ -75,7 +95,7 @@ page-home {
         background-color: rgba(255, 208, 0, 0.15);
     }
     .forte{
-        border: white solid 1px;
+        border: #494949 solid 1px;
         width: 25%;
         font-size: 0.8em;
         font-weight: bold;
@@ -113,9 +133,6 @@ page-home {
         width: 100%;
     }
 
-    .chart{
-       width: 60%;
-    }
 
     .subtitlecard{
         font-weight: bold;

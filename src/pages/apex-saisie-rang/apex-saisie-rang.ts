@@ -173,8 +173,8 @@ export class ApexSaisieRangPage {
   showResult() {
     var moyenne = this.computeMoyenne().toFixed(2);
     let alert = this.alertCtrl.create({
-      title: 'Moyenne : '+moyenne,
-      subTitle: 'Apex 1 : '+this.p_array+' <br/> Apex 0,5 : '+this.r_array+' <br/> Apex 0 : '+this.c_array,
+      title: 'Indice de croissance : '+moyenne,
+      subTitle: 'Apex pleine croissance : '+this.p_array+' <br/> Apex croissance ralentie : '+this.r_array+' <br/> Apex croissance arrétée : '+this.c_array,
       buttons: ['OK']
     });
     alert.present();
