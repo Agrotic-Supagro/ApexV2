@@ -49,7 +49,7 @@ export class SenddataPage {
   public writeData(){
     this.filename = this.dateformater.getdate()+'_apexData.csv';
     var sqlrequest = 'select * from `Session`';
-    var alldata='id;Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;IAC;Moyenne;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
+    var alldata='id;Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
 
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
@@ -62,6 +62,15 @@ export class SenddataPage {
             for (let i = 0; i < data.rows.length; i++) {
               var date = this.dateformater.convertToDate(data.rows.item(i).date);
               var time = this.dateformater.convertToTime(data.rows.item(i).date);
+              var apexR= data.rows.item(i).apexR;
+              var apexC= data.rows.item(i).apexC;
+              var apexP= data.rows.item(i).apexP;
+              tauxApexP = apexP/(apexC+apexP+apexR)*100;
+              tauxApexR = apexR/(apexC+apexP+apexR)*100;
+              tauxApexC = apexC/(apexC+apexP+apexR)*100;
+              var tauxApexR;
+              var tauxApexC;
+              var tauxApexP;
               alldata = alldata+'\n'+
                 data.rows.item(i).idSession+';'+
                 data.rows.item(i).nomParcelle+';'+
@@ -72,9 +81,10 @@ export class SenddataPage {
                 data.rows.item(i).apexP+';'+
                 data.rows.item(i).apexR+';'+
                 data.rows.item(i).apexC+';'+
-                data.rows.item(i).iac+';'+
                 data.rows.item(i).moyenne+';'+
-                data.rows.item(i).tauxApexP;
+                tauxApexP+';'+
+                tauxApexR+';'+
+                tauxApexC;
             }
           }
         }

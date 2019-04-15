@@ -109,9 +109,9 @@ export class ViewdataPage {
                   var apexR= data.rows.item(i).apexR;
                   var apexC= data.rows.item(i).apexC;
                   var moyenne2 = ((apexP)+(apexR/2))/(apexP+apexR+apexC);
-                  tauxApexP = apexP/(apexC+apexP+apexR)*100;
-                  tauxApexR = apexR/(apexC+apexP+apexR)*100;
-                  tauxApexC = apexC/(apexC+apexP+apexR)*100;
+                  tauxApexP = (apexP/(apexC+apexP+apexR)*100).toFixed(1);
+                  tauxApexR = (apexR/(apexC+apexP+apexR)*100).toFixed(1);
+                  tauxApexC = (apexC/(apexC+apexP+apexR)*100).toFixed(1);
                   classe = '3';
   
                   // GESTION DES CLASSES
@@ -220,7 +220,7 @@ export class ViewdataPage {
       data: {
         labels: this.dataDates,
         datasets: [{
-            label: 'Moyenne',
+            label: 'Indice croiss.',
             yAxisID: 'A',
             fill: false,
             lineTension: 0.1,
@@ -330,7 +330,7 @@ export class ViewdataPage {
             position: 'left',
             scaleLabel: {
               display: true,
-              labelString: 'Moyenne',
+              labelString: 'Indice croiss.',
               fontSize: 15
             },
             ticks: {

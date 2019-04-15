@@ -1,28 +1,32 @@
 page-apexmodal {
     .shadowInput{
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 8px 0 rgba(255, 0, 0, 0.438);
-
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 8px 0 rgba(230, 131, 94, 0.438);
   }
   .rognee{
-    width: 20%;
     display: inline;
+    width: 20%;
   }
   .compute{
     width: 79%;
     display: inline;
   }
   .box{
-    background-color: rgba(194, 194, 194, 0.5);
+    //background-color: rgba(194, 194, 194, 0.5);
     box-shadow: 1px 1px 2px rgb(82, 82, 82);;
     margin-left: 20px;
     margin-right: 20px;
   }
 
   .boxtop{
+    background-color: #2C6109;
     margin-top: 10px;
     margin-bottom: 20px;
   }
+  .boxmiddle{
+    background-color: #C5DC68;
+  }
   .boxbottom{
+    background-color: #6E9624;
     margin-bottom: 20px;
   }
 
@@ -33,13 +37,9 @@ page-apexmodal {
   .imgBox{
     width: 120px;
     height: 120px;
+    border: #4F5966 solid 1px;
   }
 
-  .list .toolbar-background{
-    //background-color: rgba(241, 106, 106, 0.5);
-    //border: #F04141 solid 3px;
-  }
-  
   .parcelleName {
     text-align: center;
     //font-weight: bold;

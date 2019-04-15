@@ -585,7 +585,10 @@ export class HomePage {
             datasets: [{
               label: "My First dataset",
               backgroundColor: [
-                
+                '#2C6109',               
+                '#6E9624',
+                '#C5DC68',
+
                 'rgb(104,205,117)',
                 'rgb(181,195,122)',
                 'rgb(150,159,151)',
@@ -664,15 +667,15 @@ export class HomePage {
                         var apexP:number= dataforchart.rows.item(0).apexP;
                         var apexR:number= dataforchart.rows.item(0).apexR;
                         var apexC:number= dataforchart.rows.item(0).apexC;
-                        var tauxApexP:number = Math.round(apexP/(apexC+apexP+apexR)*100);
-                        var tauxApexR:number = Math.round(apexR/(apexC+apexP+apexR)*100);
-                        var tauxApexC:number = Math.round(apexC/(apexC+apexP+apexR)*100);
+                        var tauxApexP:number = apexP/(apexC+apexP+apexR)*100;
+                        var tauxApexR:number = apexR/(apexC+apexP+apexR)*100;
+                        var tauxApexC:number = apexC/(apexC+apexP+apexR)*100;
                         this.dataChart.push({
                           id: dataforchart.rows.item(0).idSession,
                           nomParcelle: dataforchart.rows.item(0).nomParcelle,
-                          apexP: tauxApexP,
-                          apexR: tauxApexR,
-                          apexC: tauxApexC,
+                          apexP: tauxApexP.toFixed(1),
+                          apexR: tauxApexR.toFixed(1),
+                          apexC: tauxApexC.toFixed(1),
                           userId: dataforchart.rows.item(0).userId
                         });
                         this.computeChart(this.dataChart);
