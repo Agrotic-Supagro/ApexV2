@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { SenddataPage } from '../pages/senddata/senddata';
+import { ComptePage } from '../pages/compte/compte';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -38,7 +39,8 @@ import { HttpClientModule } from '@angular/common/http';
     HomePage,
     AboutPage,
     SenddataPage,
-    ContactPage
+    ContactPage,
+    ComptePage
    ],
   imports: [
     BrowserModule,
@@ -51,7 +53,8 @@ import { HttpClientModule } from '@angular/common/http';
     HomePage,
     AboutPage,
     ContactPage,
-    SenddataPage
+    SenddataPage,
+    ComptePage
   ],
   providers: [
     StatusBar,

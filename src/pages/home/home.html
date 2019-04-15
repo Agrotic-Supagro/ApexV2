@@ -65,6 +65,7 @@
             </ng-template>
             <p class="subtitlecard" (click)="openViewSession(dataSess.nomParcelle)">Dynamique de la croissance</p>
             <p (click)="openViewSession(dataSess.nomParcelle)"><img src="{{dataSess.fleche}}" class="fleche" /></p>
+            <span *ngIf="ifv == 1">
             <p class="titleCH" (click)="openViewSession(dataSess.nomParcelle)">Interprétation de la contrainte hydrique
             </p>
             <ion-grid (click)="openViewSession(dataSess.nomParcelle)">
@@ -83,6 +84,7 @@
                 </ion-col>
               </ion-row>
             </ion-grid>
+          </span>
           </ion-card-content>
         </ion-card>
       </ion-item>

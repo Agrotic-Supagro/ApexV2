@@ -1,0 +1,27 @@
+page-compte {
+    ion-card-header{
+        background-color: #86919b;
+        color: white !important;
+        font-variant: small-caps;
+        font-weight: bold;
+        text-align: center;
+        //font-size: 2em;
+        //padding: 0.1em;
+        //margin-bottom: 0.1em;
+    }
+    
+    p{
+        text-align: justify;
+    }
+
+    .titlecard{
+        background-color: #86919b;
+        color: white;
+        font-variant: small-caps;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.3em;
+        padding: 0.1em;
+        margin-bottom: 0.1em;
+    }
+}

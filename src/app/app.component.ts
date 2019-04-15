@@ -6,7 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
-import { SenddataPage } from '../pages/senddata/senddata';
+import { ComptePage } from '../pages/compte/compte';
 
 @Component({
   templateUrl: 'app.html'
@@ -24,9 +24,9 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Accueil', component: HomePage },
+      { title: 'Compte et données', component: ComptePage },
       { title: 'Au sujet d\'Apex', component: AboutPage },
-      { title: 'Contact', component: ContactPage },
-      { title: 'Données', component: SenddataPage }
+      { title: 'Contact', component: ContactPage }
     
     ];
 
@@ -46,7 +46,6 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     //this.nav.setRoot(page.component);
-
     this.nav.push(page.component);
   }
 }

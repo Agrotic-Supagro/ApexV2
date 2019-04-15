@@ -31,6 +31,7 @@ export class ViewdataPage {
   public dataTxApexC:any[];
   public dataClasses:any[];
   public dataDates:any[];
+  public ifv:number;
    
   constructor( public navCtrl: NavController,
     public modalCtrl: ModalController,
@@ -42,6 +43,7 @@ export class ViewdataPage {
       
       this.idUser = this.navParams.get('iduser');
       this.nomParcelle = this.navParams.get('nomParcelleView');
+      this.ifv = this.navParams.get('ifv');
       this.openDataBase();
 
   }
@@ -150,7 +152,10 @@ export class ViewdataPage {
         }
         this.dataDates.reverse();
         this.makeChartCroissance();
-        this.makeChartContrainte();
+        if (this.ifv == 1) {
+          this.makeChartContrainte();
+        }
+        
       })
       .catch(e => console.log('fail sql retrieve Sessions ' + e));
   }

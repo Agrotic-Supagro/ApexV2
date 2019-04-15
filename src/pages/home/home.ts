@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { Subscription} from 'rxjs/Subscription';
@@ -42,6 +42,7 @@ export class HomePage {
   public doughnutChartLabels:string[] = ['Apex 2', 'Apex 1', 'Apex 0'];
   public isToggled: boolean;
   public filter: string = 'date';
+  public ifv:number;
 
   constructor(
     public modalCtrl: ModalController,
@@ -62,7 +63,7 @@ export class HomePage {
 
   }
   ionViewDidLoad() {}
-  ionViewDidEnter() {}
+  ionViewDidEnter() {this.retrieveUser();}
   ionViewWillLeave() {}
 
   
@@ -113,7 +114,8 @@ export class HomePage {
   public openViewSession(nomParcelleView) {
     var data = {
       iduser: this.dataUser[0].id,
-      nomParcelleView: nomParcelleView
+      nomParcelleView: nomParcelleView,
+      ifv:this.ifv
     };
     var viewData = this.modalCtrl.create('ViewdataPage', data);
     viewData.onDidDismiss(() => {
@@ -152,7 +154,7 @@ export class HomePage {
   }
 
   private createTables(): void {
-    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0 )', {})
+    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0, `model` INTEGER DEFAULT 1 )', {})
       .then(() => {
         console.log('User table created');
         this.db.executeSql('CREATE TABLE IF NOT EXISTS `Session`( `idSession` TEXT NOT NULL UNIQUE, `nomParcelle` TEXT, `date` INTEGER NOT NULL, `globalLatitude` REAL, `globalLongitude` REAL, `apexP` INTEGER, `apexR` INTEGER, `apexC` INTEGER, `iac` REAL, `moyenne` REAL, `tauxApexP` REAL, `userId` TEXT NOT NULL, `serve` INTEGER DEFAULT 0, FOREIGN KEY(`userId`) REFERENCES `User`(`idUser`), PRIMARY KEY(`idSession`) )', {})
@@ -184,6 +186,7 @@ export class HomePage {
           if (data.rows.length > 0) {
             this.dataUser = [];
             for (let i = 0; i < data.rows.length; i++) {
+              this.ifv = data.rows.item(i).model;
               this.dataUser.push({
                 id: data.rows.item(i).idUser,
                 name: data.rows.item(i).name,

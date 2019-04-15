@@ -223,7 +223,7 @@ export class ApexData {
   }
 
   //----------OLD METHODS---------------
-  private cratesTablesV2(){
+  /*private cratesTablesV2(){
     return new Promise((resolve, reject) => {
       this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0 )', {})
       .then(() => {
@@ -242,9 +242,9 @@ export class ApexData {
       })
       .catch(e => console.log('fail table User | ' + e));
     });
-  }
+  }*/
 
-  private createTables(): void {
+  /*private createTables(): void {
     this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0 )', {})
       .then(() => {
         console.log('User table created');
@@ -262,7 +262,7 @@ export class ApexData {
           .catch(e => console.log('fail table Session | ' + e));
       })
       .catch(e => console.log('fail table User | ' + e));
-  }
+  }*/
 
   public getUserV0() {
     this.db.executeSql('select * from `User` order by idUser desc', {})
