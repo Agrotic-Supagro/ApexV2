@@ -39,14 +39,14 @@
   </ion-card>
 
   <ion-card>
-    <ion-card-content>
+    <ion-card-content class="center">
       <p class="titlecard">Interprétation de la contrainte hydrique</p>
       <ng-container *ngIf="model == 1; else elseTemplate">
 
-        <button ion-button block color="secondary" (tap)="ifv(0)">Modèle de l'IFV activé</button>
+        <button ion-button color="secondary" (tap)="ifv(0)" >Modèle de l'IFV activé</button>
       </ng-container>
       <ng-template #elseTemplate>
-        <button ion-button block color="danger" (tap)="ifv(1)">Modèle de l'IFV désactivé</button>
+        <button ion-button color="danger" (tap)="ifv(1)">Modèle de l'IFV désactivé</button>
       </ng-template>
     </ion-card-content>
   </ion-card>

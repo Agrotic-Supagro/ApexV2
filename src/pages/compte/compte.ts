@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { File } from '@ionic-native/file';
@@ -29,6 +29,7 @@ export class ComptePage {
     public navParams: NavParams,
     private sqlite: SQLite,
     public file: File,
+    public toastCtrl: ToastController,
     public dateformater: Dateformater,
     private emailComposer: EmailComposer) {
 
@@ -156,14 +157,35 @@ export class ComptePage {
         body: 'Vos données de l\'application Apex au format CSV.',
         isHtml: true
       };
-      this.emailComposer.open(email);
+      this.emailComposer.open(email).then(()=>{
+        this.presentToast('Email envoyé avec succès');
+      });
     }
+  }
+
+  presentToast(e) {
+    let toast = this.toastCtrl.create({
+      message: e,
+      duration: 2000,
+      position: 'top'
+    });
+  
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+  
+    toast.present();
   }
 
   ifv(e){
     this.model = e;
     this.db.executeSql('UPDATE `User` SET model = ? WHERE idUser = ?', [this.model, this.idUser])
       .then(() => {
+        if (e == 1) {
+          this.presentToast('Modèle IFV activé !')
+        } else {
+          this.presentToast('Modèle IFV désactivé !')
+        }
         console.log('IFV model : ' + this.model);
       })
       .catch(e => console.log(e));

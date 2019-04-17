@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ViewController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ViewController, ModalController, ToastController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Dateformater } from '../../services/dateformater.service';
 import { Chart } from 'chart.js';
@@ -39,6 +39,7 @@ export class ViewdataPage {
     public alertCtrl: AlertController,
     public sqlite: SQLite,
     public dateformater: Dateformater,
+    public toastCtrl: ToastController,
     public navParams: NavParams) {
       
       this.idUser = this.navParams.get('iduser');
@@ -177,9 +178,25 @@ export class ViewdataPage {
     var editSaisie = this.modalCtrl.create('EditPage', data);
     editSaisie.onDidDismiss(() => {
       this.getData();
+      this.presentToast('Observations éditées');
     });
     editSaisie.present();
   }
+
+  presentToast(e) {
+    let toast = this.toastCtrl.create({
+      message: e+' avec succès',
+      duration: 3000,
+      position: 'top'
+    });
+  
+    toast.onDidDismiss(() => {
+      console.log('Dismissed toast');
+    });
+  
+    toast.present();
+  }
+
   public trashSession(id){
     let confirm = this.alertCtrl.create({
       title: 'Vous voulez supprimer les données de cette parcelle ?',
@@ -195,6 +212,7 @@ export class ViewdataPage {
           handler: () => {
             this.deleteSession(id);
             this.getData();
+            this.presentToast('Observations supprimées');
             console.log('Agree clicked');
           }
         }
