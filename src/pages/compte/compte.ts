@@ -80,7 +80,7 @@ export class ComptePage {
     this.filename = this.dateformater.getdate() + '_apexData.csv';
     var sqlrequest = 'select * from `Session`';
     var alldata = 'id;Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
-
+    console.log('Write CSV Data');
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
         if (data == null) {
@@ -92,40 +92,55 @@ export class ComptePage {
             for (let i = 0; i < data.rows.length; i++) {
               var date = this.dateformater.convertToDate(data.rows.item(i).date);
               var time = this.dateformater.convertToTime(data.rows.item(i).date);
-              var apexR = data.rows.item(i).apexR;
-              var apexC = data.rows.item(i).apexC;
-              var apexP = data.rows.item(i).apexP;
-              tauxApexP = apexP / (apexC + apexP + apexR) * 100;
-              tauxApexR = apexR / (apexC + apexP + apexR) * 100;
-              tauxApexC = apexC / (apexC + apexP + apexR) * 100;
-              var tauxApexR:any;
-              var tauxApexC:any;
-              var tauxApexP:any;
-              alldata = alldata + '\n' +
-                data.rows.item(i).idSession + ';' +
-                data.rows.item(i).nomParcelle + ';' +
-                date + ';' +
-                time + ';' +
-                data.rows.item(i).globalLatitude + ';' +
-                data.rows.item(i).globalLongitude + ';' +
-                data.rows.item(i).apexP + ';' +
-                data.rows.item(i).apexR + ';' +
-                data.rows.item(i).apexC + ';' +
-                data.rows.item(i).moyenne + ';' +
-                tauxApexP + ';' +
-                tauxApexR + ';' +
-                tauxApexC;
+
+              if (data.rows.item(i).apexR == 999) {
+                  alldata = alldata + '\n' +
+                  data.rows.item(i).idSession + ';' +
+                  data.rows.item(i).nomParcelle + ';' +
+                  date + ';' +
+                  time + ';' +
+                  data.rows.item(i).globalLatitude + ';' +
+                  data.rows.item(i).globalLongitude + ';' +
+                  'rognée';
+              } else {
+                var apexR = data.rows.item(i).apexR;
+                var apexC = data.rows.item(i).apexC;
+                var apexP = data.rows.item(i).apexP;
+                tauxApexP = apexP / (apexC + apexP + apexR) * 100;
+                tauxApexR = apexR / (apexC + apexP + apexR) * 100;
+                tauxApexC = apexC / (apexC + apexP + apexR) * 100;
+                var tauxApexR:any;
+                var tauxApexC:any;
+                var tauxApexP:any;
+                alldata = alldata + '\n' +
+                  data.rows.item(i).idSession + ';' +
+                  data.rows.item(i).nomParcelle + ';' +
+                  date + ';' +
+                  time + ';' +
+                  data.rows.item(i).globalLatitude + ';' +
+                  data.rows.item(i).globalLongitude + ';' +
+                  data.rows.item(i).apexP + ';' +
+                  data.rows.item(i).apexR + ';' +
+                  data.rows.item(i).apexC + ';' +
+                  data.rows.item(i).moyenne + ';' +
+                  tauxApexP + ';' +
+                  tauxApexR + ';' +
+                  tauxApexC;
+              }
+
             }
           }
         }
+      }).then(() => {
+        this.file.createDir(this.file.externalRootDirectory, 'apex', true).then(data => {
+          this.file.writeFile(this.file.externalRootDirectory + '/apex', this.filename, alldata, {
+            replace: true
+          });
+        });
       })
       .catch(e => console.log('fail write CSV file : ' + e));
 
-    this.file.createDir(this.file.externalRootDirectory, 'apex', true).then(data => {
-      this.file.writeFile(this.file.externalRootDirectory + '/apex', this.filename, alldata, {
-        replace: true
-      });
-    });
+
 
   }
 

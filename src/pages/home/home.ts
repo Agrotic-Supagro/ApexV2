@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, Platform, Nav, App, IonicApp } from 'ionic-angular';
 import { ModalController } from 'ionic-angular';
 import { Subscription} from 'rxjs/Subscription';
 
@@ -54,19 +54,63 @@ export class HomePage {
     public device: Device,
     private http: HTTP,
     public file: File,
+    private ionicApp: IonicApp,
+    public platform: Platform,
+    public nav: Nav,
+    public app: App,
     public apexData: ApexData,
     public locationTracker: LocationTracker) {
 
+      platform.registerBackButtonAction(() => {
+        if (navCtrl.canGoBack()) { // CHECK IF THE USER IS IN THE ROOT PAGE.
+          navCtrl.pop(); // IF IT'S NOT THE ROOT, POP A PAGE.
+        } else {
+          
+          let nav = app.getActiveNavs()[0];
+          let activeView = nav.getActive();
+          if (activeView.name === 'HomePage') {
+            this.exitApplication();
+          } else {
+            let activeModal=this.ionicApp._modalPortal.getActive();
+            if(activeModal){
+              activeModal.dismiss();
+                  return;
+              }
+          }
+          
+        }
+      });
+
     this.createDatabaseApex();
     this.startGeolocation();
-  
 
   }
   ionViewDidLoad() {}
   ionViewDidEnter() {this.retrieveUser();}
   ionViewWillLeave() {}
 
-  
+  public exitApplication() {
+    let confirm = this.alertCtrl.create({
+      title: 'Fermer l\'application ?',
+      //message: 'Do you agree to use this lightsaber to do good across the intergalactic galaxy?',
+      buttons: [{
+          text: 'Non',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            this.platform.exitApp(); // IF IT'S THE ROOT, EXIT THE APP.
+            console.log('Agree clicked');
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
   public startGeolocation() {
     this.locationTracker.startTracking();
   }
