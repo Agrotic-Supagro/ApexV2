@@ -52,7 +52,7 @@ export class AuthenticationPage {
     if (this.validateEmail(this.email)) {
       if(this.structure != null && this.name != null && this.email != null){
         this.createDefaultUser();
-        var data = { id: this.device.uuid, structure: this.structure, name:this.name };
+        var data = { id: this.device.uuid, structure: this.structure, name:this.name, email:this.email };
         this.viewCtrl.dismiss(data);
       }
       else{

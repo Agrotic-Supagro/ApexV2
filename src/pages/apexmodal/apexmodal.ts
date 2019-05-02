@@ -421,7 +421,7 @@ export class ApexmodalPage {
 
   public closeRognee(){
     let confirm = this.alertCtrl.create({
-      title: 'Marquer la parcelle comme rognée ?',
+      title: 'Marquer la parcelle comme écimée ?',
       buttons: [
         {
           text: 'Non',
@@ -432,7 +432,7 @@ export class ApexmodalPage {
         {
           text: 'Oui',
           handler: () => {
-            console.log('Agree clicked - Close Modal, Parcelle Rognée');
+            console.log('Agree clicked - Close Modal, Parcelle écimée');
             this.leavemodal = true;
             this.deleteObservation();
             this.addDataRognee();

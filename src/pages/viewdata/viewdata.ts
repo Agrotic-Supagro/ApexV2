@@ -387,7 +387,7 @@ export class ViewdataPage {
       data: {
         labels: this.dataDates,
         datasets: [{
-            label: 'Contrainte hydrique',
+            label: 'Classe contrainte hydrique',
             yAxisID: 'CH',
             fill: true,
             steppedLine: "middle",
@@ -427,15 +427,27 @@ export class ViewdataPage {
             id: 'CH',
             type: 'linear',
             position: 'left',
-            scaleLabel: {
+            /*scaleLabel: {
               display: true,
               labelString: 'Classes',
               fontSize: 15
-            },
+            },*/
             ticks: {
               max: 3,
               min: 0,
-              stepSize: 1
+              stepSize: 1,
+              callback: function(label, index, labels) {
+                switch (label) {
+                    case 0:
+                        return 'Absente';
+                    case 1:
+                        return 'Modérée';
+                    case 2:
+                        return 'Importante';
+                    case 3:
+                        return 'Forte';
+                }
+            }
             }
           }]
         }

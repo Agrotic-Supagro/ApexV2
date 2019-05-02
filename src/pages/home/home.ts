@@ -14,9 +14,12 @@ import { HTTP } from '@ionic-native/http';
 import { Network } from '@ionic-native/network';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
-/* configuration pour la version release */
-const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
-const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
+/* configuration pour la version release OLD*/
+//const SERVEUR_APEX_NAME: string = 'https://www.gbrunel.fr/ionic/';
+//const SERVEUR_APEX_FILE: string = 'apiApexv3.php';
+
+const SERVEUR_APEX_NAME: string = 'https://www.agrotic.org/apex/';
+const SERVEUR_APEX_FILE: string = 'apiApex.php';
 
 import { Chart } from 'chart.js';
 
@@ -86,8 +89,28 @@ export class HomePage {
 
   }
   ionViewDidLoad() {}
-  ionViewDidEnter() {this.retrieveUser();}
+  ionViewDidEnter() { this.modelIVF();}
   ionViewWillLeave() {}
+
+
+  public modelIVF() {
+    this.db.executeSql('select * from `User` order by idUser desc', {})
+      .then((data) => {
+        if (data == null) {
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.ifv = data.rows.item(i).model;
+            }
+            console.log('Model IFV : ' + this.ifv);
+          } 
+        }
+
+      })
+      .catch(e => console.log('fail sql retrieve User ' + e));
+  }
 
   public exitApplication() {
     let confirm = this.alertCtrl.create({
@@ -121,7 +144,8 @@ export class HomePage {
 
   public openAuthentication() {
     var authenticationModal = this.modalCtrl.create('AuthenticationPage');
-    authenticationModal.onDidDismiss(() => {
+    authenticationModal.onDidDismiss((data) => {
+      this.dataUser = data;
       this.retrieveUser();
       this.checkServeUpdate();
      
@@ -240,7 +264,10 @@ export class HomePage {
             }
             console.log('idUser : ' + this.dataUser[0].id);
           } else {
-            this.openAuthentication();
+            if (this.dataUser == null) {
+              this.openAuthentication();
+            }
+            
           }
         }
 
@@ -634,39 +661,12 @@ export class HomePage {
               backgroundColor: [
                 '#2C6109',               
                 '#6E9624',
-                '#C5DC68',
-
-                'rgb(104,205,117)',
-                'rgb(181,195,122)',
-                'rgb(150,159,151)',
-
-                'rgba(96,198,213, 1)',
-                'rgba(206,178,170, 1)',
-                'rgba(184, 151, 195, 1)',
-
-                '#486B58',
-                '#4D9799',
-                '#7CC3C0',
-
-                'rgb(104,205,117)',
-                'rgb(181,195,122)',
-                'rgb(150,159,151)',
-
-                'rgba(96,198,213, 1)',
-                'rgba(206,178,170, 1)',
-                'rgba(195,184,151, 1)',
-
-                'rgba(75, 192, 192, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(255,99,132,1)',
+                '#C5DC68'
               ],
               borderColor: [
                 'rgba(255, 255, 255, 1)',
                 'rgba(255, 255, 255, 1)',
-                'rgba(255, 255, 255, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(255,99,132,1)',
+                'rgba(255, 255, 255, 1)'
               ],
               data: [data.apexP,data.apexR,data.apexC],
               borderWidth: 1
