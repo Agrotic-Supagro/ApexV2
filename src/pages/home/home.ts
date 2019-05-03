@@ -12,6 +12,7 @@ import { Device } from '@ionic-native/device';
 import { File } from '@ionic-native/file';
 import { HTTP } from '@ionic-native/http';
 import { Network } from '@ionic-native/network';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
 /* configuration pour la version release OLD*/
@@ -62,6 +63,7 @@ export class HomePage {
     public nav: Nav,
     public app: App,
     public apexData: ApexData,
+    public locationAccuracy: LocationAccuracy,
     public locationTracker: LocationTracker) {
 
       platform.registerBackButtonAction(() => {
@@ -91,7 +93,6 @@ export class HomePage {
   ionViewDidLoad() {}
   ionViewDidEnter() { this.modelIVF();}
   ionViewWillLeave() {}
-
 
   public modelIVF() {
     this.db.executeSql('select * from `User` order by idUser desc', {})
@@ -154,29 +155,39 @@ export class HomePage {
   }
 
   public openModal() {
-    var data = {
-      iduser: this.dataUser[0].id
-    };
-    var apexModal = this.modalCtrl.create('ApexmodalPage', data);
-    apexModal.onDidDismiss(() => {
-      this.retrieveSession();
-      this.getDataForChart();
-      this.checkServeUpdate();
-    });
-    apexModal.present();
+    this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+      () => {
+        var data = {
+          iduser: this.dataUser[0].id
+        };
+        var apexModal = this.modalCtrl.create('ApexmodalPage', data);
+        apexModal.onDidDismiss(() => {
+          this.retrieveSession();
+          this.getDataForChart();
+          this.checkServeUpdate();
+        });
+        apexModal.present();
+      },
+      error => alert('L\'application ne peut pas fonctionner sans GPS')
+    );
   }
 
   public openSaisieApex() {
-    var data = {
-      iduser: this.dataUser[0].id
-    };
-    var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
-    apexSaisie.onDidDismiss(() => {
-      this.retrieveSession();
-      this.getDataForChart();
-      this.checkServeUpdate();
-    });
-    apexSaisie.present();
+    this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+      () => {
+        var data = {
+          iduser: this.dataUser[0].id
+        };
+        var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
+        apexSaisie.onDidDismiss(() => {
+          this.retrieveSession();
+          this.getDataForChart();
+          this.checkServeUpdate();
+        });
+        apexSaisie.present();
+      },
+      error => alert('L\'application ne peut pas fonctionner sans GPS')
+    );
   }
 
   public openViewSession(nomParcelleView) {
@@ -676,7 +687,8 @@ export class HomePage {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          position: 'left'
+          position: 'left',
+          onClick: (e) => e.stopPropagation()
         }
     }
     });

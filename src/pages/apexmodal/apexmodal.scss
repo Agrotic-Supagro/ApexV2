@@ -1,7 +1,8 @@
 page-apexmodal {
-    .shadowInput{
+  .shadowInput{
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 8px 0 rgba(230, 131, 94, 0.438);
   }
+
   .rognee{
     display: inline;
     width: 20%;
@@ -12,22 +13,42 @@ page-apexmodal {
   }
   .box{
     //background-color: rgba(194, 194, 194, 0.5);
-    box-shadow: 1px 1px 2px rgb(82, 82, 82);;
+    box-shadow: 1px 1px 2px rgb(82, 82, 82);
     margin-left: 20px;
     margin-right: 20px;
   }
 
   .boxtop{
-    background-color: #2C6109;
+    //background-color: rgb(44, 97, 9);
+    background: -webkit-linear-gradient(top, rgba(44, 97, 9, 1) 0%,rgba(44, 97, 9, 0.6) 100%);
+    background: linear-gradient(to bottom, rgba(44, 97, 9, 1) 0%,rgba(44, 97, 9, 0.6) 100%);
     margin-top: 10px;
     margin-bottom: 20px;
   }
-  .boxmiddle{
-    background-color: #C5DC68;
+  .boxtop:active {
+    background: -webkit-linear-gradient(top, rgba(44, 97, 9, 0.8) 0%,rgba(44, 97, 9, 0.5) 100%);
+    background: linear-gradient(to bottom, rgba(44, 97, 9, 0.8) 0%,rgba(44, 97, 9, 0.5) 100%);
   }
+
+  .boxmiddle{
+    //background-color: rgb(197, 220, 104);
+    background: -webkit-linear-gradient(top, rgba(197, 220, 104, 1) 0%,rgba(197, 220, 104, 0.6) 100%);
+    background: linear-gradient(to bottom, rgba(197, 220, 104, 1) 0%,rgba(197, 220, 104, 0.6) 100%);
+  }
+  .boxmiddle:active{
+    background: -webkit-linear-gradient(top, rgba(197, 220, 104, 0.8) 0%,rgba(197, 220, 104, 0.5) 100%);
+    background: linear-gradient(to bottom, rgba(197, 220, 104, 0.8) 0%,rgba(197, 220, 104, 0.5) 100%);
+  }
+
   .boxbottom{
-    background-color: #6E9624;
+    //background-color: rgb(110, 150, 36);
+    background: -webkit-linear-gradient(top, rgba(110, 150, 36, 1) 0%,rgba(110, 150, 36, 0.6) 100%);
+    background: linear-gradient(to bottom, rgba(110, 150, 36, 1) 0%,rgba(110, 150, 36, 0.6) 100%);
     margin-bottom: 20px;
+  }
+  .boxbottom:active{
+    background: -webkit-linear-gradient(top, rgba(110, 150, 36, 0.8) 0%,rgba(110, 150, 36, 0.5) 100%);
+    background: linear-gradient(to bottom, rgba(110, 150, 36, 0.8) 0%,rgba(110, 150, 36, 0.5) 100%);
   }
 
   .title {

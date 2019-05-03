@@ -80,7 +80,7 @@
     </ion-card-header>
     <ion-card-content *ngIf="isDelete">
       <p>Cette action est irréversible et supprimera toutes les informations concernant la parcelle {{nomParcelle}}.</p>
-      <button ion-button block color="danger" (tap)="deleteParcelle()">Supprimer</button>
+      <button ion-button block color="danger" (tap)="showConfirmDelete()">Supprimer</button>
     </ion-card-content>
   </ion-card>
 

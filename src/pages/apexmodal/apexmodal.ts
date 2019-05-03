@@ -146,7 +146,7 @@ export class ApexmodalPage {
 
   public updateSession():void{
     var idSession = this.guidsession;
-    var nomParcelle = 'Session N°' + this.numeroSession;
+    var nomParcelle = 'Parcelle N°' + this.numeroSession;
     if (this.nomParcelle != null) {
       nomParcelle = this.nomParcelle; 
     } 
@@ -446,7 +446,7 @@ export class ApexmodalPage {
 
   public addDataRognee(){
     var idSession = this.guidsession;
-    var nomParcelle = 'Session N°' + this.numeroSession;
+    var nomParcelle = 'Parcelle N°' + this.numeroSession;
     if (this.nomParcelle != null) nomParcelle = this.nomParcelle; 
 
     var globalLatitude = this.locationTracker.getLatitude();

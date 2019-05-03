@@ -24,6 +24,7 @@ import { Network } from '@ionic-native/network';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { File } from '@ionic-native/file';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 //IMPORT SERVICES
 import { LocationTracker } from '../services/locationtracker.service';
@@ -31,7 +32,6 @@ import { GUIDGenerator } from '../services/guidgenerator.service';
 import { Dateformater } from '../services/dateformater.service';
 import { ApexData } from '../services/apexdata.service';
 import { HttpClientModule } from '@angular/common/http';
-
 
 @NgModule({
   declarations: [
@@ -74,6 +74,7 @@ import { HttpClientModule } from '@angular/common/http';
     Keyboard,
     SplashScreen,
     SQLite,
+    LocationAccuracy,
     {provide: ErrorHandler, useClass: IonicErrorHandler} ]
 })
 export class AppModule {}

@@ -96,7 +96,7 @@ export class ApexSaisieRangPage {
 
   async saveSession(){
     var idSession = this.guidsession;
-    var nomParcelle = 'Session N°' + this.numeroSession;
+    var nomParcelle = 'Parcelle N°' + this.numeroSession;
     if (this.nomParcelle != null) {
       nomParcelle = this.nomParcelle; 
     } 

@@ -170,6 +170,27 @@ export class ViewdataPage {
       .catch(e => console.log(e));
   }
 
+  public showConfirmDelete() {
+    let confirm = this.alertCtrl.create({
+      title: 'Supprimer la parcelle ?',
+      buttons: [
+        {
+          text: 'Non',
+          handler: () => {
+            console.log('Disagree clicked -  Continue session');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+           this.deleteParcelle();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
   public editSession(id){
     var data = {
       idsession: id,
@@ -178,7 +199,7 @@ export class ViewdataPage {
     var editSaisie = this.modalCtrl.create('EditPage', data);
     editSaisie.onDidDismiss(() => {
       this.getData();
-      this.presentToast('Observations éditées');
+      this.presentToast('Observation éditée');
     });
     editSaisie.present();
   }
@@ -199,7 +220,7 @@ export class ViewdataPage {
 
   public trashSession(id){
     let confirm = this.alertCtrl.create({
-      title: 'Vous voulez supprimer les données de cette parcelle ?',
+      title: 'Vous voulez supprimer cette observation ?',
       //message: 'Do you agree to use this lightsaber to do good across the intergalactic galaxy?',
       buttons: [{
           text: 'non',
@@ -212,7 +233,7 @@ export class ViewdataPage {
           handler: () => {
             this.deleteSession(id);
             this.getData();
-            this.presentToast('Observations supprimées');
+            this.presentToast('Observation supprimée');
             console.log('Agree clicked');
           }
         }
@@ -387,7 +408,7 @@ export class ViewdataPage {
       data: {
         labels: this.dataDates,
         datasets: [{
-            label: 'Classe contrainte hydrique',
+            label: 'Niveau contrainte hydrique',
             yAxisID: 'CH',
             fill: true,
             steppedLine: "middle",
@@ -443,9 +464,9 @@ export class ViewdataPage {
                     case 1:
                         return 'Modérée';
                     case 2:
-                        return 'Importante';
-                    case 3:
                         return 'Forte';
+                    case 3:
+                        return 'Sévère';
                 }
             }
             }

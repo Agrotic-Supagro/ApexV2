@@ -80,7 +80,7 @@ export class ComptePage {
   public writeData() {
     this.filename = this.dateformater.getdate() + '_apexData.csv';
     var sqlrequest = 'select * from `Session`';
-    var alldata = 'id;Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
+    var alldata = 'Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
     console.log('Write CSV Data');
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
@@ -96,13 +96,12 @@ export class ComptePage {
 
               if (data.rows.item(i).apexR == 999) {
                   alldata = alldata + '\n' +
-                  data.rows.item(i).idSession + ';' +
                   data.rows.item(i).nomParcelle + ';' +
                   date + ';' +
                   time + ';' +
                   data.rows.item(i).globalLatitude + ';' +
                   data.rows.item(i).globalLongitude + ';' +
-                  'rognée';
+                  'écimée';
               } else {
                 var apexR = data.rows.item(i).apexR;
                 var apexC = data.rows.item(i).apexC;
@@ -158,7 +157,7 @@ export class ComptePage {
         isHtml: true
       };
       this.emailComposer.open(email).then(()=>{
-        this.presentToast('Email envoyé avec succès');
+
       });
     }
   }
