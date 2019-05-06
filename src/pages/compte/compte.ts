@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { File } from '@ionic-native/file';
@@ -24,11 +24,14 @@ export class ComptePage {
   public emailtext: string;
   public filename: string;
 
+  public isEdit:boolean = false;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private sqlite: SQLite,
     public file: File,
+    public alertCtrl : AlertController,
     public toastCtrl: ToastController,
     public dateformater: Dateformater,
     private emailComposer: EmailComposer) {
@@ -191,4 +194,47 @@ export class ComptePage {
       
   }
 
+  editInfo(){
+    this.isEdit = true;
+  }
+  annulateInfo(){
+    this.isEdit = false;
+  }
+  validateInfo(){
+    this.isEdit = false;
+    if (this.validateEmail(this.email)) {
+      if(this.structure != null && this.name != null && this.email != null){
+        this.updateUser();
+      }
+      else{
+        this.showAlert('Merci de renseigner tous les champs');
+      }
+    }
+    else{
+      this.showAlert('Merci de renseigner une adresse email correcte');
+    }
+  }
+
+  updateUser() {
+    this.db.executeSql('UPDATE `User` SET name = ?, email = ?, structure = ?, serve = 0 WHERE idUser = ?', [this.name, this.email, this.structure, this.idUser])
+    .then(() => {
+        this.presentToast('Données personnelles éditées')
+      console.log('UPDATE USER !');
+    })
+    .catch(e => console.log(e));
+  }
+
+  public validateEmail(email):boolean {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  public showAlert(txt):void {
+    let alert = this.alertCtrl.create({
+      title: 'Apex',
+      subTitle: txt,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 }

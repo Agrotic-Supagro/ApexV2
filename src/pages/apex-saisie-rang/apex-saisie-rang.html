@@ -1,69 +1,88 @@
 <ion-header>
-    <ion-toolbar [ngClass]='categorie'>
-      <ion-title *ngIf="nomParcelle" (click)="resetNomParcelle()">{{nomParcelle}}</ion-title>
-      <div *ngIf="!nomParcelle">
-          <table class="parcelle">
-              <tr>
-                <td>
-                  <ion-item class="shadowInput">
-                    <ion-label>Parcelle</ion-label>
-                    <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"  (ionChange)="changeClass()">
-                    <ion-option *ngFor="let nomParcelle of selectParcelle" [value] = "nomParcelle.nom" [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
-                    </ion-select>
-                  </ion-item>
-                </td>
-                <td class="al-right">
-                  <button ion-button small (tap)="addParcelle()">
-                      <ion-icon name="add-circle"></ion-icon>
-                  </button></td>
-              </tr>
-            </table>
-      </div>
-    </ion-toolbar>
-  </ion-header>
-
-<ion-content padding>
-  <ion-grid>
-      <ion-row>
-        <ion-col><ion-label color="primary" stacked>APEX : pleine croissance</ion-label></ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-auto>
-          <img src="assets/imgs/stadeP.jpg" class="imgsize" />
-        </ion-col>
-        <ion-col >
-          <ion-item>    
-            <ion-input type="number" min="0" placeholder="nombre ..." [(ngModel)]="p_array"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-          <ion-col><ion-label color="primary" stacked>APEX : croissance ralentie</ion-label></ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-auto>
-          <img src="assets/imgs/stadeR.jpg" class="imgsize" />
-        </ion-col>
+  <ion-toolbar [ngClass]='categorie'>
+    <ion-grid *ngIf="nomParcelle">
+      <ion-row (click)="resetNomParcelle()">
         <ion-col>
-          <ion-item>
-            <ion-input type="number" min="0" placeholder="nombre ..." [(ngModel)]="r_array"></ion-input>
-          </ion-item>
+          <ion-title>{{nomParcelle}}</ion-title>
         </ion-col>
-      </ion-row>
-      <ion-row>
-          <ion-col><ion-label color="primary" stacked>APEX : croissance arrétée</ion-label></ion-col>
-      </ion-row>
-      <ion-row>
         <ion-col col-auto>
-          <img src="assets/imgs/stadeC.jpg" class="imgsize" />
-        </ion-col>
-        <ion-col>
-          <ion-item>
-            <ion-input type="number" min="0" placeholder="nombre ..." [(ngModel)]="c_array"></ion-input>
-          </ion-item>
+          <ion-title>
+            <ion-icon name="create"></ion-icon>
+          </ion-title>
         </ion-col>
       </ion-row>
     </ion-grid>
+    <div *ngIf="!nomParcelle">
+      <table class="parcelle">
+        <tr>
+          <td>
+            <ion-item class="shadowInput">
+              <ion-label>Parcelle</ion-label>
+              <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"
+                (ionChange)="changeClass()">
+                <ion-option *ngFor="let nomParcelle of selectParcelle" [value]="nomParcelle.nom"
+                  [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
+              </ion-select>
+            </ion-item>
+          </td>
+          <td class="al-right">
+            <button ion-button small (tap)="addParcelle()">
+              <ion-icon name="add-circle"></ion-icon>
+            </button></td>
+        </tr>
+      </table>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-label color="primary" stacked>APEX : pleine croissance</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-auto>
+        <img src="assets/imgs/stadeP.jpg" class="imgsize" />
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input type="number" min="0" placeholder="nombre ..." [(ngModel)]="p_array"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label color="primary" stacked>APEX : croissance ralentie</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-auto>
+        <img src="assets/imgs/stadeR.jpg" class="imgsize" />
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input type="number" min="0" placeholder="nombre ..." [(ngModel)]="r_array"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label color="primary" stacked>APEX : croissance arrétée</ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-auto>
+        <img src="assets/imgs/stadeC.jpg" class="imgsize" />
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-input type="number" min="0" placeholder="nombre ..." [(ngModel)]="c_array"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer>
@@ -71,4 +90,3 @@
     <button ion-button block color="secondary" (tap)="closeModal()">Calculer les indices</button>
   </ion-toolbar>
 </ion-footer>
-

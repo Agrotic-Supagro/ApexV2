@@ -6,13 +6,12 @@
 
 <ion-content>
   <ion-card>
-
-    <ion-card-content>
+    <ion-card-content *ngIf="!isEdit" class="center">
       <p class="titlecard">Vos informations personnelles</p>
-      <ion-grid>
+      <ion-grid class="leftSize">
         <ion-row>
           <ion-col col-1>
-            <ion-icon name="contact" (click)="deleteDB()"></ion-icon>
+            <ion-icon name="contact"></ion-icon>
           </ion-col>
           <ion-col col-8>
             {{name}}
@@ -35,6 +34,24 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+      <button ion-button small color="light" (tap)="editInfo()">Editer</button>
+    </ion-card-content>
+
+    <ion-card-content *ngIf="isEdit" class="center">
+        <p class="titlecard">Editer vos informations personnelles</p>
+        <ion-item class="leftSize">
+            <ion-label color="primary"><ion-icon name="contact"></ion-icon></ion-label>
+            <ion-input placeholder="nom" [(ngModel)]="name"></ion-input>
+        </ion-item>
+        <ion-item class="leftSize">
+            <ion-label color="primary"><ion-icon name="mail"></ion-icon></ion-label>
+            <ion-input placeholder="email" [(ngModel)]="email"></ion-input>
+        </ion-item>
+        <ion-item class="leftSize">
+            <ion-label color="primary"><ion-icon name="home"></ion-icon></ion-label>
+            <ion-input placeholder="structure" [(ngModel)]="structure"></ion-input>
+        </ion-item>    
+        <button ion-button small color="light" (tap)="annulateInfo()" >Annuler</button><button ion-button small (tap)="validateInfo()" >Valider</button>
     </ion-card-content>
   </ion-card>
 
@@ -43,10 +60,10 @@
       <p class="titlecard">Interprétation de la contrainte hydrique</p>
       <ng-container *ngIf="model == 1; else elseTemplate">
 
-        <button ion-button color="secondary" (tap)="ifv(0)" >Modèle de l'IFV activé</button>
+        <button ion-button color="secondary" small (tap)="ifv(0)">Modèle de l'IFV activé</button>
       </ng-container>
       <ng-template #elseTemplate>
-        <button ion-button color="danger" (tap)="ifv(1)">Modèle de l'IFV désactivé</button>
+        <button ion-button color="danger" small (tap)="ifv(1)">Modèle de l'IFV désactivé</button>
       </ng-template>
     </ion-card-content>
   </ion-card>
@@ -59,7 +76,7 @@
         <ion-textarea rows="2" class="txt" placeholder="Veuillez écrire votre email" [(ngModel)]="emailtext">
         </ion-textarea>
       </ion-item>
-      <button ion-button full (click)="sendEmail()">Envoyer les données par e-mail</button>
+      <button ion-button full small (click)="sendEmail()">Envoyer les données par e-mail</button>
     </ion-card-content>
   </ion-card>
 

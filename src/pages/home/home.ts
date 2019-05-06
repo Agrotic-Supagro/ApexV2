@@ -365,21 +365,26 @@ export class HomePage {
                         }
                       }
 
+                      //CHECK SI LA PARCELLE N'EST PAS VIDE
+                      if (data.rows.item(0).nomParcelle != null && data.rows.item(0).nomParcelle != '') {
+                        this.dataSesion.push({
+                          id: data.rows.item(0).idSession,
+                          nomParcelle: data.rows.item(0).nomParcelle,
+                          apexP: data.rows.item(0).apexP,
+                          apexR: data.rows.item(0).apexR,
+                          apexC: data.rows.item(0).apexC,
+                          visibility: visibility,
+                          fleche: fleche,
+                          classe:classe,
+                          date: this.dateformater.convertToDate(data.rows.item(0).date),
+                          time: this.dateformater.convertToTime(data.rows.item(0).date),
+                          timestamp: data.rows.item(0).date,
+                          userId: data.rows.item(0).userId
+                        });
+                      }else{
+                        this.deleteSession(data.rows.item(0).idSession);
+                      }
 
-                      this.dataSesion.push({
-                        id: data.rows.item(0).idSession,
-                        nomParcelle: data.rows.item(0).nomParcelle,
-                        apexP: data.rows.item(0).apexP,
-                        apexR: data.rows.item(0).apexR,
-                        apexC: data.rows.item(0).apexC,
-                        visibility: visibility,
-                        fleche: fleche,
-                        classe:classe,
-                        date: this.dateformater.convertToDate(data.rows.item(0).date),
-                        time: this.dateformater.convertToTime(data.rows.item(0).date),
-                        timestamp: data.rows.item(0).date,
-                        userId: data.rows.item(0).userId
-                      });
                       this.dataSesion.sort(function (a, b) {
                         return b.timestamp - a.timestamp;
                       });

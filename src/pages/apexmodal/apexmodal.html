@@ -1,6 +1,17 @@
 <ion-header>
   <ion-toolbar [ngClass]='categorie'>
-    <ion-title *ngIf="nomParcelle" (click)="resetNomParcelle()">{{nomParcelle}}</ion-title>
+    <ion-grid *ngIf="nomParcelle">
+        <ion-row (click)="resetNomParcelle()">
+          <ion-col>
+            <ion-title>{{nomParcelle}}</ion-title>
+          </ion-col>
+          <ion-col col-auto>
+            <ion-title>
+              <ion-icon name="create"></ion-icon>
+            </ion-title>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     <div *ngIf="!nomParcelle">
       <table class="parcelle">
         <tr>
