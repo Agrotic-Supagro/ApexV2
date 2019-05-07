@@ -144,6 +144,7 @@ export class ViewdataPage {
                 id: data.rows.item(i).idSession,
                 nomParcelle: data.rows.item(i).nomParcelle,
                 date: this.dateformater.convertToDate(data.rows.item(i).date),
+                //date: new Date(data.rows.item(i).date*1000).toLocaleDateString("fr-FR"),
                 time: this.dateformater.convertToTime(data.rows.item(i).date),
                 timestamp: data.rows.item(i).date,
                 userId: data.rows.item(i).userId

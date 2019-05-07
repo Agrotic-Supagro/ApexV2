@@ -15,6 +15,9 @@ export class EditPage {
   private db: SQLiteObject;
 
   public apexC: number;
+  public myDate: any;
+  public dateOld: any;
+  public dateSave: any;
   public apexR: number;
   public apexP: number;
   public nomParcelle: string;
@@ -97,6 +100,8 @@ export class EditPage {
               this.apexP = data.rows.item(i).apexP;
               this.apexR = data.rows.item(i).apexR;
               this.apexC = data.rows.item(i).apexC;
+              this.dateOld = new Date(data.rows.item(i).date*1000).toLocaleDateString("fr-FR");
+              this.dateSave = data.rows.item(i).date;
             }
           }
         }
@@ -162,10 +167,14 @@ export class EditPage {
     var apexR = this.apexR;
     var apexC = this.apexC;
     var serve = 0;
+    var date = this.dateSave;
+    if (this.myDate) {
+      date = new Date(this.myDate).getTime()/1000;
+    } 
     console.log('try update Session table')
  
-    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, apexP=?, apexR=?, apexC=?, serve=? WHERE idSession=?', 
-    [nomParcelle, iac, moyenne, tauxApexP, apexP, apexR, apexC, serve, idSession])
+    this.db.executeSql('UPDATE `Session` SET nomParcelle=?, iac=?, moyenne=?, tauxApexP=?, apexP=?, apexR=?, apexC=?, serve=?, date=? WHERE idSession=?', 
+    [nomParcelle, iac, moyenne, tauxApexP, apexP, apexR, apexC, serve, date, idSession])
     .then(() => console.log('Session updated'))
     .catch(e => console.log(e));
 

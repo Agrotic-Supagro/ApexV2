@@ -35,8 +35,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content >
   <ion-grid>
+      <ion-row>
+          <ion-col col-auto>
+              <ion-label color="primary" stacked class="datecss">Date</ion-label>
+          </ion-col>
+          <ion-col>
+              <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="myDate" pickerFormat="DD/MM/YYYY" placeholder="{{dateDay}}" doneText="ok" cancelText="annuler" ></ion-datetime>
+          </ion-col>
+      </ion-row>
     <ion-row>
       <ion-col>
         <ion-label color="primary" stacked>APEX : pleine croissance</ion-label>

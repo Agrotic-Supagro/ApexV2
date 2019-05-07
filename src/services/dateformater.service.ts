@@ -22,7 +22,7 @@ export class Dateformater {
     var day = this.zeroPad(myDate.getDate());
     var month = this.zeroPad(myDate.getMonth());
     var year = this.zeroPad(myDate.getFullYear());
-    return day+'-'+month+'-'+year;
+    return day+'/'+month+'/'+year;
   }
 
   convertToDate(timestamp){

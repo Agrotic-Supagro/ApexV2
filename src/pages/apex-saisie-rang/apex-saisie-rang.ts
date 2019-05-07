@@ -19,6 +19,8 @@ export class ApexSaisieRangPage {
 
   private db: SQLiteObject;
 
+  public myDate: any;
+  public dateDay: any = new Date().toLocaleDateString("fr-FR");
   public c_array: number;
   public r_array: number;
   public p_array: number;
@@ -100,7 +102,12 @@ export class ApexSaisieRangPage {
     if (this.nomParcelle != null) {
       nomParcelle = this.nomParcelle; 
     } 
+
     var date = this.dateformater.gettimestamp();
+    if (this.myDate) {
+      date = new Date(this.myDate).getTime()/1000;
+    } 
+     
     var globalLatitude = this.latitude;
     var globalLongitude = this.longitude;
     var apexP = this.p_array;

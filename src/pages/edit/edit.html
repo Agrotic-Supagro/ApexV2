@@ -36,6 +36,12 @@
 </ion-header>
 
 <ion-content padding>
+    <div>
+        <ion-item>
+          <ion-label color="primary" stacked class="datecss">Date de l'observation</ion-label>
+          <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="myDate" placeholder="{{dateOld}}" doneText="ok" cancelText="annuler" ></ion-datetime>
+        </ion-item>
+      </div>
   <div>
     <ion-item>
       <ion-label color="primary" stacked>APEX pleine croissance</ion-label>
