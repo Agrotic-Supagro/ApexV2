@@ -88,11 +88,20 @@ export class HomePage {
 
     this.createDatabaseApex();
     this.startGeolocation();
-
+      //this.testPragam();
   }
   ionViewDidLoad() {}
   ionViewDidEnter() { this.modelIVF();}
   ionViewWillLeave() {}
+
+  testPragam(){
+    //ALTER TABLE " + "YourTableName" + " ADD COLUMN " + "YourColumnName" + "TEXT"
+    this.db.executeSql('ALTER TABLE `User` ADD COLUMN `model` INTEGER DEFAULT 1', {})
+      .then((data) => {
+        console.log('********************************************* - ALTER TABLE OK');
+      })
+      .catch(e => console.log('fail alter table' + '********************************************* - ALTER TABLE NOPE !!!'));
+  }
 
   public modelIVF() {
     this.db.executeSql('select * from `User` order by idUser desc', {})
@@ -246,6 +255,7 @@ export class HomePage {
                 this.retrieveSession();
                 this.getDataForChart();
                 this.checkServeUpdate();
+                this.testPragam();
               })
               .catch(e => console.log('fail table Observation | ' + e));
           })
