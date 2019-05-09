@@ -95,6 +95,9 @@
 
 <ion-footer>
   <ion-toolbar>
-    <button ion-button block color="secondary" (tap)="closeModal()">Calculer les indices</button>
+      <button ion-button block color="danger" (tap)="closeRognee()" class="rognee">
+          <ion-icon name="custom-cisaille"></ion-icon>
+        </button>
+    <button ion-button block color="secondary" (tap)="closeModal()" class="compute">Calculer les indices</button>
   </ion-toolbar>
 </ion-footer>

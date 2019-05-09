@@ -105,6 +105,9 @@ export class ApexSaisieRangPage {
 
     var date = this.dateformater.gettimestamp();
     if (this.myDate) {
+      var hours = new Date().getHours();
+      var minute = new Date().getMinutes();
+      this.myDate = new Date(this.myDate).setHours(hours,minute);
       date = new Date(this.myDate).getTime()/1000;
     } 
      
@@ -259,4 +262,57 @@ export class ApexSaisieRangPage {
   public changeClass() {
     this.categorie.list = false;
   }
+
+  public closeRognee(){
+    let confirm = this.alertCtrl.create({
+      title: 'Marquer la parcelle comme écimée ?',
+      buttons: [
+        {
+          text: 'Non',
+          handler: () => {
+            console.log('Disagree clicked -  Continue session');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            console.log('Agree clicked - Close Modal, Parcelle écimée');
+            this.addDataRognee();
+            this.viewCtrl.dismiss();
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  public addDataRognee(){
+    var idSession = this.guidsession;
+    var nomParcelle = 'Parcelle N°' + this.numeroSession;
+    if (this.nomParcelle != null) nomParcelle = this.nomParcelle; 
+
+    var globalLatitude = this.locationTracker.getLatitude();
+    var globalLongitude = this.locationTracker.getLongitude();
+
+    var iac = 999;
+    var moyenne = 999;
+    var tauxApexP = 999;
+    var apexP = 999;
+    var apexR = 999;
+    var apexC = 999;
+    var userId = this.idUser;
+    var date = this.dateformater.gettimestamp();
+    if (this.myDate) {
+      var hours = new Date().getHours();
+      var minute = new Date().getMinutes();
+      this.myDate = new Date(this.myDate).setHours(hours,minute);
+      date = new Date(this.myDate).getTime()/1000;
+    } 
+
+    this.db.executeSql('INSERT INTO `Session` (idSession, nomParcelle, date, globalLatitude, globalLongitude, apexP, apexR, apexC, iac, moyenne, tauxApexP, userId) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+     [idSession,nomParcelle,date,globalLatitude,globalLongitude,apexP,apexR,apexC,iac,moyenne,tauxApexP,userId])
+    .then(() => console.log('Score updated '+nomParcelle+' '+globalLatitude+' '+idSession))
+    .catch(e => console.log(e));
+  }
+
 }

@@ -17,7 +17,7 @@
         <tr>
           <td>
             <ion-item class="shadowInput">
-              <ion-label>Parcelle</ion-label>
+              <ion-label>Choisir une parcelle</ion-label>
               <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"
                 (ionChange)="changeClass()">
                 <ion-option *ngFor="let nomParcelle of selectParcelle" [value]="nomParcelle.nom"

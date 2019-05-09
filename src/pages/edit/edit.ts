@@ -169,6 +169,9 @@ export class EditPage {
     var serve = 0;
     var date = this.dateSave;
     if (this.myDate) {
+      var hours = new Date().getHours();
+      var minute = new Date().getMinutes();
+      this.myDate = new Date(this.myDate).setHours(hours,minute);
       date = new Date(this.myDate).getTime()/1000;
     } 
     console.log('try update Session table')

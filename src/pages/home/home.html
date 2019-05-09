@@ -3,22 +3,23 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Accueil APEX</ion-title>
+    <ion-title>Accueil</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="homePage">
+  <h3 class="centerclass">Nouvelle observation</h3>
   <ion-grid>
     <ion-row>
       <ion-col>
-        <img src="assets/imgs/leaf.png" class="imgnav" (click)="openModal()" />
+        <img src="assets/imgs/leaf.png" class="imgnav box" (click)="openModal()" />
       </ion-col>
       <ion-col>
-        <img src="assets/imgs/rang.png" class="imgnav" (click)="openSaisieApex()" />
+        <img src="assets/imgs/rang.png" class="imgnav box" (click)="openSaisieApex()" />
       </ion-col>
     </ion-row>
   </ion-grid>
-  <h3 class="centerclass">Liste des sessions effectuées</h3>
+  <h3 class="centerclass">Liste des parcelles effectuées</h3>
 
   <ion-row radio-group [(ngModel)]="filter">
     <ion-col>
