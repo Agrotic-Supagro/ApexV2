@@ -34,6 +34,7 @@ export class ApexSaisieRangPage {
   public categorie: any = {
     list:true,
   };
+  public isList:any = false;
 
   constructor(
     public vibration: Vibration,
@@ -205,6 +206,7 @@ export class ApexSaisieRangPage {
         if (data.rows) {
           if (data.rows.length > 0) {
             console.log('Push data session');
+            this.isList = true;
             for (let i = 0; i < data.rows.length; i++) {
               this.selectParcelle.push({
                 nom: data.rows.item(i).nomParcelle,

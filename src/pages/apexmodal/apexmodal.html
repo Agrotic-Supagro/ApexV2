@@ -16,13 +16,16 @@
       <table class="parcelle">
         <tr>
           <td>
-            <ion-item class="shadowInput">
+            <ion-item class="shadowInput" *ngIf="isList">
               <ion-label>Choisir une parcelle</ion-label>
               <ion-select [(ngModel)]="nomParcelle" okText="Ok" cancelText="Annuler" (ionCancel)="onCancel()"
                 (ionChange)="changeClass()">
                 <ion-option *ngFor="let nomParcelle of selectParcelle" [value]="nomParcelle.nom"
                   [selected]="nomParcelle.check">{{nomParcelle.nom}}</ion-option>
               </ion-select>
+            </ion-item>
+            <ion-item *ngIf="!isList" class="al-right graycolor">
+              <i>Ajouter le nom d'une parcelle -></i>
             </ion-item>
           </td>
           <td class="al-right">

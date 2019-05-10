@@ -47,6 +47,7 @@ export class HomePage {
   public isToggled: boolean;
   public filter: string = 'date';
   public ifv:number;
+  public isDropDB:number = 0;
 
   constructor(
     public modalCtrl: ModalController,
@@ -89,6 +90,7 @@ export class HomePage {
     this.createDatabaseApex();
     this.startGeolocation();
       //this.testPragam();
+    this.isDropDB = 0;
   }
   ionViewDidLoad() {}
   ionViewDidEnter() { this.modelIVF();}
@@ -765,4 +767,34 @@ export class HomePage {
       })
       .catch(e => console.log('fail Open DB DataChart ' + e));
   }
+
+  public dropDB(){
+    this.isDropDB++;
+    if (this.isDropDB == 8) {
+      let confirm = this.alertCtrl.create({
+        title: 'Supprimer votre base de donnée ?',
+        buttons: [
+          {
+            text: 'Non',
+            handler: () => {
+              console.log('Disagree clicked -  Continue session');
+              this.isDropDB = 0;
+            }
+          },
+          {
+            text: 'Oui',
+            handler: () => {
+              this.sqlite.deleteDatabase({ name: DATABASE_APEX_NAME, location: 'default'});
+              this.dataUser = null;
+              this.dataSesion = null;
+              this.dataChart = null;
+              this.createDatabaseApex();
+            }
+          }
+        ]
+      });
+      confirm.present();
+    }
+  }
+
 }
