@@ -7,11 +7,31 @@ page-contact {
     .txt{
         background-color: #e7e7e7;
     }
-
-    .imglogo{
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        height: 40px;
+    
+    .titleh{
+      color: #b4b20d;
     }
+
+    
+    .imglogo{
+      height: 50px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+  }
+
+  .imglogo2{
+    height: 70px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+  
+  .tablelogo{
+    width: 100%;
+  }
+
+  .centerclass{
+    text-align: center;
+  }
 }

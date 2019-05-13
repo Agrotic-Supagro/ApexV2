@@ -4,15 +4,47 @@
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
-      <ion-title>Contact</ion-title>
+      <ion-title>A propos</ion-title>
     </ion-navbar>
   
   </ion-header>
   
   <ion-content padding>
+      <h4 class="titleh">Application APEX</h4>
+  <p class="pjustify">Cette application a été développée par l'équipe <b>AgroTIC de Montpellier SupAgro</b> avec le
+    soutien de la <b>région Occitanie</b> dans le cadre de travaux menés depuis plusieurs années en partenariat avec
+    l'<b>Institut Français de la Vigne et du vin</b> et <b>la chambre d'agriculture de l'Hérault</b>.</p>
+
+  <h4 class="titleh">Partenaires :</h4>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/supagro.jpg" class="imglogo" />
+      </ion-col>
+      <ion-col col-auto>
+        <img src="assets/imgs/agrotic.png" class="imglogo" />
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/logo_occitanie.jpg" class="imglogo" />
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <img src="assets/imgs/ifv.png" class="imglogo2" />
+      </ion-col>
+      <ion-col>
+        <img src="assets/imgs/ca34.jpg" class="imglogo2" />
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <h4 class="titleh">Contact :</h4>
+
   <p class="pjustify">N'hésitez pas à nous faire part de vos questions ou remarques relatives à l'utilisation de cette application en nous envoyant un e-mail.</p>
 
-  <h3>Nous écrire :</h3>
+  <h6>Nous écrire :</h6>
   <ion-item>
       <ion-textarea rows="15" class="txt" placeholder="corps de l'email" [(ngModel)]="emailtext"></ion-textarea>
     </ion-item>

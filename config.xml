@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="ag.GB.apex" version="0.0.8" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>ApeX</name>
+    <name>ApeX Vigne</name>
     <description>APEX</description>
     <author email="guilhem.brunel@supagro.fr" href="http://gbrunel.fr">Guilhem Brunel</author>
     <content src="index.html" />

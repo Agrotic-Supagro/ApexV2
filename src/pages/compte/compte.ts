@@ -21,7 +21,6 @@ export class ComptePage {
   public model: any;
   public idUser:any;
 
-  public emailtext: string;
   public filename: string;
 
   public isEdit:boolean = false;
@@ -148,9 +147,8 @@ export class ComptePage {
   }
 
   sendEmail(): void {
-    if (this.emailtext != "") {
       let email = {
-        to: this.emailtext,
+        to: this.email,
         cc: 'agrotic.applications@gmail.com',
         attachments: [
           this.file.externalRootDirectory + '/apex/' + this.filename
@@ -162,7 +160,6 @@ export class ComptePage {
       this.emailComposer.open(email).then(()=>{
 
       });
-    }
   }
 
   presentToast(e) {

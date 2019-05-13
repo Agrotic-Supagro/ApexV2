@@ -4,7 +4,7 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>A Propos</ion-title>
+    <ion-title>La méthode des apex</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -12,58 +12,73 @@
 
 <ion-content padding>
 
-  <h4 class="titleh">Application APEX</h4>
-  <p class="pjustify">Cette application a été développé par l'équipe <b>AgroTIC de Montpellier SupAgro</b> avec le
-    soutien de la <b>région Occitanie</b> dans le cadre de travaux menés depuis plusieurs années en partenariat avec
-    l'<b>Institut Français de la Vigne et du vin</b> et <b>la chambre d'agriculture de l'Hérault</b>.</p>
-  <p class="pjustify">Cette application permet d’enregistrer vos observations et de calculer des indicateurs permettant
-    de les interpréter.
-    Elle a été développée dans le cadre de travaux de recherche et est actuellement en développement.
-    N’hésitez-pas à faire remonter des dysfonctionnements que vous pourriez observer ou des propositions d’amélioration.
+  <h4 class="titleh">La méthode des apex et le suivi de la croissance :</h4>
+  <h5>Comprendre la méthode des apex</h5>
+  <p class="pjustify">La méthode des apex est une méthode simple pour caractériser la croissance végétative de la vigne.
+    Elle est basée sur l’observation de l’extrémité des rameaux, que l’on appelle les apex. Elle consiste à observer une
+    cinquantaine d’apex et à les classer selon trois catégories (pleine croissance, croissance ralentie ou croissance
+    arrêtée).
+    Le calcul d’un indice synthétique, appelé indice de croissance, permet ensuite de caractériser la croissance
+    végétative de
+    la zone observée. La réalisation hebdomadaire de ces observations permet de caractériser la dynamique de croissance.
   </p>
 
-  <h4 class="titleh">Comprendre la méthode des apex :</h4>
-  <p class="pjustify">Qualifier instantanément l’état de croissance végétative des vignes ou caractériser la dynamique
-    de croissance
-    d’une parcelle sont des notions intéressantes à développer au vignoble. Les utilisations de ces informations sont
-    potentiellement nombreuses
-    pour la conduite agronomique des vignobles. Pour ce faire, une méthode simple basée sur l’observation des apex est
-    développée par les
-    principaux acteurs des organisations techniques professionnelles du pourtour méditerranéen depuis plusieurs années
-    (Institut Français de
-    la Vigne et du Vin, Chambres d’Agriculture, Syndicat des Vignerons des Côtes-du-Rhône).</p>
-
-  <p class="pjustify">Le principe repose sur la définition d’une typologie physionomique des apex en 3 catégories : les
-    rameaux sont dits en « pleine croissance »
-    lorsque les deux dernières feuilles étalées repliées le long de l’axe ne recouvrent pas l’apex (codé 1); la
-    croissance est considérée comme
-    « ralentie » lorsque les deux dernières feuilles étalées recouvrent l’apex (codé 0,5) ; la croissance est dite «
-    arrêtée » lorsque l’apex est
-    sec ou a chu (codé 0). Il convient de rajouter une catégorie particulière concernant les rameaux écimés qui ne
-    peuvent être pris en considération
-    dans la qualification du niveau de croissance de la vigne.</p>
+  <p class="pjustify">Cette méthode a été développée et est utilisée depuis plusieurs années par les principaux acteurs
+    des organisations techniques professionnelles du pourtour méditerranéen (Institut Français de la Vigne et du Vin,
+    Chambres d’Agriculture, Syndicat des Vignerons des Côtes-du-Rhône). En permettant le suivi de la croissance
+    végétative et de sa dynamique elle offre de nombreuses applications pour la conduite agronomique des vignobles
+    (suivi de la contrainte hydrique,
+    suivi de la vigueur, etc.).
+  </p>
+  <h5>Reconnaitre les catégories d’apex </h5>
+  <p class="centerclass">Les apex en <b>pleine croissance</b> :</p>
+  <p class="pjustify">Lorsque les deux dernières feuilles étalées sont repliées le long de l’axe du rameau, celles-ci ne
+    recouvrent pas
+    l’apex.</p>
   <img src="assets/imgs/stadeP.jpg" />
-  <p class="centerclass">Apex (1) - Pleinne croissance</p>
+  <p class="centerclass">Les apex en <b>croissance ralentie</b> :</p>
+  <p class="pjustify">Lorsque les deux dernières feuilles étalées sont repliées le long de l’axe du rameau, celles-ci
+    recouvrent l’apex.
+  </p>
   <img src="assets/imgs/stadeR.jpg" />
-  <p class="centerclass">Apex (0,5) - Croissance ralentie</p>
+  <p class="centerclass">Les apex en <b>croissance arrêtée</b> :</p>
+  <p class="pjustify">L’apex est sec ou a chu.</p>
   <img src="assets/imgs/stadeC.jpg" />
-  <p class="centerclass">Apex (0) - Croissance arrétée</p>
 
-  <h4 class="titleh">Méthodogie :</h4>
+  <p class="pjustify">Remarque : lorsque la vigne a été rognée ou écimée, les observations sur les apex ne sont pas
+    interprétables pour le suivi de la croissance végétative. </p>
+
+  <h5>Comprendre l’indice de croissance végétative :</h5>
+
+  <p class="pjustify">Cet indice varie entre 0 et 1 et permet de synthétiser l’état de croissance végétative d’une
+    parcelle. Il s’appuie sur les catégories des apex observés sur la parcelle (apex en pleine croissance, en croissance
+    modérée ou en croissance arrêtée). Plus la valeur de l’indice est forte et plus la croissance végétative est forte
+    sur cette parcelle.</p>
+
+  <p class="pjustify">Par exemple, la valeur de l’indice est égale à 1 pour une parcelle dans laquelle tous les apex
+    sont en pleine croissance. Elle est égale à 0 pour une parcelle dans laquelle tous les apex sont tombés ou secs.</p>
+
+  <h5>Définir l'échantillonnage :</h5>
   <p class="pjustify">La méthode consiste à observer cinquante apex minimum pour qualifier un niveau moyen de
-    croissance. Réalisée de façon régulière,
-    l’application propose une caractérisation de la dynamique de croissance. Il est conseillé de procéder à des
+    croissance. Il est conseillé de procéder à des
     observations hebdomadaires pour limiter
-    notamment les problèmes d’interprétation dus aux écimages. Des règles techniques d’interprétations associées à ces
+    notamment les problèmes d’interprétation dus aux écimages et permettre une caractérisation de la dynamique de
+    croissance.
+    Des règles techniques d’interprétations associées à ces
     relevés permettent de proposer en
     complément un diagnostic agronomique de la situation viticole.</p>
 
-  <h4 class="titleIFV">Règles d’interprétation de la contrainte hydrique (IFV) :</h4>
-  <p class="pjustify">L’institut Français de la Vigne et du Vin a acquis une base de données mettant en relation les
-    observations des apex avec des niveaux
-    de contrainte hydrique, la croissance des rameaux étant la première fonction physiologique à être affectée par la
-    contrainte hydrique chez la vigne.
-    Quatre niveaux de contrainte hydrique sont proposés avec l’interprétation des apex :</p>
+  <hr>
+  <h4 class="titleIFV">L’interprétation pour le suivi de la contrainte hydrique (IFV) :</h4>
+  <p class="pjustify">L’intérêt principal de la méthode des apex est le suivi de la croissance végétative de la vigne.
+    Néanmoins, dans certaines conditions, l’étude de cette croissance peut également donner des renseignements sur les
+    phénomènes qui l’influencent. C’est par exemple le cas pour la contrainte hydrique. En effet, la croissance
+    végétative des rameaux est la première fonction physiologique à être affectée par la contrainte hydrique. </p>
+  <p class="pjustify">L’institut Français de la Vigne et du Vin (IFV) a ainsi mené des expérimentations et construit des
+    règles permettant d’interpréter un niveau de contrainte hydrique en fonction des observations faites sur les apex.
+    Pour cela, l’IFV a construit une large base de données mettant en relation les observations faites sur les apex avec
+    des mesures de référence de la contrainte hydrique (potentiels hydriques foliaires de bases). Ces règles
+    d’interprétation permettent de distinguer quatre niveaux de contrainte hydrique :</p>
   <ul>
     <li>
       Niveau 0 : absence de contrainte hydrique
@@ -79,46 +94,15 @@
     </li>
   </ul>
   <p class="pjustify">
-    Ces gammes d’interprétation en cours de développement s’entendent pour des observations de la végétation en période
-    végétative, de la floraison à la mi-maturation,
-    les conditions de sénescence naturelle grevant l’interprétation des relations par la suite.
-  </p>
-  <p class="pjustify">Echantillonnage : la base de données a été acquise en observant 5 apex par cep sur des placettes
-    de 10 ceps contigus identifiés à la parcelle.
-    Les apex observés sont ceux correspondant aux rameaux dominants de la végétation. Au vignoble, l’expérience a montré
-    l’extension possible de la méthode
-    à l’observation de parcelles entières en échantillonnant une cinquantaine d’apex sur différents ceps ; il convient
-    alors de réaliser les observations
-    sur un même rang afin de limiter les erreurs d’interprétation dues à l’hétérogénéité de la parcelle.
+    Il est important de souligner les contours des conditions de l’étude ayant permis de définir ces règles
+    d’interprétation. Ces dernières sont relatives à des observations réalisées en saison végétative (de la floraison à
+    la mi-maturation) pour un échantillonnage portant sur une série de dix ceps contigus dument identifiés à la
+    parcelle, à raison de 5 apex observés par cep, dans la partie dominante de la végétation. Les observations ont porté
+    sur 5 cépages différents et 5 années d’expérimentation. Au vignoble, l’expérience a montré l’extension possible de
+    ces règles d’interprétation à l’observation de parcelles entières en échantillonnant une cinquantaine d’apex sur
+    différents ceps. Il convient alors de réaliser les observations sur un même rang ou dans une zone relativement
+    homogène afin de limiter les erreurs d’interprétation dues à l’hétérogénéité de la parcelle.
   </p>
 
-  <h4 class="titleh">Contacts :</h4>
-  <p class="pjustify">Pour le fonctionnement de l’application : Léo Pichon, SupAgro, agrotic.applications@gmail.com</p>
-  <p class="pjustify">Pour les informations agronomiques associées : Jean-Christophe Payan, IFV, jean-christophe.payan@vignevin.com</p>
-  
-  <h4 class="titleh">Partenaires :</h4>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <img src="assets/imgs/supagro.jpg" class="imglogo" />
-      </ion-col>
-      <ion-col col-auto>
-        <img src="assets/imgs/agrotic.png" class="imglogo" />
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <img src="assets/imgs/logo_occitanie.jpg" class="imglogo" />
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <img src="assets/imgs/ifv.png" class="imglogo2" />
-      </ion-col>
-      <ion-col>
-        <img src="assets/imgs/ca34.jpg" class="imglogo2" />
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 
 </ion-content>

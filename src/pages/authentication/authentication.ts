@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController, ModalController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Device } from '@ionic-native/device';
 
@@ -16,21 +16,34 @@ export class AuthenticationPage {
   public structure:string;
   public name:string;
   public email:string;
+  public isTuto:any = true;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl : ViewController,
+    public modalCtrl: ModalController,
     public device: Device,
     public alertCtrl: AlertController,
     private sqlite: SQLite) {
       this.openDB();
-      this.showAlert('Cette application a été développée dans le cadre de travaux de recherche. '+
+      /*this.showAlert('Cette application a été développée dans le cadre de travaux de recherche. '+
       'En l\'utilisant, vous acceptez que les données, une fois anonymisées, puissent être utilisées pour des travaux de recherche. '+
-      'L\'application est actuellement en version Béta. N\'hésitez pas à faire remonter des dysfonctionnements que vous pourriez observer.');
+      'L\'application est actuellement en version Béta. N\'hésitez pas à faire remonter des dysfonctionnements que vous pourriez observer.');*/
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad AuthenticationPage');
+  }
+
+  public openTutoriel() {
+    var data = {
+      isTuto: true
+    };
+    var viewData = this.modalCtrl.create('TutorielPage', data);
+    viewData.onDidDismiss(() => {
+      console.log('toto');
+    });
+    viewData.present();
   }
 
   private openDB(): void {

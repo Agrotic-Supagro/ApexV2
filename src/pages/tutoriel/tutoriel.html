@@ -1,0 +1,111 @@
+<ion-content>
+    <ion-slides pager="true" (ionSlideDidChange)="slideChanged()">
+        <ion-slide class="slider">
+            <ion-grid fixed>
+              <ion-row>
+                <ion-col><h1>Bienvenue sur l'application ApeX Vigne</h1></ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col><img src="assets/imgs/icon.png" class="moyen" /></ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Découvrer son fonctionnement</ion-col>
+              </ion-row>
+             </ion-grid>
+          </ion-slide>
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Depuis votre parcelle, réalisez une nouvelle observation selon la méthode des apex.</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/1.png" class="mockup" /></ion-col>
+          </ion-row>
+         </ion-grid>
+      </ion-slide>
+  
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Observez un apex et cliquez sur le bouton correspondant à sa catégorie. Après 50 apex, calculez l’indice de croissance végétative.</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/3.png" class="mockup" /></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-slide>
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Depuis votre bureau ou votre voiture, saisissez une observation que vous avez déjà réalisée.</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/2.png" class="mockup" /></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-slide>
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Renseignez le nombre d’apex de chaque catégorie et calculez l’indice de croissance végétative.</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/4.png" class="mockup" /></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-slide>
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Visualisez l’ensemble des observations d’une parcelle.</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/5.png" class="mockup" /></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-slide>
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Suivez la dynamique de la croissance végétative et celle de la contrainte hydrique.</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/6.png" class="mockup" /></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-slide>
+  
+      <ion-slide class="slider">
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col>Pendant les saisies, si la parcelle a été écimée, cliquez sur <button ion-button block color="danger" class="rognee"><ion-icon name="custom-cisaille"></ion-icon>
+              </button>. Les résultats à cette date ne sont alors pas interprétés. 
+              </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col><img src="assets/imgs/ecime1.png" class="mockup" /></ion-col>
+          </ion-row>
+          <ion-row>
+              <ion-col><img src="assets/imgs/ecime2.png" class="mockup" /></ion-col>
+            </ion-row>
+        </ion-grid>
+      </ion-slide>
+    </ion-slides>
+  </ion-content>
+  <ion-footer class="foot">
+    <ion-toolbar >
+      <ion-grid >
+        <ion-row>
+          <ion-col>
+            <button ion-button small color="dark" (tap)="prevS()" class="prev">Préc.</button>
+          </ion-col>
+          <ion-col>
+            <button ion-button small (tap)="closeTuto()" class="prev" >Fermer</button>
+          </ion-col>
+          <ion-col>
+            <button ion-button small color="light" (tap)="nextS()" class="prev">Suiv.</button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-toolbar>
+  </ion-footer>

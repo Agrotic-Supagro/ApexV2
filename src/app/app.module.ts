@@ -1,16 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-
 import { MyApp } from './app.component';
+
+//IMPORT PAGE
 import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
-import { SenddataPage } from '../pages/senddata/senddata';
 import { ComptePage } from '../pages/compte/compte';
-
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import { TutorielPage } from '../pages/tutoriel/tutoriel';
 
 //IMPORT NATIVE COMPONENTS
 import { Geolocation } from '@ionic-native/geolocation';
@@ -18,6 +16,8 @@ import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { Vibration } from '@ionic-native/vibration';
 import { Device } from '@ionic-native/device';
 import { SQLite } from '@ionic-native/sqlite';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import { HTTP } from '@ionic-native/http';
 import { Keyboard } from '@ionic-native/keyboard';
 import { Network } from '@ionic-native/network';
@@ -38,9 +38,9 @@ import { HttpClientModule } from '@angular/common/http';
     MyApp,
     HomePage,
     AboutPage,
-    SenddataPage,
     ContactPage,
-    ComptePage
+    ComptePage,
+    TutorielPage
    ],
   imports: [
     BrowserModule,
@@ -53,8 +53,8 @@ import { HttpClientModule } from '@angular/common/http';
     HomePage,
     AboutPage,
     ContactPage,
-    SenddataPage,
-    ComptePage
+    ComptePage,
+    TutorielPage
   ],
   providers: [
     StatusBar,

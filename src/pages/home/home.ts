@@ -154,8 +154,18 @@ export class HomePage {
     this.locationTracker.stopTracking();
   }
 
-  public openAuthentication() {
-    var authenticationModal = this.modalCtrl.create('AuthenticationPage');
+  public openAuthenticationModal() {
+    var tutoModal = this.modalCtrl.create('AuthenticationPage');
+    tutoModal.onDidDismiss((data) => {
+      this.dataUser = data;
+      this.retrieveUser();
+      this.checkServeUpdate();
+     
+    });
+    tutoModal.present();
+  }
+  public openTuroriel() {
+    var authenticationModal = this.modalCtrl.create('TutorielModalPage');
     authenticationModal.onDidDismiss((data) => {
       this.dataUser = data;
       this.retrieveUser();
@@ -288,7 +298,8 @@ export class HomePage {
             console.log('idUser : ' + this.dataUser[0].id);
           } else {
             if (this.dataUser == null) {
-              this.openAuthentication();
+              //this.openAuthentication();
+              this.openTuroriel();
             }
             
           }

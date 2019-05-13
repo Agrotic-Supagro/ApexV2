@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { ComptePage } from '../pages/compte/compte';
+import { TutorielPage } from '../pages/tutoriel/tutoriel';
 
 @Component({
   templateUrl: 'app.html'
@@ -24,9 +25,10 @@ export class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Accueil', component: HomePage },
+      { title: 'La méthode des apex', component: AboutPage },
+      { title: 'Tutoriel ApeX Vigne', component: TutorielPage },
       { title: 'Compte et données', component: ComptePage },
-      { title: 'Au sujet d\'Apex', component: AboutPage },
-      { title: 'Contact', component: ContactPage }
+      { title: 'A propos', component: ContactPage }
     
     ];
 
