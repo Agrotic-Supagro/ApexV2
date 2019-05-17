@@ -89,15 +89,13 @@ export class HomePage {
 
     this.createDatabaseApex();
     this.startGeolocation();
-      //this.testPragam();
     this.isDropDB = 0;
   }
   ionViewDidLoad() {}
   ionViewDidEnter() { this.modelIVF();}
   ionViewWillLeave() {}
 
-  testPragam(){
-    //ALTER TABLE " + "YourTableName" + " ADD COLUMN " + "YourColumnName" + "TEXT"
+  public alterTableModel(){
     this.db.executeSql('ALTER TABLE `User` ADD COLUMN `model` INTEGER DEFAULT 1', {})
       .then((data) => {
         console.log('********************************************* - ALTER TABLE OK');
@@ -154,23 +152,26 @@ export class HomePage {
     this.locationTracker.stopTracking();
   }
 
+  //N'est plus utilisée !!
   public openAuthenticationModal() {
     var tutoModal = this.modalCtrl.create('AuthenticationPage');
     tutoModal.onDidDismiss((data) => {
       this.dataUser = data;
       this.retrieveUser();
       this.checkServeUpdate();
-     
     });
     tutoModal.present();
   }
+
+  //Lance le tuto quand la BDD est vide
   public openTuroriel() {
     var authenticationModal = this.modalCtrl.create('TutorielModalPage');
     authenticationModal.onDidDismiss((data) => {
       this.dataUser = data;
       this.retrieveUser();
+      this.retrieveSession();
+      this.getDataForChart();
       this.checkServeUpdate();
-     
     });
     authenticationModal.present();
   }
@@ -267,7 +268,7 @@ export class HomePage {
                 this.retrieveSession();
                 this.getDataForChart();
                 this.checkServeUpdate();
-                this.testPragam();
+                this.alterTableModel();
               })
               .catch(e => console.log('fail table Observation | ' + e));
           })
@@ -275,7 +276,6 @@ export class HomePage {
       })
       .catch(e => console.log('fail table User | ' + e));
   }
-
 
   public retrieveUser() {
     this.db.executeSql('select * from `User` order by idUser desc', {})
@@ -807,5 +807,6 @@ export class HomePage {
       confirm.present();
     }
   }
+
 
 }

@@ -21,7 +21,7 @@ export class ComptePage {
   public model: any;
   public idUser:any;
 
-  public filename: string;
+  public filename: string = this.dateformater.getdate() + '_apexData.csv';
 
   public isEdit:boolean = false;
 
@@ -51,7 +51,8 @@ export class ComptePage {
         console.log('DB opened !');
         this.db = db;
         this.getUser();
-        this.writeData();
+        //this.writeData();
+        this.writeFile('test');
       })
       .catch(e => console.log(e));
   }
@@ -80,7 +81,7 @@ export class ComptePage {
   }
 
   public writeData() {
-    this.filename = this.dateformater.getdate() + '_apexData.csv';
+    
     var sqlrequest = 'select * from `Session`';
     var alldata = 'Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
     console.log('Write CSV Data');
@@ -134,16 +135,20 @@ export class ComptePage {
           }
         }
       }).then(() => {
-        this.file.createDir(this.file.externalRootDirectory, 'apex', true).then(data => {
-          this.file.writeFile(this.file.externalRootDirectory + '/apex', this.filename, alldata, {
-            replace: true
-          });
-        });
+
       })
       .catch(e => console.log('fail write CSV file : ' + e));
 
 
 
+  }
+
+  writeFile(alldata){
+    this.file.createDir(this.file.externalRootDirectory, 'apex', true).then(data => {
+      this.file.writeFile(this.file.externalRootDirectory + '/apex', this.filename, alldata, {
+        replace: true
+      }).catch(e => console.log('fail create dir : ' + e));
+    }).catch(e => console.log('fail write file : ' + e));
   }
 
   sendEmail(): void {
