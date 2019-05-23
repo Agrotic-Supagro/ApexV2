@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, AlertController, Platform } from 'ionic-angular';
 import { EmailComposer } from '@ionic-native/email-composer';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { File } from '@ionic-native/file';
 import { Dateformater } from '../../services/dateformater.service';
 
 const DATABASE_APEX_NAME: string = 'dataApex.db';
+const DIR_APEX_NAME: string = 'ApexData';
 
 @IonicPage()
 @Component({
@@ -21,7 +22,7 @@ export class ComptePage {
   public model: any;
   public idUser:any;
 
-  public filename: string = this.dateformater.getdate() + '_apexData.csv';
+  public filename: string;
 
   public isEdit:boolean = false;
 
@@ -32,10 +33,14 @@ export class ComptePage {
     public file: File,
     public alertCtrl : AlertController,
     public toastCtrl: ToastController,
+    public platform: Platform,
     public dateformater: Dateformater,
     private emailComposer: EmailComposer) {
-
-    this.openDataBase();
+      this.filename = 'ApexData.csv';
+      this.platform.ready().then(() =>{
+        //this.writeFile('teote');
+        this.openDataBase();
+      });
   }
 
   ionViewDidLoad() {
@@ -51,8 +56,8 @@ export class ComptePage {
         console.log('DB opened !');
         this.db = db;
         this.getUser();
-        //this.writeData();
-        this.writeFile('test');
+        this.writeData();
+        //this.writeDir();
       })
       .catch(e => console.log(e));
   }
@@ -81,7 +86,7 @@ export class ComptePage {
   }
 
   public writeData() {
-    
+
     var sqlrequest = 'select * from `Session`';
     var alldata = 'Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
     console.log('Write CSV Data');
@@ -98,7 +103,7 @@ export class ComptePage {
               var time = this.dateformater.convertToTime(data.rows.item(i).date);
 
               if (data.rows.item(i).apexR == 999) {
-                  alldata = alldata + '\n' +
+                alldata = alldata + '\n' +
                   data.rows.item(i).nomParcelle + ';' +
                   date + ';' +
                   time + ';' +
@@ -112,9 +117,9 @@ export class ComptePage {
                 tauxApexP = apexP / (apexC + apexP + apexR) * 100;
                 tauxApexR = apexR / (apexC + apexP + apexR) * 100;
                 tauxApexC = apexC / (apexC + apexP + apexR) * 100;
-                var tauxApexR:any;
-                var tauxApexC:any;
-                var tauxApexP:any;
+                var tauxApexR: any;
+                var tauxApexC: any;
+                var tauxApexP: any;
                 alldata = alldata + '\n' +
                   data.rows.item(i).idSession + ';' +
                   data.rows.item(i).nomParcelle + ';' +
@@ -130,33 +135,47 @@ export class ComptePage {
                   tauxApexR + ';' +
                   tauxApexC;
               }
-
             }
           }
         }
-      }).then(() => {
-
-      })
+        this.writeDir(alldata);
+      }).then(() => {})
       .catch(e => console.log('fail write CSV file : ' + e));
+  }
 
-
-
+  writeDir(alldata){
+    var dirName = DIR_APEX_NAME;
+    if(this.platform.is('android')) {
+      this.file.checkDir(this.file.externalRootDirectory, dirName).then(response => {
+        console.log('Directory exists'+response);
+        this.writeFile(alldata);
+      }).catch(err => {
+        console.log('Directory doesn\'t exist'+JSON.stringify(err));
+        this.file.createDir(this.file.externalRootDirectory, dirName, false).then(response => {
+          console.log('Directory create'+response);
+          this.writeFile(alldata);
+        }).catch(err => {
+          console.log('Directory no create'+JSON.stringify(err));
+        }); 
+      });
+    }
   }
 
   writeFile(alldata){
-    this.file.createDir(this.file.externalRootDirectory, 'apex', true).then(data => {
-      this.file.writeFile(this.file.externalRootDirectory + '/apex', this.filename, alldata, {
-        replace: true
-      }).catch(e => console.log('fail create dir : ' + e));
-    }).catch(e => console.log('fail write file : ' + e));
+    console.log(this.filename);
+    var dirName = DIR_APEX_NAME;
+    this.file.writeFile(this.file.externalRootDirectory + dirName, this.filename, alldata, {
+      replace: true
+    });
   }
 
   sendEmail(): void {
+    var dirName = DIR_APEX_NAME;
       let email = {
         to: this.email,
         cc: 'agrotic.applications@gmail.com',
         attachments: [
-          this.file.externalRootDirectory + '/apex/' + this.filename
+          this.file.externalRootDirectory + '/' +dirName+ '/' + this.filename
         ],
         subject: '[ApeX] Contact',
         body: 'Vos données de l\'application Apex au format CSV.',

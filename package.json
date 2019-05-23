@@ -24,7 +24,7 @@
     "@ionic-native/core": "4.4.0",
     "@ionic-native/device": "^4.5.3",
     "@ionic-native/email-composer": "^4.7.0",
-    "@ionic-native/file": "^4.10.1",
+    "@ionic-native/file": "^4.20.0",
     "@ionic-native/geolocation": "^4.5.3",
     "@ionic-native/http": "^4.6.0",
     "@ionic-native/keyboard": "^4.7.0",
