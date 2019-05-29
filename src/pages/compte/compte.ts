@@ -88,7 +88,7 @@ export class ComptePage {
   public writeData() {
 
     var sqlrequest = 'select * from `Session`';
-    var alldata = 'Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arrétée;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arrétée';
+    var alldata = 'Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arretee;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arretee';
     console.log('Write CSV Data');
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
@@ -121,7 +121,7 @@ export class ComptePage {
                 var tauxApexC: any;
                 var tauxApexP: any;
                 alldata = alldata + '\n' +
-                  data.rows.item(i).idSession + ';' +
+                  //data.rows.item(i).idSession + ';' +
                   data.rows.item(i).nomParcelle + ';' +
                   date + ';' +
                   time + ';' +
