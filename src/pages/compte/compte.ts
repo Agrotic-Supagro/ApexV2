@@ -109,7 +109,7 @@ export class ComptePage {
                   time + ';' +
                   data.rows.item(i).globalLatitude + ';' +
                   data.rows.item(i).globalLongitude + ';' +
-                  'écimée';
+                  'ecimee';
               } else {
                 var apexR = data.rows.item(i).apexR;
                 var apexC = data.rows.item(i).apexC;
