@@ -1,4 +1,9 @@
 page-compte {
+
+    .test{
+        background-color: rgb(155, 173, 182);
+    }
+
     ion-card-header{
         background-color: #86919b;
         color: white !important;
@@ -15,7 +20,8 @@ page-compte {
     }
 
     .titlecard{
-        background-color: #86919b;
+        border-radius: 5%;
+        background-color: rgb(69, 169, 187);
         color: white;
         font-variant: small-caps;
         font-weight: bold;
@@ -29,5 +35,25 @@ page-compte {
     }
     .leftSize{
         text-align: left;
+    }
+
+    .right{
+        text-align: right;
+    }
+
+    .linecol{
+        border-right: solid 1px #86919b;
+    }
+    .totalparcellecss{
+        color: rgb(245, 147, 49);
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.3em;
+    }
+    .totalobscss{
+        color: rgb(0, 101, 130);
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.3em;
     }
 }

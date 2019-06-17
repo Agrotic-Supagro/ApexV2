@@ -98,9 +98,14 @@ export class HomePage {
   public alterTableModel(){
     this.db.executeSql('ALTER TABLE `User` ADD COLUMN `model` INTEGER DEFAULT 1', {})
       .then((data) => {
-        console.log('********************************************* - ALTER TABLE OK');
+        console.log('++ ALTER TABLE model OK');
       })
-      .catch(e => console.log('fail alter table' + '********************************************* - ALTER TABLE NOPE !!!'));
+      .catch(e => console.log('fail alter table "model"'));
+      this.db.executeSql('ALTER TABLE `User` ADD COLUMN `nbapex` INTEGER DEFAULT 50', {})
+      .then((data) => {
+        console.log('++ ALTER TABLE nbapex OK');
+      })
+      .catch(e => console.log('fail alter table "nbapex"'));
   }
 
   public modelIVF() {
@@ -255,7 +260,7 @@ export class HomePage {
   }
 
   private createTables(): void {
-    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0, `model` INTEGER DEFAULT 1 )', {})
+    this.db.executeSql('CREATE TABLE IF NOT EXISTS `User` ( `idUser` TEXT NOT NULL PRIMARY KEY UNIQUE, `name` TEXT, `email` TEXT, `structure` TEXT, `serve` INTEGER DEFAULT 0, `model` INTEGER DEFAULT 1, `nbapex` INTEGER DEFAULT 50 )', {})
       .then(() => {
         console.log('User table created');
         this.db.executeSql('CREATE TABLE IF NOT EXISTS `Session`( `idSession` TEXT NOT NULL UNIQUE, `nomParcelle` TEXT, `date` INTEGER NOT NULL, `globalLatitude` REAL, `globalLongitude` REAL, `apexP` INTEGER, `apexR` INTEGER, `apexC` INTEGER, `iac` REAL, `moyenne` REAL, `tauxApexP` REAL, `userId` TEXT NOT NULL, `serve` INTEGER DEFAULT 0, FOREIGN KEY(`userId`) REFERENCES `User`(`idUser`), PRIMARY KEY(`idSession`) )', {})

@@ -68,6 +68,24 @@ export class ApexmodalPage {
     console.log('ionViewDidLoad ApexmodalPage');
   }
 
+  public getUser() {
+    this.db.executeSql('select * from `User`', {})
+      .then((data) => {
+        if (data == null) {
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.thresholdApex = data.rows.item(i).nbapex;
+            }
+          } 
+        }
+
+      })
+      .catch(e => console.log('fail sql retrieve User ' + e));
+  }
+
   private initializeVariable():void{
     this.c_array = 0;
     this.r_array = 0;
@@ -89,6 +107,7 @@ export class ApexmodalPage {
       .then((db: SQLiteObject) => {
         console.log('DB opened !');
         this.db = db;
+        this.getUser();
         this.retrieveSession();
         this.createSession();
         this.getNextIndexSession();
@@ -99,7 +118,7 @@ export class ApexmodalPage {
   public apexAlert() {
     let alert = this.alertCtrl.create({
       title: 'Méthode des Apex',
-      subTitle: 'Pour calculer l\'Indice d\'Arrêt de Croissance (IAC), il est nécessaire de réaliser des observations sur au moins '+this.thresholdApex+' apex. Vous n\'avez réalisé pour l\'instant que '+this.numberApex+' observations.',
+      subTitle: 'Pour calculer les indices, il est nécessaire de réaliser des observations sur au moins '+this.thresholdApex+' apex. Vous n\'avez réalisé pour l\'instant que '+this.numberApex+' observations.',
       buttons: ['Fermer']
     });
     alert.present();

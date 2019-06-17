@@ -21,7 +21,10 @@ export class ComptePage {
   public structure: any;
   public model: any;
   public idUser:any;
-
+  public nbapex:number;
+  public modelifv:boolean = true;
+  public totalparcelle:any;
+  public totalobservation:any;
   public filename: string;
 
   public isEdit:boolean = false;
@@ -56,12 +59,47 @@ export class ComptePage {
         console.log('DB opened !');
         this.db = db;
         this.getUser();
+        this.getStats();
         this.writeData();
         //this.writeDir();
       })
       .catch(e => console.log(e));
   }
 
+  public getStats() {
+    // SELECT  COUNT(DISTINCT title)  FROM  employees;
+    this.db.executeSql('select COUNT(DISTINCT nomParcelle) AS totalname  from `Session`', {})
+      .then((data) => {
+        if (data == null) {
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.totalparcelle = data.rows.item(i).totalname;
+            }
+          } 
+        }
+
+      })
+      .catch(e => console.log('fail sql retrieve User ' + e));
+      this.db.executeSql('select COUNT(DISTINCT idObservation) AS totalobservation  from `Observation`', {})
+      .then((data) => {
+        if (data == null) {
+          return;
+        }
+        if (data.rows) {
+          if (data.rows.length > 0) {
+            for (let i = 0; i < data.rows.length; i++) {
+              this.totalobservation = data.rows.item(i).totalobservation;
+            }
+          } 
+        }
+
+      })
+      .catch(e => console.log('fail sql retrieve User ' + e));
+  }
+  
   public getUser() {
     this.db.executeSql('select * from `User`', {})
       .then((data) => {
@@ -71,11 +109,15 @@ export class ComptePage {
         if (data.rows) {
           if (data.rows.length > 0) {
             for (let i = 0; i < data.rows.length; i++) {
-              this.idUser = data.rows.item(i).idUser,
+              this.idUser = data.rows.item(i).idUser;
               this.name = data.rows.item(i).name;
               this.email = data.rows.item(i).email;
               this.structure = data.rows.item(i).structure;
               this.model = data.rows.item(i).model;
+              this.nbapex = data.rows.item(i).nbapex;
+              if (this.model == 0) {
+                this.modelifv = false;
+              }
             }
             console.log('idUser : ' + this.name);
           } 
@@ -86,7 +128,6 @@ export class ComptePage {
   }
 
   public writeData() {
-
     var sqlrequest = 'select * from `Session`';
     var alldata = 'Parcelle;Date;Heure;Latitude;Longitude;Apex pleine croissance;Apex croissante ralentie;Apex croissance arretee;Indice de croissance;% Apex pleine croissance;% Apex croissance ralentie;% Apex croissance arretee';
     console.log('Write CSV Data');
@@ -212,7 +253,14 @@ export class ComptePage {
         console.log('IFV model : ' + this.model);
       })
       .catch(e => console.log(e));
-      
+  }
+
+  ifvconf(){
+    if (this.modelifv) {
+      this.ifv(1);
+    } else {
+      this.ifv(0);
+    }
   }
 
   editInfo(){
@@ -234,6 +282,22 @@ export class ComptePage {
     else{
       this.showAlert('Merci de renseigner une adresse email correcte');
     }
+  }
+
+  validateConf(){
+    this.verif();
+    this.db.executeSql('UPDATE `User` SET nbapex = ? WHERE idUser = ?', [this.nbapex, this.idUser])
+    .then(() => {
+        this.presentToast('Nombre d\'apex éditées')
+    })
+    .catch(e => console.log(e));
+  }
+
+  verif(){
+    this.nbapex = Math.round(this.nbapex);
+    if (this.nbapex < 0 || this.nbapex == null) {
+      this.nbapex = 0;
+    } 
   }
 
   updateUser() {
