@@ -191,6 +191,28 @@ page-home {
     .iconslice{
         font-size: 35px;
     }
+
+    .rightSide{
+        text-align: right;
+        margin-right: 20px;
+    }
+
+    .marginbutton{
+        margin-left: 20px;
+        
+    }
+
+    ion-footer{
+        text-align: center;
+        background-color: white;
+    }
+
+    .colorblue{
+        background-color: #006C83;
+    }
+    .colorgreen{
+        background-color: #C5DC68;
+    }
 }
 .alertInput {
 	button.alert-button:nth-child(1) {

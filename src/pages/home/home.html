@@ -20,7 +20,6 @@
     </ion-row>
   </ion-grid>
   <h3 class="centerclass">Liste des parcelles</h3>
-
   <ion-row radio-group [(ngModel)]="filter">
     <ion-col>
       <ion-item>
@@ -30,13 +29,13 @@
     <ion-col>
       <ion-item>
         <ion-label>Date</ion-label>
-        <ion-radio checked="true" value="date" (ionSelect)="changeFilter()"></ion-radio>
+        <ion-radio checked="true" value="date" (ionSelect)="changeFilter(false)"></ion-radio>
       </ion-item>
     </ion-col>
     <ion-col>
       <ion-item>
         <ion-label>Nom</ion-label>
-        <ion-radio value="nomParcelle" (ionSelect)="changeFilter()"></ion-radio>
+        <ion-radio value="nomParcelle" (ionSelect)="changeFilter(true)"></ion-radio>
       </ion-item>
     </ion-col>
   </ion-row>
@@ -97,5 +96,7 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-
 </ion-content>
+<ion-footer>
+  <button ion-button small class="colorblue" (tap)="loadless()">Prec.</button><button ion-button small class="colorgreen" (tap)="loadmore()" >Suiv.</button>
+</ion-footer>

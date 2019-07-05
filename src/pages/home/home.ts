@@ -48,6 +48,9 @@ export class HomePage {
   public filter: string = 'date';
   public ifv:number;
   public isDropDB:number = 0;
+  public offset:number = 0;
+  public limite:number = 5;
+  public sortbyname: boolean = false;
 
   constructor(
     public modalCtrl: ModalController,
@@ -172,6 +175,7 @@ export class HomePage {
   public openTuroriel() {
     var authenticationModal = this.modalCtrl.create('TutorielModalPage');
     authenticationModal.onDidDismiss((data) => {
+      this.offset = 0;
       this.dataUser = data;
       this.retrieveUser();
       this.retrieveSession();
@@ -189,6 +193,7 @@ export class HomePage {
         };
         var apexModal = this.modalCtrl.create('ApexmodalPage', data);
         apexModal.onDidDismiss(() => {
+          this.offset = 0;
           this.retrieveSession();
           this.getDataForChart();
           this.checkServeUpdate();
@@ -207,6 +212,7 @@ export class HomePage {
         };
         var apexSaisie = this.modalCtrl.create('ApexSaisieRangPage', data);
         apexSaisie.onDidDismiss(() => {
+          this.offset = 0;
           this.retrieveSession();
           this.getDataForChart();
           this.checkServeUpdate();
@@ -314,9 +320,9 @@ export class HomePage {
       .catch(e => console.log('fail sql retrieve User ' + e));
   }
 
-  public changeFilter(){
+  public changeFilter(value){
     console.log('Filter : '+this.filter);
-    if (this.filter == 'nomParcelle') {
+    /*if (this.filter == 'nomParcelle') {
       this.dataSesion.sort(function (a, b) {
         return a.nomParcelle.localeCompare(b.nomParcelle);
       });
@@ -324,13 +330,21 @@ export class HomePage {
       this.dataSesion.sort(function (a, b) {
         return b.timestamp - a.timestamp;
       });
-    }
+    }*/
+      this.sortbyname = value;
+      this.retrieveSession();
+      this.getDataForChart();
   }
 
   public retrieveSession() {
-    var sqlrequest = 'select distinct `nomParcelle` from `Session`';
+    //var sqlrequest = 'select distinct `nomParcelle` from `Session`';
+    //var sqlrequest = 'select distinct `nomParcelle`, `date` from `Session` order by date desc LIMIT '+this.limite+' OFFSET '+this.offset;
+    var sqlrequest = 'select distinct `nomParcelle` from `Session` GROUP BY `nomParcelle` ORDER BY MAX(date) DESC LIMIT '+this.limite+' OFFSET '+this.offset;
+    if(this.sortbyname == true){
+      sqlrequest = 'select distinct `nomParcelle` from `Session` ORDER BY `nomParcelle` ASC LIMIT '+this.limite+' OFFSET '+this.offset;
+    }
     //var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
-    this.dataSesion = [];
+    
 
     this.db.executeSql(sqlrequest, {})
       .then((data) => {
@@ -338,8 +352,9 @@ export class HomePage {
           console.log('no session yet');
           return;
         }
-        if (data.rows) {
+        if (data.rows) {         
           if (data.rows.length > 0) {
+            this.dataSesion = [];
             for (let i = 0; i < data.rows.length; i++) {
               console.log(data.rows.item(i).nomParcelle);
               this.db.executeSql('select * from `Session` WHERE nomParcelle = ? order by date desc LIMIT 2', [data.rows.item(i).nomParcelle])
@@ -413,18 +428,80 @@ export class HomePage {
                         this.deleteSession(data.rows.item(0).idSession);
                       }
 
-                      this.dataSesion.sort(function (a, b) {
-                        return b.timestamp - a.timestamp;
-                      });
+                      if(!this.sortbyname){
+                        this.dataSesion.sort(function (a, b) {
+                          return b.timestamp - a.timestamp;
+                        });
+                      }
                     }
                   }
                 })
                 .catch(e => console.log('fail sql retrieve Sessions ' + e));
             }
           }
+          else{
+            this.offset-=5;
+          }
         }
       })
       .catch(e => console.log('fail Open DB ' + e));
+  }
+
+  public getDataForChart() {
+    //var sqlrequest = 'select distinct `nomParcelle` from `Session`';
+    //var sqlrequest = 'select distinct `nomParcelle`, `date` from `Session` order by date desc LIMIT '+this.limite+' OFFSET '+this.offset;
+    var sqlrequest = 'select distinct `nomParcelle` from `Session` GROUP BY `nomParcelle` ORDER BY MAX(date) DESC LIMIT '+this.limite+' OFFSET '+this.offset;
+    if(this.sortbyname == true){
+      sqlrequest = 'select distinct `nomParcelle` from `Session` ORDER BY `nomParcelle` ASC LIMIT '+this.limite+' OFFSET '+this.offset;
+    }
+    //GROUP BY salesperson_id ORDER BY MAX(Amount) DESC
+    //var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
+    this.db.executeSql(sqlrequest, {})
+      .then((data) => {
+        if (data == null) {
+          console.log('no session yet');
+          return;
+        }
+        if (data.rows) { 
+          if (data.rows.length > 0) {
+            this.dataChart = [];
+            for (let i = 0; i < data.rows.length; i++) {
+              console.log('## '+data.rows.item(i).nomParcelle);
+              this.db.executeSql('select * from `Session` WHERE nomParcelle = ? order by date desc LIMIT 2', [data.rows.item(i).nomParcelle])
+                .then((dataforchart) => {
+                  if (dataforchart == null) {
+                    console.log('no session yet');
+                    return;
+                  }
+                  if (dataforchart.rows) {
+                    if (dataforchart.rows.length > 0) {
+                      if (dataforchart.rows.item(0).apexP != 999) {
+                        var apexP:number= dataforchart.rows.item(0).apexP;
+                        var apexR:number= dataforchart.rows.item(0).apexR;
+                        var apexC:number= dataforchart.rows.item(0).apexC;
+                        var tauxApexP:number = apexP/(apexC+apexP+apexR)*100;
+                        var tauxApexR:number = apexR/(apexC+apexP+apexR)*100;
+                        var tauxApexC:number = apexC/(apexC+apexP+apexR)*100;
+                        this.dataChart.push({
+                          id: dataforchart.rows.item(0).idSession,
+                          nomParcelle: dataforchart.rows.item(0).nomParcelle,
+                          apexP: tauxApexP.toFixed(1),
+                          apexR: tauxApexR.toFixed(1),
+                          apexC: tauxApexC.toFixed(1),
+                          userId: dataforchart.rows.item(0).userId
+                        });
+                        this.computeChart(this.dataChart);
+                      }
+
+                    }
+                  }
+                })
+                .catch(e => console.log('fail sql retrieve Sessions for DataChart ' + e));
+            }
+          }
+        }
+      })
+      .catch(e => console.log('fail Open DB DataChart ' + e));
   }
 
   public computeAffichage(moyenne, tx, iac){
@@ -717,8 +794,11 @@ export class HomePage {
             }]
        },
        options: {
+         animation:{
+           duration:0
+         },
         responsive: true,
-        maintainAspectRatio: false,
+          maintainAspectRatio: false,
         legend: {
           position: 'left',
           onClick: (e) => e.stopPropagation()
@@ -732,57 +812,7 @@ export class HomePage {
       this.makeChart(element);
     });
   }
-  public getDataForChart() {
-    var sqlrequest = 'select distinct `nomParcelle` from `Session`';
-    //var sqlrequest = 'select * from `Session` where serve=0 or serve=1 order by date desc LIMIT 20';
-    this.dataChart = [];
 
-    this.db.executeSql(sqlrequest, {})
-      .then((data) => {
-        if (data == null) {
-          console.log('no session yet');
-          return;
-        }
-        if (data.rows) {
-          if (data.rows.length > 0) {
-            for (let i = 0; i < data.rows.length; i++) {
-              console.log('## '+data.rows.item(i).nomParcelle);
-              this.db.executeSql('select * from `Session` WHERE nomParcelle = ? order by date desc LIMIT 2', [data.rows.item(i).nomParcelle])
-                .then((dataforchart) => {
-                  if (dataforchart == null) {
-                    console.log('no session yet');
-                    return;
-                  }
-                  if (dataforchart.rows) {
-                    if (dataforchart.rows.length > 0) {
-                      if (dataforchart.rows.item(0).apexP != 999) {
-                        var apexP:number= dataforchart.rows.item(0).apexP;
-                        var apexR:number= dataforchart.rows.item(0).apexR;
-                        var apexC:number= dataforchart.rows.item(0).apexC;
-                        var tauxApexP:number = apexP/(apexC+apexP+apexR)*100;
-                        var tauxApexR:number = apexR/(apexC+apexP+apexR)*100;
-                        var tauxApexC:number = apexC/(apexC+apexP+apexR)*100;
-                        this.dataChart.push({
-                          id: dataforchart.rows.item(0).idSession,
-                          nomParcelle: dataforchart.rows.item(0).nomParcelle,
-                          apexP: tauxApexP.toFixed(1),
-                          apexR: tauxApexR.toFixed(1),
-                          apexC: tauxApexC.toFixed(1),
-                          userId: dataforchart.rows.item(0).userId
-                        });
-                        this.computeChart(this.dataChart);
-                      }
-
-                    }
-                  }
-                })
-                .catch(e => console.log('fail sql retrieve Sessions for DataChart ' + e));
-            }
-          }
-        }
-      })
-      .catch(e => console.log('fail Open DB DataChart ' + e));
-  }
 
   public dropDB(){
     this.isDropDB++;
@@ -813,5 +843,20 @@ export class HomePage {
     }
   }
 
+  public loadmore(){
+    this.offset +=5;
+    this.retrieveSession();
+    this.getDataForChart();
+  }
 
+  public loadless(){
+    this.offset -=5;
+    if (this.offset < 0) {
+      this.offset = 0;
+    }
+    else{
+      this.retrieveSession();
+      this.getDataForChart();
+    }
+  }
 }
